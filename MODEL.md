@@ -159,3 +159,49 @@ The model should continuously improve across six layers:
 **Universe eligibility → data freshness → business quality → growth → valuation → risk → catalyst/thesis → portfolio fit → transaction friction → final decision.**
 
 A candidate that fails an earlier hard gate cannot be rescued by a high score elsewhere.
+
+
+## Adaptive capital engine v4
+
+Investerning använder nu tre samtidiga tidshorisonter:
+- **Kort:** 0–8 veckor, där momentum, katalysatorer och förändringstakt väger tungt.
+- **Medel:** 2–12 månader, där vinst-/omsättningsacceleration, omvärdering och katalysatorer kombineras.
+- **Lång:** 12+ månader, där kvalitet, återinvestering och uthållig FCF-/vinsttillväxt får större betydelse.
+
+Den slutliga portföljvikten är adaptiv och baseras på:
+**modellscore + conviction + förväntad avkastning + nedsiderisk + tesstyrka + portföljpassning + transaktionsfriktion.**
+
+### Expected-return engine
+Varje kandidat ska, när data finns, ha separata förväntade avkastningar för kort, medel och lång sikt. Dessa kombineras till en adaptiv opportunity score. Förväntad avkastning får aldrig ersätta datakvalitet eller riskkontroll.
+
+### Earnings acceleration
+Modellen ska prioritera förändringstakt, inte bara nivå: omsättning, EPS/FCF, marginaler, guidance och estimatrevideringar ska analyseras som acceleration/deceleration när historiska datapunkter finns.
+
+### Smart momentum
+Momentum ska delas upp i prisstyrka och fundamental bekräftelse. Ett stigande pris utan förbättrade fundamenta ska inte behandlas lika som stigande pris tillsammans med positiva estimatrevideringar, marginaler eller katalysatorer.
+
+### 10x/asymmetry radar
+Små bolag får en separat möjlighetspremie endast när kvalitet, likviditet, balansräkning, ägarbild och verifierad katalysator klarar hårda gate-krav. Målet är asymmetri, inte att förutsäga en viss multipel.
+
+### Sell-before-buy
+Varje ny köpkandidat ska jämföras mot befintliga innehav. Kapital flyttas endast när den nya möjligheten har tillräckligt hög relativ opportunity/conviction efter risk, portföljpassning och transaktionskostnader.
+
+### Kill list
+Varje innehav ska ha en tes, invalidationspunkt och relevanta negativa triggers. Prisfall ensamt räcker inte; strukturell försämring, bruten tes, för hög värdering eller förbrukad katalysator kan göra att kapitalet bör roteras.
+
+### Självlärande journal
+Varje beslut bör lagra förväntad avkastning, tidshorisont, conviction, katalysator, risk, invalidation och senare faktiskt utfall. Modellens faktorvikter får endast förändras efter tillräckligt många observationer och helst med walk-forward/out-of-sample-stöd.
+
+### Modellstyrning
+Modellversioner ska jämföras mot varandra med CAGR, totalavkastning, max drawdown, volatilitet, Sharpe/Sortino, turnover, hit rate, genomsnittlig vinst/förlust och benchmark. Kort paper-performance får inte ensam styra viktförändringar.
+
+### Datagates
+Market-, fundamental-, ownership- och catalyst-freshness ska behandlas separat. En färsk kurs får inte göra gamla fundamenta "färska". Discovery-data är idédata och får inte ensam skapa köpbeslut.
+
+### Portföljoptimering
+Position sizing ska ta hänsyn till toppvikt, sektor, korrelation, volatilitet och marginalbidrag till portföljrisken när sådana data finns. Diversifiering är ett riskverktyg, inte ett självändamål.
+
+### Operativ regel
+Vid varje tisdag/fredag 10:00-genomgång ska modellen i princip ställa:
+**"Om hela kapitalet var kontant nu, vilka positioner skulle ge bäst riskjusterad kapitaltillväxt över de tre tidshorisonterna?"**
+Sedan jämförs svaret med den faktiska portföljen och endast meningsfulla kapitalförflyttningar föreslås.
