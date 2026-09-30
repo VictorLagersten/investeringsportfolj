@@ -9,6 +9,7 @@ function clamp(v){return Math.max(0,Math.min(100,v))}
 function scale(v,lo,hi){return v==null?null:clamp((v-lo)/(hi-lo)*100)}
 function invScale(v,bad,good){return v==null?null:clamp((bad-v)/(bad-good)*100)}
 function avg(parts){const p=parts.filter(v=>v!=null);return p.length?p.reduce((a,b)=>a+b,0)/p.length:null}
+function tradable(r){return r.listed!==false&&["STO","CPH","HEL","OSL","ICE","NMS","NYQ","NYS","ASE","NCM","NAS","FRA","GER","STU","PAR","AMS","BRU"].includes(String(r.exchange||""))}
 function coverage(r){const keys=["currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","liquidity"];return Math.round(keys.filter(k=>n(r[k])!=null).length/keys.length*100)}
 function weighted(parts){
   const valid=parts.filter(x=>x.v!=null);
@@ -41,6 +42,7 @@ function riskFlag(r){
   return flags.length?flags.join(" · "):"Ingen flagga";
 }
 function status(r){
+  if(!tradable(r))return "Ej Handelsbanken-universum";
   const s=investmentScore(r), c=coverage(r);
   if(c<55||s==null)return "Ej redo";
   if(s>=78&&c>=75)return "Kandidat";
@@ -80,7 +82,7 @@ async function syncMarketPrices(){
 function renderScanner(){
   const filter=document.querySelector("#scannerFilter"),rowsEl=document.querySelector("#scannerRows");if(!rowsEl)return;
   const sorted=[...scannerRows].sort((a,b)=>(investmentScore(b)??-1)-(investmentScore(a)??-1));
-  const filtered=sorted.filter(r=>{const s=investmentScore(r);if(filter?.value==="ready")return coverage(r)>=55;if(filter?.value==="small")return smallCap(r);if(filter?.value==="watch")return s!=null&&s>=65&&s<78;return true});
+  const filtered=sorted.filter(r=>{if(!tradable(r))return false;const s=investmentScore(r);if(filter?.value==="ready")return coverage(r)>=55;if(filter?.value==="small")return smallCap(r);if(filter?.value==="watch")return s!=null&&s>=65&&s<78;return true});
   rowsEl.innerHTML=filtered.length?filtered.map(r=>{
     const b=businessScore(r),s=investmentScore(r),c=coverage(r);
     return "<tr><td><strong>"+esc(r.name||r.ticker)+"</strong><small>"+esc(r.ticker)+" · "+esc(r.sector||"")+"</small></td><td>"+(b==null?"–":b.toFixed(0))+"</td><td><b class='model-score "+(s>=78?"good":s>=65?"mid":"")+"'>"+(s==null?"–":s.toFixed(0))+"</b></td><td>"+c+"%</td><td>"+esc(riskFlag(r))+"</td><td>"+status(r)+(smallCap(r)?" · småbolag":"")+"</td></tr>";
