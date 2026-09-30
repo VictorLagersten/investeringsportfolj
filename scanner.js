@@ -9,7 +9,22 @@ function clamp(v){return Math.max(0,Math.min(100,v))}
 function scale(v,lo,hi){return v==null?null:clamp((v-lo)/(hi-lo)*100)}
 function invScale(v,bad,good){return v==null?null:clamp((bad-v)/(bad-good)*100)}
 function avg(parts){const p=parts.filter(v=>v!=null);return p.length?p.reduce((a,b)=>a+b,0)/p.length:null}
-function tradable(r){return r.listed!==false&&["STO","CPH","HEL","OSL","ICE","NMS","NYQ","NYS","ASE","NCM","NAS","FRA","GER","STU","PAR","AMS","BRU"].includes(String(r.exchange||""))}
+function tradable(r){
+  if(r.listed===false)return false;
+  const ex=String(r.exchange||"");
+  return ["STO","CPH","HEL","OSL","ICE","NMS","NYQ","NYS","ASE","NCM","NAS","FRA","GER","STU","PAR","AMS","BRU"].includes(ex);
+}
+function dataFreshEnough(r,maxDays=120){
+  if(!r.asOf)return false;
+  const t=Date.parse(r.asOf); if(!Number.isFinite(t))return false;
+  return (Date.now()-t)<=maxDays*86400000;
+}
+function opportunityScore(r){
+  const b=businessScore(r), i=investmentScore(r); if(i==null)return null;
+  const small=smallCap(r)?5:0;
+  const catalyst=r.catalyst?5:0;
+  return Math.min(100,i*.8+(b??i)*.15+small+catalyst);
+}
 function coverage(r){const keys=["currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","liquidity"];return Math.round(keys.filter(k=>n(r[k])!=null).length/keys.length*100)}
 function weighted(parts){
   const valid=parts.filter(x=>x.v!=null);
@@ -45,6 +60,8 @@ function status(r){
   if(!tradable(r))return "Ej Handelsbanken-universum";
   const s=investmentScore(r), c=coverage(r);
   if(c<55||s==null)return "Ej redo";
+  if(!tradable(r))return "Ej Handelsbanken-universum";
+  if(!dataFreshEnough(r))return "Data för gammal";
   if(s>=78&&c>=75)return "Kandidat";
   if(s>=65)return "Bevaka";
   return "Avvakta";
@@ -81,7 +98,7 @@ async function syncMarketPrices(){
 }
 function renderScanner(){
   const filter=document.querySelector("#scannerFilter"),rowsEl=document.querySelector("#scannerRows");if(!rowsEl)return;
-  const sorted=[...scannerRows].sort((a,b)=>(investmentScore(b)??-1)-(investmentScore(a)??-1));
+  const sorted=[...scannerRows].sort((a,b)=>(opportunityScore(b)??-1)-(opportunityScore(a)??-1));
   const filtered=sorted.filter(r=>{if(!tradable(r))return false;const s=investmentScore(r);if(filter?.value==="ready")return coverage(r)>=55;if(filter?.value==="small")return smallCap(r);if(filter?.value==="watch")return s!=null&&s>=65&&s<78;return true});
   rowsEl.innerHTML=filtered.length?filtered.map(r=>{
     const b=businessScore(r),s=investmentScore(r),c=coverage(r);
