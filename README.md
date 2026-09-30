@@ -1,20 +1,26 @@
-# Investeringsportfölj
+# INVESTERNING · portföljdashboard
 
-En enkel, responsiv webbdashboard för att följa en personlig investeringsportfölj. Byggd med vanlig HTML, CSS och JavaScript utan byggsteg eller externa datatjänster.
+En lättläst dashboard för paperportföljen i projektet Investerning.
 
-## Kom igång
+## Vad du ser
 
-Öppna `index.html` i en webbläsare. Dashboarden visar exempeldata tills du lägger in egna innehav.
+- Portföljvärde, kassa, dagens förändring och total utveckling från startkapitalet 50 000 kr.
+- Innehav: Sandvik (40), NIBE B (328) och BONESUPPORT (44).
+- Jämförelse med OMXS30, fördelningen mellan aktier och kassa, och registrerad affärshistorik.
+- Värdekurva som ritas från sparade dagsvärden.
+- Manuell uppdatering av verifierade stängningskurser och kassa.
+- Säkerhetskopia som JSON-fil.
 
-## Funktioner
+## Öppna
 
-- Portföljvärde, insatt kapital och total utveckling
-- Innehavslista med värde och utveckling per innehav
-- Fördelning mellan aktier och fonder
-- Lägg till och ta bort innehav
-- Anpassad layout för mobil och dator
-- Innehav sparas lokalt i webbläsarens `localStorage`
+Öppna `index.html` i webbläsaren. Sidan fungerar utan installation.
 
-## Data och begränsningar
+## Uppdatera historiken
 
-Exempelkurserna är statiska och endast för att visa gränssnittet. Dashboarden hämtar inte livekurser, ansluter inte till bank eller mäklare och ska inte användas som finansiell rådgivning. Innehav sparas på den aktuella enheten och synkas inte mellan webbläsare. Använd **↻** i sidhuvudet för att återställa exempeldata.
+Välj **Uppdatera kurser** efter att du har verifierat dagens stängningskurser. Dashboarden räknar om portföljvärdet och sparar datumets värde automatiskt. **Spara dagens värde** låter dig registrera en värdering separat. Historiken visas lokalt i samma webbläsare.
+
+Startvärdena är från projektets senaste stängningsrapport för 30 september 2026. Dagsvärden i historiken är 50 000 kr (28 sep), 50 197,08 kr (29 sep) och 50 589,64 kr (30 sep). De tre affärerna är registrerade utan exakta affärsdatum eftersom de inte fanns i projektanteckningarna.
+
+## Viktigt om data
+
+Det här är en paperportfölj, inte en koppling till Avanza eller Nordnet. Webbsidan hämtar inte automatiskt livekurser och sparar inte data till GitHub eller mellan enheter. Kurser måste verifieras innan de matas in. Ingen handel genomförs här och vyn är inte finansiell rådgivning. Dagsrapporten kl. 18 körs i ChatGPT och behöver aktuell verifierbar marknadsdata.
