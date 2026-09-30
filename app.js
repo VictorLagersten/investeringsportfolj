@@ -13,12 +13,20 @@ const INITIAL = {
     { date: "2026-09-28", value: 50000 },
     { date: "2026-09-29", value: 50197.08 },
     { date: "2026-09-30", value: 50589.64 }
-  ]
+  ],
+  transactions: [
+    { type: "buy", name: "Sandvik", ticker: "SAND", quantity: 40, price: 374.1, date: null },
+    { type: "buy", name: "NIBE Industrier B", ticker: "NIBE B", quantity: 328, price: 45.7, date: null },
+    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 44, price: 227.2, date: null }
+  ],
+  plans: []
 };
 const money = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", maximumFractionDigits: 0 });
 const precise = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 let data = readData();
+let selectedCalendarDate = [...data.history].sort((a,b)=>a.date.localeCompare(b.date)).at(-1)?.date ?? today();
+let calendarMonth = new Date(selectedCalendarDate + "T12:00:00");
 const positions = document.querySelector("#positions");
 const priceDialog = document.querySelector("#priceDialog");
 const snapshotDialog = document.querySelector("#snapshotDialog");
@@ -26,7 +34,7 @@ const snapshotDialog = document.querySelector("#snapshotDialog");
 function readData() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORE));
-    return saved?.holdings && saved?.history ? saved : structuredClone(INITIAL);
+    return saved?.holdings && saved?.history ? { ...structuredClone(INITIAL), ...saved, transactions: saved.transactions ?? structuredClone(INITIAL.transactions), plans: saved.plans ?? [] } : structuredClone(INITIAL);
   } catch {
     return structuredClone(INITIAL);
   }
@@ -105,6 +113,66 @@ function renderChart() {
   axes.innerHTML = ticks.map(v => `<span>${money.format(v).replace(" ","")}</span>`).join("");
   labels.innerHTML = points.map((p,i)=>i===0 || i===points.length-1 || (points.length>5 && i===Math.floor(points.length/2)) ? `<span>${dateLabel(p.date)}</span>` : "<span></span>").join("");
 }
+
+function renderTransactions() {
+  const filter=document.querySelector("#tradeFilter").value;
+  const rows=[...data.transactions].filter(t=>filter==="all"||t.type===filter).sort((a,b)=>(a.date||"9999-99-99").localeCompare(b.date||"9999-99-99"));
+  document.querySelector("#tradeRows").innerHTML=rows.map(t=>{
+    const type=t.type==="sell"?"Försäljning":"Köp";
+    return "<tr><td>"+(t.date?dateLabel(t.date,{day:"numeric",month:"short",year:"numeric"}):"Datum saknas")+"</td><td><span class=\"trade-type "+t.type+"\">"+type+"</span></td><td><strong>"+t.name+"</strong> <small>"+(t.ticker||"")+"</small></td><td>"+Number(t.quantity).toLocaleString("sv-SE")+"</td><td>"+precise.format(t.price)+"</td><td>"+money.format(t.quantity*t.price)+"</td></tr>";
+  }).join("");
+  document.querySelector("#tradeEmpty").hidden=rows.length>0;
+  document.querySelector("#historySummary").textContent=data.transactions.length+" registrerade affärer";
+  document.querySelector("#tradeCount").textContent=String(data.transactions.length);
+}
+function renderPlans() {
+  const plans=[...data.plans].sort((a,b)=>a.date.localeCompare(b.date));
+  document.querySelector("#planRows").innerHTML=plans.map(p=>{
+    const action=p.action==="buy"?"Köp":p.action==="sell"?"Sälj":"Avvakta";
+    return "<tr><td>"+dateLabel(p.date,{day:"numeric",month:"short",year:"numeric"})+"</td><td class=\"plan-action "+(p.action==="sell"?"sell":"")+"\">"+action+"</td><td>"+p.name+"</td><td>"+(p.quantity?Number(p.quantity).toLocaleString("sv-SE"):"–")+"</td><td>"+p.reason+"</td><td class=\"plan-status\">Planerad</td></tr>";
+  }).join("");
+  document.querySelector("#planEmpty").hidden=plans.length>0;
+}
+function renderCalendar() {
+  const grid=document.querySelector("#calendarGrid"), detail=document.querySelector("#calendarDayDetail");
+  const year=calendarMonth.getFullYear(), month=calendarMonth.getMonth();
+  document.querySelector("#calendarMonth").textContent=new Intl.DateTimeFormat("sv-SE",{month:"long",year:"numeric"}).format(calendarMonth);
+  const weekdays=["Mån","Tis","Ons","Tor","Fre","Lör","Sön"];
+  const offset=(new Date(year,month,1).getDay()+6)%7, count=new Date(year,month+1,0).getDate();
+  const recorded=new Map(data.history.map(p=>[p.date,p]));
+  grid.innerHTML=weekdays.map(d=>"<div class=\"calendar-weekday\" role=\"columnheader\">"+d+"</div>").join("");
+  for(let i=0;i<offset;i++)grid.insertAdjacentHTML("beforeend","<div class=\"calendar-day empty\" aria-hidden=\"true\"></div>");
+  for(let n=1;n<=count;n++){
+    const date=year+"-"+String(month+1).padStart(2,"0")+"-"+String(n).padStart(2,"0"), point=recorded.get(date);
+    const valueText=point?money.format(point.value):"";
+    grid.insertAdjacentHTML("beforeend","<button class=\"calendar-day "+(point?"has-value ":"")+(date===selectedCalendarDate?"selected":"")+"\" role=\"gridcell\" data-date=\""+date+"\" "+(point?"":"disabled")+"><span class=\"day-num\">"+n+"</span>"+(point?"<span class=\"day-value\">"+valueText+"</span>":"")+"</button>");
+  }
+  grid.querySelectorAll(".calendar-day.has-value").forEach(b=>b.addEventListener("click",()=>{selectedCalendarDate=b.dataset.date;renderCalendar();}));
+  const selected=recorded.get(selectedCalendarDate);
+  if(!selected){detail.innerHTML="<span>Välj en markerad dag i kalendern.</span>";return;}
+  const sorted=[...data.history].sort((a,b)=>a.date.localeCompare(b.date)),idx=sorted.findIndex(p=>p.date===selectedCalendarDate),prior=idx>0?sorted[idx-1]:null;
+  const positions=selected.snapshot?.holdings||selected.holdings;
+  const holdings=positions?("<div class=\"detail-holdings\">"+positions.map(h=>"<span>"+h.name+": "+Number(h.quantity).toLocaleString("sv-SE")+" st"+(h.price!=null?" · "+precise.format(h.price):"")+"</span>").join("")+"</div>"):"<small>Innehav per aktie saknas för den här äldre värderingen.</small>";
+  detail.innerHTML="<span>"+dateLabel(selected.date,{day:"numeric",month:"long",year:"numeric"})+"</span><strong>"+precise.format(selected.value)+"</strong><small>"+(prior?"Förändring sedan "+dateLabel(prior.date)+": "+signedMoney(selected.value-prior.value):"Ingen tidigare registrerad dag att jämföra med")+(selected.snapshot?.cash!=null?" · Kassa "+money.format(selected.snapshot.cash):"")+"</small>"+holdings;
+}
+function renderConclusion() {
+  const total=valueNow(), ret=total-data.startCapital, retPct=ret/data.startCapital*100;
+  const equity=data.holdings.reduce((sum,h)=>sum+h.quantity*h.price,0), share=total?equity/total*100:0;
+  const sells=data.transactions.filter(t=>t.type==="sell").length, buys=data.transactions.filter(t=>t.type==="buy").length;
+  document.querySelector("#conclusionLead").textContent="Portföljen är värd "+precise.format(total)+" och ligger "+signedMoney(ret)+" ("+(retPct>=0?"+":"")+pct.format(retPct)+" %) mot startkapitalet "+money.format(data.startCapital)+".";
+  document.querySelector("#conclusionAsOf").textContent="Senast uppdaterad "+dateLabel(data.asOf,{day:"numeric",month:"long",year:"numeric"})+".";
+  document.querySelector("#conclusionPerformance").textContent="Registrerat resultat är "+signedMoney(ret)+". Det finns "+data.history.length+" sparade dagsvärderingar; kalendern visar vilka datum som har uppgifter.";
+  document.querySelector("#conclusionAllocation").textContent=pct.format(share)+" % i aktier och "+money.format(data.cash)+" i kassa. Portföljen har "+data.holdings.length+" innehav, så enskilda bolag påverkar utfallet tydligt.";
+  document.querySelector("#conclusionActivity").textContent="Historiken innehåller "+buys+" köp och "+sells+" försäljningar. Affärsdatum saknas för de tre ursprungliga köpen.";
+  document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" planerade ändringar finns noterade. Gå igenom dem på tisdag kl. 10 och jämför med verifierade kurser.":"Nästa veckogenomgång är tisdag kl. 10. Lägg in planer för beslut du vill följa upp; inget genomförs automatiskt.";
+}
+function setView(name) {
+  const views={dashboard:"#dashboardView",history:"#historyView",plan:"#planView",calendar:"#calendarView",conclusion:"#conclusionView"};
+  Object.entries(views).forEach(([key,selector])=>document.querySelector(selector).hidden=key!==name);
+  document.querySelectorAll(".view-tab").forEach(tab=>{const active=tab.dataset.view===name;tab.classList.toggle("active",active);if(active)tab.setAttribute("aria-current","page");else tab.removeAttribute("aria-current");});
+  if(name==="calendar")renderCalendar();
+}
+
 function render() {
   const total = valueNow();
   const equity = data.holdings.reduce((sum,h) => sum + h.quantity * h.price, 0);
@@ -137,9 +205,13 @@ function render() {
   }
   renderPositions();
   renderChart();
+  renderTransactions();
+  renderPlans();
+  renderCalendar();
+  renderConclusion();
 }
-function addHistory(date,value) {
-  const item={date,value:Number(value)};
+function addHistory(date,value,snapshot=null) {
+  const item={date,value:Number(value),...(snapshot?{snapshot}:{})};
   const i=data.history.findIndex(p=>p.date===date);
   if(i>=0)data.history[i]=item;else data.history.push(item);
   data.history.sort((a,b)=>a.date.localeCompare(b.date));
@@ -159,7 +231,7 @@ document.querySelector("#priceForm").addEventListener("submit",event=>{
   const form=event.currentTarget, fd=new FormData(form), date=String(fd.get("date"));
   data.holdings.forEach((h,i)=>{h.previousPrice=h.price;h.price=Number(fd.get(`price-${i}`));h.dayPct=h.previousPrice?(h.price/h.previousPrice-1)*100:0;});
   data.cash=Number(fd.get("cash"));data.asOf=date;
-  addHistory(date,valueNow());persist();render();priceDialog.close();
+  addHistory(date,valueNow(),{cash:data.cash,holdings:data.holdings.map(h=>({name:h.name,ticker:h.ticker,quantity:h.quantity,price:h.price}))});persist();render();priceDialog.close();
 });
 document.querySelector("#saveDay").addEventListener("click",()=>{
   const form=document.querySelector("#snapshotForm");
@@ -168,7 +240,7 @@ document.querySelector("#saveDay").addEventListener("click",()=>{
 document.querySelector("#cancelSnapshot").addEventListener("click",()=>snapshotDialog.close());
 document.querySelector("#snapshotForm").addEventListener("submit",event=>{
   event.preventDefault();const fd=new FormData(event.currentTarget),date=String(fd.get("date"));
-  addHistory(date,Number(fd.get("value")));data.asOf=date;persist();render();snapshotDialog.close();
+  addHistory(date,Number(fd.get("value")),{cash:data.cash,holdings:data.holdings.map(h=>({name:h.name,ticker:h.ticker,quantity:h.quantity,price:h.price}))});data.asOf=date;persist();render();snapshotDialog.close();
 });
 document.querySelector("#period").addEventListener("change",renderChart);
 document.querySelector("#backup").addEventListener("click",()=>{
@@ -179,4 +251,23 @@ document.querySelector("#reset").addEventListener("click",()=>{
   if(!confirm("Återställ dashboarden till senast kända portföljdata från projektet? Dina lokala uppdateringar ersätts."))return;
   data=structuredClone(INITIAL);persist();render();
 });
+
+document.querySelectorAll(".view-tab").forEach(tab=>tab.addEventListener("click",()=>setView(tab.dataset.view)));
+document.querySelector("#tradeFilter").addEventListener("change",renderTransactions);
+document.querySelector("#addTrade").addEventListener("click",()=>document.querySelector("#tradeDialog").showModal());
+document.querySelector("#cancelTrade").addEventListener("click",()=>document.querySelector("#tradeDialog").close());
+document.querySelector("#tradeForm").addEventListener("submit",event=>{
+  event.preventDefault();const fd=new FormData(event.currentTarget);
+  data.transactions.push({type:String(fd.get("type")),name:String(fd.get("name")).trim(),ticker:String(fd.get("ticker")).trim(),quantity:Number(fd.get("quantity")),price:Number(fd.get("price")),date:String(fd.get("date"))||null});
+  persist();render();event.currentTarget.reset();document.querySelector("#tradeDialog").close();
+});
+document.querySelector("#addPlan").addEventListener("click",()=>{const form=document.querySelector("#planForm");form.elements.date.value=today();document.querySelector("#planDialog").showModal();});
+document.querySelector("#cancelPlan").addEventListener("click",()=>document.querySelector("#planDialog").close());
+document.querySelector("#planForm").addEventListener("submit",event=>{
+  event.preventDefault();const fd=new FormData(event.currentTarget);
+  data.plans.push({action:String(fd.get("action")),name:String(fd.get("name")).trim(),quantity:fd.get("quantity")?Number(fd.get("quantity")):null,date:String(fd.get("date")),reason:String(fd.get("reason")).trim()});
+  persist();render();event.currentTarget.reset();document.querySelector("#planDialog").close();
+});
+document.querySelector("#calendarPrev").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()-1);renderCalendar();});
+document.querySelector("#calendarNext").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()+1);renderCalendar();});
 render();
