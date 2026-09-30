@@ -126,3 +126,10 @@ Köpbeslut ska bygga på hela informationskedjan:
 6. **Sell/review triggers** – bruten tes, strukturellt försämrade fundamenta, för hög värdering eller förändrad risk.
 
 Ett köp kräver alltså både ett attraktivt bolag och ett rimligt investeringsläge. Ett prisfall är inte ensamt en säljsignal.
+
+
+## Handelsbanken ISK trading universe
+The paper portfolio is designed to simulate a real Handelsbanken ISK. The stock universe must therefore be restricted to instruments practically tradable through Handelsbanken's retail channels: Nordic markets, the United States, France, the Netherlands and Germany, subject to instrument/account eligibility. The model must exclude private/unlisted shares and markets outside this practical universe. Current Handelsbanken documentation should be rechecked periodically because available markets can change.
+
+## Trading friction
+Portfolio decisions must account for realistic Handelsbanken trading friction, including brokerage and FX conversion for foreign securities. Small proposed trades should be rejected or deferred when expected edge is too small after estimated transaction costs.
