@@ -1,5 +1,5 @@
 const SCANNER_STORE="investern-scanner-v1";
-const SCANNER_FIELDS=["ticker","name","currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","analystCoverage","liquidity","sector","catalyst","riskNote","source","asOf"];
+const SCANNER_FIELDS=["ticker","name","currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","analystCoverage","liquidity","sector","catalyst","catalystDate","riskNote","source","asOf","market","currency","marketDataAsOf","fundamentalDataAsOf","ownershipDataAsOf","catalystDataAsOf"];
 let scannerRows=readScanner();
 
 function readScanner(){try{const x=JSON.parse(localStorage.getItem(SCANNER_STORE));return Array.isArray(x)?x:[]}catch{return[]}}
