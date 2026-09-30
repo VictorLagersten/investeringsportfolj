@@ -95,7 +95,9 @@ function today() {
 function signedMoney(value) { return (value > 0 ? "+" : value < 0 ? "−" : "") + money.format(Math.abs(value)); }
 function valueNow() { return data.cash + data.holdings.reduce((sum, h) => sum + h.quantity * h.price, 0); }
 function dateLabel(date, options = { day: "numeric", month: "short" }) {
-  return new Date(date + "T12:00:00").toLocaleDateString("sv-SE", options);
+  const raw = String(date);
+  const d = raw.includes("T") ? new Date(raw) : new Date(raw + "T12:00:00");
+  return d.toLocaleDateString("sv-SE", options);
 }
 function renderPositions() {
   positions.innerHTML = data.holdings.map(h => {
@@ -257,6 +259,7 @@ function render() {
   renderPlans();
   renderCalendar();
   renderConclusion();
+  updateMarketStatus();
 }
 function addHistory(date,value,snapshot=null) {
   const item={date,value:Number(value),...(snapshot?{snapshot}:{})};
