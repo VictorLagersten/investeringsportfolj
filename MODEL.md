@@ -133,3 +133,14 @@ The paper portfolio is designed to simulate a real Handelsbanken ISK. The stock 
 
 ## Trading friction
 Portfolio decisions must account for realistic Handelsbanken trading friction, including brokerage and FX conversion for foreign securities. Small proposed trades should be rejected or deferred when expected edge is too small after estimated transaction costs.
+
+
+## Modellförbättringar v3 – genomförda
+- Handelsbanken-ISK-universum är ett hårt filter: endast praktiskt relevanta börser/marknader får bli investeringskandidater.
+- Trading friction: modellen uppskattar courtage, eventuell valutakostnad och minsta rimliga affärsstorlek innan en transaktion kan bli kandidat.
+- Broad discovery: universumet upptäcks automatiskt dagligen; discovery-data är aldrig tillräcklig för köpbeslut i sig.
+- Portfolio risk: positioner ska bedömas tillsammans med koncentration och sektorexponering, inte enbart bolagsscore.
+- Hidden gems: småbolag kan prioriteras som idéer men måste klara samma datadisciplin, likviditet och balansräkning som större bolag.
+- Model learning: backtests ska vara walk-forward och out-of-sample. Faktorvikter får inte justeras enbart efter kortsiktigt paper trading-resultat.
+- Kill-switch: om en faktor eller modellversion visar stabil försämring i out-of-sample-test ska den kunna sänkas/inaktiveras i stället för att optimeras mot historiska utfall.
+- Ingen automatisk orderläggning. Systemet producerar beslutsunderlag och paper trades.
