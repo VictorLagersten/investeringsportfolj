@@ -167,10 +167,10 @@ function renderConclusion() {
   document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" planerade ändringar finns noterade. Gå igenom dem på tisdag kl. 10 och jämför med verifierade kurser.":"Nästa veckogenomgång är tisdag kl. 10. Lägg in planer för beslut du vill följa upp; inget genomförs automatiskt.";
 }
 function setView(name) {
-  const views={dashboard:"#dashboardView",history:"#historyView",plan:"#planView",calendar:"#calendarView",conclusion:"#conclusionView"};
+  const views={dashboard:"#dashboardView",history:"#historyView",plan:"#planView",calendar:"#calendarView",conclusion:"#conclusionView",model:"#modelView"};
   Object.entries(views).forEach(([key,selector])=>document.querySelector(selector).hidden=key!==name);
   document.querySelectorAll(".view-tab").forEach(tab=>{const active=tab.dataset.view===name;tab.classList.toggle("active",active);if(active)tab.setAttribute("aria-current","page");else tab.removeAttribute("aria-current");});
-  if(name==="calendar")renderCalendar();
+  if(name==="calendar")renderCalendar(); if(name==="model" && window.InvesternModel)window.InvesternModel.render();
 }
 
 function render() {
