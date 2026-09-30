@@ -5,6 +5,8 @@ const DEFAULT_MODEL = {
   riskFreeRate: 2.0,
   maxPositionPct: 25,
   minCashPct: 10,
+  startingCapital: 50000,
+  trading: { courtagePct: 0.09, minCourtageSEK: 9, fxPct: 0.25, minTradeSEK: 750 },
   candidates: [],
   journal: [], backtests: []
 };
@@ -38,6 +40,21 @@ function confidence(c){
   return Math.round(filled/FACTORS.length*100);
 }
 function label(score){if(score==null)return "Ej bedömd";if(score>=80)return "Stark kandidat";if(score>=70)return "Intressant";if(score>=60)return "Bevaka";return "Svag/avvakta";}
+function tradingCostSEK(c,tradeValueSEK){
+  const t=model.trading||DEFAULT_MODEL.trading;
+  const value=Math.max(0,Number(tradeValueSEK)||0);
+  const fx=/\.ST$|\.CO$|\.HE$|\.OL$|\.IS$/.test(String(c.ticker||""))?0:t.fxPct/100;
+  const brokerage=Math.max(t.minCourtageSEK,value*t.courtagePct/100);
+  return value>0?brokerage+value*fx:0;
+}
+function tradeEfficient(c,targetPct){
+  const total=portfolioContext().total||model.startingCapital||50000;
+  const value=total*Math.max(0,targetPct)/100;
+  if(value<=0)return {ok:false,cost:0,value};
+  const cost=tradingCostSEK(c,value);
+  const minTrade=(model.trading||DEFAULT_MODEL.trading).minTradeSEK;
+  return {ok:value>=minTrade&&cost/value<0.02,cost,value};
+}
 function positionPct(c){
   const s=factorScore(c); if(s==null)return 0;
   const risk=Math.max(0,Math.min(100,num(c.risk)==null?50:num(c.risk)));
@@ -58,6 +75,7 @@ function buyDecision(c){
   const currentWeight=existing?.weight??0;
   const targetPct=s==null?0:positionPct(c);
   const targetWeight=targetPct/100;
+  const friction=tradeEfficient(c,targetPct);
   const gap=targetWeight-currentWeight;
 
   if(s==null) blockers.push("Saknar tillräcklig faktordata");
@@ -65,6 +83,7 @@ function buyDecision(c){
   if(s!=null&&s<70) blockers.push("Score under 70");
   if(model.regime==="risk_off"&&s!=null&&s<80) blockers.push("Risk-off kräver score ≥80");
   if(targetPct<=0&&s!=null) blockers.push("Ingen meningsfull målposition");
+  if(!friction.ok&&gap>0.03) blockers.push("Affären för liten/dyr efter courtage och valuta");
 
   if(existing){
     if(s>=80 && gap>0.03) reasons.push("Starkt case och målvikten ligger över aktuell vikt");
@@ -82,7 +101,7 @@ function buyDecision(c){
     else if(!existing && s>=80) status="KÖPKANDIDAT";
     else if(!existing && s>=70) status="BEVAKA";
   }
-  return {status,score:s,confidence:conf,currentWeight,targetPct,gap,reasons,blockers};
+  return {status,score:s,confidence:conf,currentWeight,targetPct,gap,reasons,blockers,estimatedTradeCost:friction.cost};
 }
 
 function sellDecision(h){
@@ -110,6 +129,15 @@ function sellDecision(h){
   else if(reasons.length>=1) status="OMPRÖVA";
   if(s>=80 && conf>=75 && reasons.length===0 && current>targetWeight+0.03) status="MINSKA";
   return {status,ticker:h.ticker,name:h.name,weight:current,score:s,targetPct,reasons,blockers};
+}
+function portfolioRiskBudget(){
+  const p=portfolioContext();
+  const weights=p.weights||[];
+  const hhi=weights.reduce((s,h)=>s+h.weight*h.weight,0);
+  const sectors={};
+  weights.forEach(h=>{const c=model.candidates.find(x=>x.ticker===h.ticker);const sec=c?.sector||"Okänd";sectors[sec]=(sectors[sec]||0)+h.weight;});
+  const maxSector=Math.max(0,...Object.values(sectors));
+  return {hhi,maxSector};
 }
 function renderDecisionEngine(){
   const buyEl=document.querySelector("#buyEngineRows"), sellEl=document.querySelector("#sellEngineRows");
