@@ -103,3 +103,26 @@ Dashboarden visar toppvikt och ett enkelt koncentrationsmått (HHI) för registr
 3. Göra walk-forward backtest av faktorvikterna.
 4. Lägga till revisionsdata, FCF-avkastning, EV/Sales, ROIC-trend och kapitalallokering.
 5. Göra portföljoptimering utifrån korrelation och riskbudget, inte bara bolagsscore.
+
+
+## Automatisk marknadsdata v2
+Dashboarden hämtar nu automatiskt marknadsdata via GitHub Actions och lagrar senaste hämtning i `data/market.json`. Dashboarden läser filen löpande och uppdaterar registrerade innehav samt scannerpriser när nya data finns.
+
+Marknadsdata används för:
+- aktuell portföljvärdering,
+- dagsrörelse,
+- scannerpris,
+- tidsstämplad dataproveniens.
+
+Fundamentala faktorer, insiderdata, katalysatorer och värderingsmått ska fortfarande komma från verifierade källor. Kursdata ensam får inte skapa en automatisk köp- eller säljsignal.
+
+## Beslutsmotor
+Köpbeslut ska bygga på hela informationskedjan:
+1. **Business Score** – kvalitet, tillväxt, balansräkning och ägarbild.
+2. **Investment Score** – business score plus värdering, momentum och risk.
+3. **Data confidence** – datatäckning och källans färskhet.
+4. **Catalyst/thesis** – varför värdet kan realiseras.
+5. **Portfolio fit** – positionens storlek, koncentration och korrelation.
+6. **Sell/review triggers** – bruten tes, strukturellt försämrade fundamenta, för hög värdering eller förändrad risk.
+
+Ett köp kräver alltså både ett attraktivt bolag och ett rimligt investeringsläge. Ett prisfall är inte ensamt en säljsignal.
