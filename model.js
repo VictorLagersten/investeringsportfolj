@@ -54,38 +54,79 @@ function portfolioContext(){
 function buyDecision(c){
   const s=factorScore(c), conf=confidence(c), p=portfolioContext();
   const reasons=[], blockers=[];
+  const existing=p.weights.find(h=>h.ticker&&c.ticker&&h.ticker===c.ticker);
+  const currentWeight=existing?.weight??0;
+  const targetPct=s==null?0:positionPct(c);
+  const targetWeight=targetPct/100;
+  const gap=targetWeight-currentWeight;
+
   if(s==null) blockers.push("Saknar tillräcklig faktordata");
   if(conf<75) blockers.push("Datatäckning under 75%");
   if(s!=null&&s<70) blockers.push("Score under 70");
-  if(model.regime==="risk_off"&&s!=null&&s<80) blockers.push("Risk-off kräver högre beviskrav");
-  const existing=p.holdings.find(h=>h.ticker&&c.ticker&&h.ticker===c.ticker);
-  if(existing) reasons.push("Finns redan i portföljen");
-  if(s>=80) reasons.push("Stark kombination av kvalitet, tillväxt, värdering och risk");
+  if(model.regime==="risk_off"&&s!=null&&s<80) blockers.push("Risk-off kräver score ≥80");
+  if(targetPct<=0&&s!=null) blockers.push("Ingen meningsfull målposition");
+
+  if(existing){
+    if(s>=80 && gap>0.03) reasons.push("Starkt case och målvikten ligger över aktuell vikt");
+    else if(s>=70 && gap>0.03) reasons.push("Målvikten ligger över aktuell vikt");
+    else if(Math.abs(gap)<=0.03) reasons.push("Aktuell vikt ligger nära modellens mål");
+    else if(gap<0) reasons.push("Aktuell vikt överstiger modellens mål");
+  } else if(s>=80) reasons.push("Stark kombination av kvalitet, tillväxt, värdering och risk");
   else if(s>=70) reasons.push("Intressant modellprofil");
-  const status=blockers.length?"AVVAKTA":s>=80?"KÖPKANDIDAT":s>=70?"BEVAKA":"AVVAKTA";
-  return {status,score:s,confidence:conf,position:positionPct(c),reasons,blockers};
+
+  let status="AVVAKTA";
+  if(!blockers.length){
+    if(existing && s>=80 && gap>0.03) status="ÖKA";
+    else if(existing && s>=70 && Math.abs(gap)<=0.03) status="BEHÅLL";
+    else if(existing && gap< -0.03) status="MINSKA";
+    else if(!existing && s>=80) status="KÖPKANDIDAT";
+    else if(!existing && s>=70) status="BEVAKA";
+  }
+  return {status,score:s,confidence:conf,currentWeight,targetPct,gap,reasons,blockers};
 }
+
 function sellDecision(h){
   const c=model.candidates.find(x=>x.ticker&&h.ticker&&x.ticker===h.ticker);
-  const p=portfolioContext(), weight=p.weights.find(x=>x.ticker===h.ticker)?.weight??0;
+  const p=portfolioContext(), current=p.weights.find(x=>x.ticker===h.ticker)?.weight??0;
+  if(!c){
+    return {status:"OMPRÖVA",ticker:h.ticker,name:h.name,weight:current,score:null,targetPct:null,
+      reasons:["Ingen aktuell verifierad modellprofil för innehavet"],blockers:["Fundamental data saknas"]};
+  }
+  const s=factorScore(c), conf=confidence(c), targetPct=positionPct(c), targetWeight=targetPct/100;
   const reasons=[], blockers=[];
-  if(!c){ return {status:"OMPRÖVA",ticker:h.ticker,name:h.name,weight,score:null,reasons:["Ingen aktuell verifierad modellprofil för innehavet"],blockers:["Fundamental data saknas"]}; }
-  const s=factorScore(c), conf=confidence(c);
+  const risk=num(c.risk), valuation=num(c.valuation), growth=num(c.growth), quality=num(c.quality), balance=num(c.balance);
   if(s<60) reasons.push("Modellscore under 60");
   if(conf<75) reasons.push("Datatäckning under 75%");
-  if(num(c.risk)!=null&&num(c.risk)<40) reasons.push("Förhöjd modellrisk");
-  if(num(c.valuation)!=null&&num(c.valuation)<35) reasons.push("Svag värderingsbild");
-  if(weight>model.maxPositionPct/100) reasons.push("Positionen överstiger modellens maxvikt");
-  const status=reasons.length>=2?"SÄLJ/ROTERA":reasons.length===1?"OMPRÖVA":"BEHÅLL";
-  return {status,ticker:h.ticker,name:h.name,weight,score:s,reasons,blockers};
+  if(risk!=null&&risk<40) reasons.push("Förhöjd modellrisk");
+  if(valuation!=null&&valuation<35) reasons.push("Svag värderingsbild");
+  if(balance!=null&&balance<35) reasons.push("Svag balansräkning");
+  if(growth!=null&&growth<35) reasons.push("Tillväxtprofilen har försämrats");
+  if(quality!=null&&quality<35) reasons.push("Kvalitetsprofilen är för svag");
+  if(current>model.maxPositionPct/100) reasons.push("Positionen överstiger modellens maxvikt");
+  if(targetPct>0 && current-targetWeight>0.05) reasons.push("Aktuell vikt ligger >5 procentenheter över målvikten");
+
+  let status="BEHÅLL";
+  if(reasons.length>=3) status="SÄLJ/ROTERA";
+  else if(reasons.length>=1) status="OMPRÖVA";
+  if(s>=80 && conf>=75 && reasons.length===0 && current>targetWeight+0.03) status="MINSKA";
+  return {status,ticker:h.ticker,name:h.name,weight:current,score:s,targetPct,reasons,blockers};
 }
 function renderDecisionEngine(){
   const buyEl=document.querySelector("#buyEngineRows"), sellEl=document.querySelector("#sellEngineRows");
   if(!buyEl||!sellEl)return;
   const candidates=[...model.candidates].sort((a,b)=>(factorScore(b)??-1)-(factorScore(a)??-1));
-  buyEl.innerHTML=candidates.length?candidates.map(c=>{const d=buyDecision(c);return "<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+"</small></td><td>"+(d.score==null?"–":d.score.toFixed(0))+"</td><td>"+d.confidence+"%</td><td><b class='decision "+(d.status==="KÖPKANDIDAT"?"good":d.status==="BEVAKA"?"mid":"")+"' >"+d.status+"</b></td><td>"+esc((d.blockers.length?d.blockers:d.reasons).join(" · "))+"</td></tr>"}).join(""):"<tr><td colspan='5' class='model-empty'>Inga kandidater med verifierade datapunkter ännu.</td></tr>";
+  buyEl.innerHTML=candidates.length?candidates.map(c=>{
+    const d=buyDecision(c);
+    const cls=["KÖPKANDIDAT","ÖKA"].includes(d.status)?"good":["BEVAKA","BEHÅLL","MINSKA","OMPRÖVA"].includes(d.status)?"mid":"";
+    const sizing=d.targetPct==null?"–":d.targetPct.toFixed(1)+"%";
+    return "<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+"</small></td><td>"+(d.score==null?"–":d.score.toFixed(0))+"</td><td>"+d.confidence+"%</td><td>"+sizing+"</td><td><b class='decision "+cls+"'>"+d.status+"</b></td><td>"+esc((d.blockers.length?d.blockers:d.reasons).join(" · "))+"</td></tr>"
+  }).join(""):"<tr><td colspan='6' class='model-empty'>Inga kandidater med verifierade datapunkter ännu.</td></tr>";
   const holdings=portfolioContext().holdings;
-  sellEl.innerHTML=holdings.length?holdings.map(h=>{const d=sellDecision(h);return "<tr><td><strong>"+esc(h.name)+"</strong><small>"+esc(h.ticker)+"</small></td><td>"+(d.score==null?"–":d.score.toFixed(0))+"</td><td>"+(d.weight*100).toFixed(1)+"%</td><td><b class='decision "+(d.status==="SÄLJ/ROTERA"?"bad":d.status==="OMPRÖVA"?"mid":"good")+"' >"+d.status+"</b></td><td>"+esc(d.reasons.join(" · ")||"Ingen tydlig säljsignal i modellen")+"</td></tr>"}).join(""):"<tr><td colspan='5'>Inga innehav.</td></tr>";
+  sellEl.innerHTML=holdings.length?holdings.map(h=>{
+    const d=sellDecision(h);
+    const cls=d.status==="SÄLJ/ROTERA"?"bad":d.status==="BEHÅLL"?"good":"mid";
+    return "<tr><td><strong>"+esc(h.name)+"</strong><small>"+esc(h.ticker)+"</small></td><td>"+(d.score==null?"–":d.score.toFixed(0))+"</td><td>"+(d.weight*100).toFixed(1)+"%</td><td>"+(d.targetPct==null?"–":d.targetPct.toFixed(1)+"%")+"</td><td><b class='decision "+cls+"'>"+d.status+"</b></td><td>"+esc(d.reasons.join(" · ")||"Ingen tydlig säljsignal i modellen")+"</td></tr>"
+  }).join(""):"<tr><td colspan='6'>Inga innehav.</td></tr>";
 }
 function renderModel(){
   const total = typeof valueNow==="function"?valueNow():0;
