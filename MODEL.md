@@ -144,3 +144,18 @@ Portfolio decisions must account for realistic Handelsbanken trading friction, i
 - Model learning: backtests ska vara walk-forward och out-of-sample. Faktorvikter får inte justeras enbart efter kortsiktigt paper trading-resultat.
 - Kill-switch: om en faktor eller modellversion visar stabil försämring i out-of-sample-test ska den kunna sänkas/inaktiveras i stället för att optimeras mot historiska utfall.
 - Ingen automatisk orderläggning. Systemet producerar beslutsunderlag och paper trades.
+
+
+## Anti-bottleneck operating standard
+The model should continuously improve across six layers:
+1. **Universe:** maximize coverage of instruments actually tradable through the simulated Handelsbanken ISK while excluding non-tradable/private instruments.
+2. **Data:** prioritize primary-source financial statements, fresh market data, ownership/insider information, estimates and corporate events. Every datapoint has source and timestamp where possible.
+3. **Research:** separate discovery, screening and deep underwriting. Discovery can generate candidates; only verified data can generate decisions.
+4. **Portfolio:** optimize marginal capital allocation, concentration, sector exposure, liquidity, volatility and transaction costs.
+5. **Testing:** use point-in-time data, walk-forward validation and out-of-sample evaluation. Never tune parameters on future information.
+6. **Learning:** keep a decision journal and evaluate factor/model contribution. Poorly performing factors can be reduced or disabled; successful factors must survive out-of-sample testing before receiving more weight.
+
+### Decision hierarchy
+**Universe eligibility → data freshness → business quality → growth → valuation → risk → catalyst/thesis → portfolio fit → transaction friction → final decision.**
+
+A candidate that fails an earlier hard gate cannot be rescued by a high score elsewhere.
