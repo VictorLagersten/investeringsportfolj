@@ -6,19 +6,22 @@ const DEFAULT_MODEL = {
   maxPositionPct: 25,
   minCashPct: 10,
   candidates: [],
-  journal: []
+  journal: [], backtests: []
 };
 
 const FACTORS = [
   ["quality","Kvalitet",20],["growth","Tillväxt",20],["valuation","Värdering",15],
-  ["momentum","Momentum",10],["insider","Insider/ägande",10],["catalyst","Katalysator",10],
-  ["balance","Balansräkning",10],["risk","Risk",5]
+  ["momentum","Momentum",10],["insider","Insider/ägande",10],["catalyst","Katalysator",5],
+  ["balance","Balansräkning",10],["risk","Risk",10]
 ];
+// Methodology: quality/growth/value form the core; risk is explicitly weighted to avoid treating upside without downside context as a complete signal.
+const METHOD_SOURCES = ["Fundsmith quality/ROCE/cash conversion/reinvestment","Oaktree second-level risk thinking","Spargurun external idea generation","Small-cap entrepreneurial filter","Quantitative ranking and backtesting"];
+
 
 function readModel() {
   try {
     const saved = JSON.parse(localStorage.getItem(MODEL_STORE));
-    return saved ? {...structuredClone(DEFAULT_MODEL), ...saved, candidates:saved.candidates||[], journal:saved.journal||[]} : structuredClone(DEFAULT_MODEL);
+    return saved ? {...structuredClone(DEFAULT_MODEL), ...saved, candidates:saved.candidates||[], journal:saved.journal||[], backtests:saved.backtests||[]} : structuredClone(DEFAULT_MODEL);
   } catch { return structuredClone(DEFAULT_MODEL); }
 }
 let model = readModel();
