@@ -1,5 +1,5 @@
 const SCANNER_STORE="investern-scanner-v1";
-const SCANNER_FIELDS=["ticker","name","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","analystCoverage","liquidity","sector","catalyst","riskNote","source","asOf"];
+const SCANNER_FIELDS=["ticker","name","currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","analystCoverage","liquidity","sector","catalyst","riskNote","source","asOf"];
 let scannerRows=readScanner();
 
 function readScanner(){try{const x=JSON.parse(localStorage.getItem(SCANNER_STORE));return Array.isArray(x)?x:[]}catch{return[]}}
@@ -9,13 +9,18 @@ function clamp(v){return Math.max(0,Math.min(100,v))}
 function scale(v,lo,hi){return v==null?null:clamp((v-lo)/(hi-lo)*100)}
 function invScale(v,bad,good){return v==null?null:clamp((bad-v)/(bad-good)*100)}
 function avg(parts){const p=parts.filter(v=>v!=null);return p.length?p.reduce((a,b)=>a+b,0)/p.length:null}
-function coverage(r){const keys=["marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","liquidity"];return Math.round(keys.filter(k=>n(r[k])!=null).length/keys.length*100)}
+function coverage(r){const keys=["currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","liquidity"];return Math.round(keys.filter(k=>n(r[k])!=null).length/keys.length*100)}
+function weighted(parts){
+  const valid=parts.filter(x=>x.v!=null);
+  const weight=valid.reduce((s,x)=>s+x.w,0);
+  return weight?valid.reduce((s,x)=>s+x.v*x.w,0)/weight:null;
+}
 function businessScore(r){
   const quality=avg([scale(n(r.roic),5,30),scale(n(r.operatingMargin),5,30),scale(n(r.fcfMargin),0,25)]);
   const growth=avg([scale(n(r.revenueGrowth3y),0,25),scale(n(r.epsGrowth3y),0,30)]);
   const balance=invScale(n(r.netDebtEbitda),4,0);
   const insider=scale(n(r.insiderOwnership),0,40);
-  return avg([quality==null?null:quality*.35,growth==null?null:growth*.30,balance==null?null:balance*.20,insider==null?null:insider*.15]) ;
+  return weighted([{v:quality,w:.35},{v:growth,w:.30},{v:balance,w:.20},{v:insider,w:.15}]);
 }
 function investmentScore(r){
   const b=businessScore(r);
@@ -23,7 +28,7 @@ function investmentScore(r){
   const momentum=avg([scale(n(r.priceMomentum12m),-30,30),scale(n(r.priceMomentum6m),-20,25)]);
   const risk=invScale(n(r.netDebtEbitda),5,0);
   const parts=[b==null?null:b*.50,valuation==null?null:valuation*.20,momentum==null?null:momentum*.10,risk==null?null:risk*.20];
-  return avg(parts);
+  return weighted([{v:b,w:.50},{v:valuation,w:.20},{v:momentum,w:.10},{v:risk,w:.20}]);
 }
 function riskFlag(r){
   const flags=[];
@@ -63,6 +68,15 @@ function parseCSV(text){
   return rows.slice(1).map(a=>Object.fromEntries(SCANNER_FIELDS.map(k=>[k,(a[index[k]]??"").trim()]))).filter(r=>r.ticker||r.name);
 }
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+async function syncMarketPrices(){
+  try{
+    const response=await fetch("./data/market.json?ts="+Date.now(),{cache:"no-store"});
+    if(!response.ok)return;
+    const payload=await response.json(),quotes=payload.quotes||{};
+    scannerRows=scannerRows.map(r=>{const q=quotes[r.ticker];if(!q)return r;return {...r,currentPrice:Number(q.price)||r.currentPrice,dayPct:Number.isFinite(Number(q.dayPct))?Number(q.dayPct):r.dayPct,asOf:payload.fetchedAt||r.asOf,source:r.source||payload.source};});
+    saveScanner();
+  }catch{}
+}
 function renderScanner(){
   const filter=document.querySelector("#scannerFilter"),rowsEl=document.querySelector("#scannerRows");if(!rowsEl)return;
   const sorted=[...scannerRows].sort((a,b)=>(investmentScore(b)??-1)-(investmentScore(a)??-1));
@@ -92,7 +106,7 @@ function downloadTemplate(){
 function initScanner(){
   document.querySelector("#scannerFilter")?.addEventListener("change",renderScanner);
   document.querySelector("#scannerTemplate")?.addEventListener("click",downloadTemplate);
-  document.querySelector("#scannerFile")?.addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;const imported=parseCSV(await f.text());scannerRows=imported.map(r=>({...r,...Object.fromEntries(["marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","analystCoverage","liquidity"].map(k=>[k,n(r[k])]))}));saveScanner();renderScanner();e.target.value=""});
+  document.querySelector("#scannerFile")?.addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;const imported=parseCSV(await f.text());scannerRows=imported.map(r=>({...r,...Object.fromEntries(["currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","analystCoverage","liquidity"].map(k=>[k,n(r[k])]))}));saveScanner();renderScanner();e.target.value=""});
   renderScanner();
 }
 window.InvesternScanner={render:renderScanner,rows:()=>scannerRows};
