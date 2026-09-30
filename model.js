@@ -91,3 +91,27 @@ function addModelListeners(){
 }
 document.addEventListener("DOMContentLoaded",()=>{addModelListeners();renderModel();});
 window.InvesternModel={render:renderModel};
+
+function renderJournal(){
+ const el=document.querySelector("#journalRows"); if(!el)return;
+ el.innerHTML=model.journal.slice(-8).reverse().map(j=>"<div><strong>"+esc(j.ticker)+"</strong><span>"+esc(j.hypothesis)+"</span><small>Invalidation: "+esc(j.invalidation)+"</small></div>").join("")||"<small>Inga journalnoteringar ännu.</small>";
+}
+function initResearchTools(){
+ document.querySelector("#runBacktest")?.addEventListener("click",()=>{
+   const s=Number(document.querySelector("#btStart").value),e=Number(document.querySelector("#btEnd").value),y=Number(document.querySelector("#btYears").value),dd=Number(document.querySelector("#btDd").value);
+   const c=s>0&&e>0&&y>0?(Math.pow(e/s,1/y)-1)*100:null;
+   document.querySelector("#btCagr").textContent=c==null?"–":c.toFixed(2)+"%";
+   document.querySelector("#btMaxDd").textContent=dd.toFixed(1)+"%";
+   document.querySelector("#btStatus").textContent=c==null?"Ogiltiga data":"Resultat registrerat lokalt";
+   model.backtests.push({date:new Date().toISOString().slice(0,10),start:s,end:e,years:y,cagr:c,maxDrawdown:dd});
+   saveModel();
+ });
+ document.querySelector("#saveJournal")?.addEventListener("click",()=>{
+   const ticker=document.querySelector("#jTicker").value.trim(),hypothesis=document.querySelector("#jHypothesis").value.trim(),invalidation=document.querySelector("#jInvalidation").value.trim();
+   if(!ticker||!hypothesis||!invalidation)return;
+   model.journal.push({date:new Date().toISOString().slice(0,10),ticker,hypothesis,invalidation});
+   saveModel(); document.querySelector("#jTicker").value="";document.querySelector("#jHypothesis").value="";document.querySelector("#jInvalidation").value="";renderJournal();
+ });
+ renderJournal();
+}
+document.addEventListener("DOMContentLoaded",initResearchTools);
