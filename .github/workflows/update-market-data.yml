@@ -15,6 +15,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Discover global equity universe
+        run: node scripts/discover-universe.mjs
+
+      - name: Enrich universe market data
+        run: node scripts/enrich-universe.mjs
+
       - name: Fetch market data
         run: node scripts/update-market-data.mjs
 
@@ -22,6 +28,6 @@ jobs:
         run: |
           git config user.name "investern-bot"
           git config user.email "investern-bot@users.noreply.github.com"
-          git add data/market.json
+          git add data/market.json data/universe.json
           git diff --cached --quiet || git commit -m "Update market data"
           git push
