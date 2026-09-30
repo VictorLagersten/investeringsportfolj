@@ -103,11 +103,36 @@ function downloadTemplate(){
   const sample=SCANNER_FIELDS.join(",")+"\n"+SCANNER_FIELDS.map(k=>k==="source"?"egen verifierad källa":k==="asOf"?"YYYY-MM-DD":"").join(",");
   const blob=new Blob([sample],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="investerning-scanner-template.csv";a.click();URL.revokeObjectURL(a.href);
 }
+
+// Broad universe discovery: automatically seed the scanner from data/universe.json.
+// Discovery rows are intentionally marked as discovery-only until sufficient verified
+// fundamental fields are available; discovery alone can never create a buy signal.
+async function loadBroadUniverse(){
+  try{
+    const r=await fetch("./data/universe.json?ts="+Date.now(),{cache:"no-store"});
+    if(!r.ok)return;
+    const j=await r.json(), rows=Array.isArray(j.rows)?j.rows:[];
+    if(!rows.length)return;
+    const existing=new Map(scannerRows.map(x=>[x.ticker,x]));
+    rows.forEach(x=>{
+      if(!x.ticker)return;
+      const prior=existing.get(x.ticker);
+      const merged={...(prior||{}),ticker:x.ticker,name:x.name||prior?.name||x.ticker,currentPrice:x.currentPrice??prior?.currentPrice??null,dayPct:x.dayPct??prior?.dayPct??null,marketCap:x.marketCap??prior?.marketCap??null,pe:x.pe??prior?.pe??null,sector:x.sector||prior?.sector||"",source:x.source||"Broad universe discovery",asOf:x.asOf||j.generatedAt||prior?.asOf||""};
+      existing.set(x.ticker,merged);
+    });
+    scannerRows=[...existing.values()];
+    saveScanner(); renderScanner();
+    const note=document.querySelector("#scannerUniverseNote");
+    if(note)note.textContent="Automatiskt universum: "+rows.length.toLocaleString("sv-SE")+" upptäckta bolag. Upptäckt är inte samma sak som verifierat investeringscase.";
+  }catch{}
+}
+
 function initScanner(){
   document.querySelector("#scannerFilter")?.addEventListener("change",renderScanner);
   document.querySelector("#scannerTemplate")?.addEventListener("click",downloadTemplate);
   document.querySelector("#scannerFile")?.addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;const imported=parseCSV(await f.text());scannerRows=imported.map(r=>({...r,...Object.fromEntries(["currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","analystCoverage","liquidity"].map(k=>[k,n(r[k])]))}));saveScanner();renderScanner();e.target.value=""});
   renderScanner();
+  loadBroadUniverse();
 }
 window.InvesternScanner={render:renderScanner,rows:()=>scannerRows};
 document.addEventListener("DOMContentLoaded",initScanner);
