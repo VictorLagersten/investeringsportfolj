@@ -76,7 +76,7 @@ function openCandidate(existing){
 function addModelListeners(){
   document.querySelector("#modelRegime").addEventListener("change",e=>{model.regime=e.target.value;saveModel();renderModel();});
   document.querySelector("#addCandidate").addEventListener("click",()=>openCandidate());
-  document.querySelector("#cancelModel").addEventListener("click",()=>document.querySelector("#modelDialog").close());
+  document.querySelector("#cancelModel").addEventListener("click",()=>document.querySelector("#modelDialog").close()); document.querySelector("#cancelModel2").addEventListener("click",()=>document.querySelector("#modelDialog").close());
   document.querySelector("#modelForm").addEventListener("submit",e=>{
     e.preventDefault();const f=e.currentTarget,fd=new FormData(f),id=f.dataset.id;
     const c={id,name:String(fd.get("name")),ticker:String(fd.get("ticker")),type:String(fd.get("type"))};
