@@ -1,6 +1,6 @@
 const YAHOO="https://query2.finance.yahoo.com/v1/finance/screener/predefined/saved";
 const PREDEFINED=["most_actives","day_gainers","day_losers","growth_technology_stocks","undervalued_growth_stocks","undervalued_large_caps","growth_large_cap","aggressive_small_caps","small_cap_gainers"];
-const EXCHANGES=["NMS","NYQ","NYS","ASE","NCM","NAS","STO","CPH","HEL","OSL","ICE","FRA","GER","STU","PAR","AMS","BRU"];
+const EXCHANGES=["NMS","NYQ","NYS","ASE","NCM","NAS","STO","CPH","HEL","OSL","ICE","FRA","GER","STU","PAR","AMS","BRU"]; // Yahoo proxies; eligibility is separately documented
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function getJson(url,opts={}){const r=await fetch(url,{...opts,headers:{"User-Agent":"Mozilla/5.0",...(opts.headers||{})}});if(!r.ok)throw new Error(r.status+" "+url);return r.json();}
 function normalize(q){return {ticker:q.symbol,name:q.longName||q.shortName||q.symbol,exchange:q.exchange||"",marketCap:q.marketCap??null,currentPrice:q.regularMarketPrice??null,dayPct:q.regularMarketChangePercent??null,sector:q.sector||"",currency:q.currency||"",source:"Yahoo Finance discovery",asOf:new Date().toISOString()};}
