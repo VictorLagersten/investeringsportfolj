@@ -41,6 +41,16 @@
       <div class="section-head"><div><p class="eyebrow">AKTIESCANNER</p><h2>Kandidater</h2><p class="card-hint">Score 0–100. Position är en indikativ modellstorlek, inte en order.</p></div></div>
       <div class="table-wrap"><table class="trade-table"><thead><tr><th>Bolag</th><th>Score</th><th>Datatäckning</th><th>Signal</th><th>Indikativ vikt</th><th></th></tr></thead><tbody id="modelRows"></tbody></table></div>
     </article>
+    <div class="model-grid decision-grid">
+      <article class="card model-card">
+        <div class="section-head"><div><p class="eyebrow">BUY ENGINE</p><h2>Köpbeslut</h2><p class="card-hint">Kandidaten måste klara score, datatäckning, riskregim och portföljpassning.</p></div></div>
+        <div class="table-wrap"><table class="trade-table"><thead><tr><th>Bolag</th><th>Score</th><th>Data</th><th>Beslut</th><th>Varför / blockerare</th></tr></thead><tbody id="buyEngineRows"></tbody></table></div>
+      </article>
+      <article class="card model-card">
+        <div class="section-head"><div><p class="eyebrow">SELL ENGINE</p><h2>Sälj / rotera</h2><p class="card-hint">Säljsignaler kräver en konkret försämring; ett vanligt prisfall räcker inte.</p></div></div>
+        <div class="table-wrap"><table class="trade-table"><thead><tr><th>Innehav</th><th>Score</th><th>Vikt</th><th>Beslut</th><th>Orsak</th></tr></thead><tbody id="sellEngineRows"></tbody></table></div>
+      </article>
+    </div>
     <div class="model-method-grid">
       <article class="card"><p class="eyebrow">KÖPMOTOR</p><h3>Vad krävs?</h3><ul class="model-list"><li>Kvalitet och tillväxt måste bära caset.</li><li>Värderingen måste ge rimlig risk/reward.</li><li>Momentum och katalysatorer används som timingstöd.</li><li>Insiderägande och balansräkning används som kvalitetsfilter.</li><li>Risk-off höjer kraven och sänker indikativ position.</li></ul></article>
       <article class="card"><p class="eyebrow">SÄLJMOTOR</p><h3>När omprövar vi?</h3><ul class="model-list"><li>Investeringscaset bryts.</li><li>Vinst-/kassaflödesbilden försämras tydligt.</li><li>Skuldsättning eller kapitalbehov ändras materiellt.</li><li>Värderingen blir oproportionerlig mot tillväxten.</li><li>Prisfall ensamt är inte en säljsignal.</li></ul></article>
