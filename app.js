@@ -40,6 +40,54 @@ function readData() {
   }
 }
 function persist() { localStorage.setItem(STORE, JSON.stringify(data)); }
+
+let marketDataState = { fetchedAt: null, source: null, ok: false };
+
+async function loadMarketData() {
+  try {
+    const response = await fetch("./data/market.json?ts=" + Date.now(), { cache: "no-store" });
+    if (!response.ok) throw new Error("market data HTTP " + response.status);
+    const payload = await response.json();
+    const quotes = payload.quotes || {};
+    let updated = false;
+    data.holdings.forEach(h => {
+      const q = quotes[h.ticker];
+      const price = Number(q?.price);
+      if (!Number.isFinite(price) || price <= 0) return;
+      h.previousPrice = h.price;
+      h.price = price;
+      if (Number.isFinite(Number(q.dayPct))) h.dayPct = Number(q.dayPct);
+      updated = true;
+    });
+    if (updated) {
+      marketDataState = { fetchedAt: payload.fetchedAt || null, source: payload.source || null, ok: true };
+      data.asOf = payload.fetchedAt || data.asOf;
+      persist();
+      render();
+    } else {
+      marketDataState = { fetchedAt: payload.fetchedAt || null, source: payload.source || null, ok: false };
+    }
+    updateMarketStatus();
+  } catch (error) {
+    marketDataState = { fetchedAt: null, source: null, ok: false, error: String(error) };
+    updateMarketStatus();
+  }
+}
+
+function updateMarketStatus() {
+  const el = document.querySelector("#asof");
+  if (!el) return;
+  if (marketDataState.ok && marketDataState.fetchedAt) {
+    const d = new Date(marketDataState.fetchedAt);
+    el.textContent = "Marknadsdata " + d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }) + " · automatisk";
+    el.title = "Senaste hämtning: " + d.toLocaleString("sv-SE") + ". " + (marketDataState.source || "");
+  } else {
+    el.textContent = "Marknadsdata väntar på uppdatering · manuell fallback";
+  }
+}
+
+loadMarketData();
+setInterval(loadMarketData, 60 * 1000);
 function today() {
   const d = new Date();
   return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
