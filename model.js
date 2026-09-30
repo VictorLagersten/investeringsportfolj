@@ -39,7 +39,7 @@ function positionPct(c){
   const s=factorScore(c); if(s==null)return 0;
   const risk=Math.max(0,Math.min(100,num(c.risk)==null?50:num(c.risk)));
   const base=Math.max(0,Math.min(1,(s-50)/50));
-  const riskAdj=.45+.55*(1-risk/100);
+  const riskAdj=.45+.55*(risk/100);
   const regimeAdj=model.regime==="risk_on"?1.05:model.regime==="risk_off"?.65:1;
   return Math.min(model.maxPositionPct,Math.max(0,base*riskAdj*regimeAdj*model.maxPositionPct));
 }
