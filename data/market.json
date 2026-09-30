@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "source": "Yahoo Finance chart endpoint",
+  "disclaimer": "Market data may be delayed. This file is for dashboard analysis and is not an execution feed.",
+  "fetchedAt": null,
+  "quotes": {}
+}
