@@ -24,3 +24,11 @@ Startvärdena är från projektets senaste stängningsrapport för 30 september 
 ## Viktigt om data
 
 Det här är en paperportfölj, inte en koppling till Avanza eller Nordnet. Webbsidan hämtar inte automatiskt livekurser och sparar inte data till GitHub eller mellan enheter. Kurser måste verifieras innan de matas in. Ingen handel genomförs här och vyn är inte finansiell rådgivning. Dagsrapporten kl. 18 körs i ChatGPT och behöver aktuell verifierbar marknadsdata.
+
+## Historik, kalender och planering
+
+- Fliken **Historik** listar registrerade köp och försäljningar. De tre ursprungliga köpen saknar affärsdatum i projektanteckningarna och visas därför som "Datum saknas". Nya affärer kan läggas till i webbläsaren.
+- Fliken **Kalender** visar datum där portföljvärden har sparats. Klicka på en markerad dag för totalvärdet och, för nya sparade värderingar, även kassa och innehav per aktie. Äldre dagar har endast registrerade totalvärden.
+- Fliken **Planering** är en lokal anteckningslista för möjliga ändringar inför tisdagens genomgång kl. 10. Planer är inte order och genomför ingen handel.
+- Fliken **Slutsats** sammanfattar registrerat resultat, fördelning, affärshistorik och nästa genomgång.
+- Historik, planer och affärer sparas lokalt i webbläsaren och delas inte mellan enheter. Dashboarden är inte kopplad till en mäklare och handlar inte automatiskt.
