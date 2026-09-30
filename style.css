@@ -5,3 +5,207 @@ dialog{border:0;border-radius:13px;padding:0;width:min(430px,calc(100% - 28px));
 
 .view-tabs{display:flex;gap:6px;align-items:center;margin:0 0 18px;border-bottom:1px solid var(--border);overflow-x:auto}.view-tab{display:flex;align-items:center;gap:7px;white-space:nowrap;border:0;border-bottom:2px solid transparent;background:transparent;padding:11px 14px;color:#758279;font:600 11px "DM Sans";cursor:pointer}.view-tab:hover{color:var(--green);background:#eef3ee}.view-tab.active{color:#355d41;border-bottom-color:#52795b}.tab-count,.tab-schedule{border-radius:12px;background:#edf2ed;padding:3px 6px;color:#75857a;font-size:8px}.tab-schedule{font-weight:500}.transaction-card,.plan-card,.calendar-card{margin-bottom:14px;min-height:370px}.history-controls{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}.history-controls label{display:flex;align-items:center;gap:8px;color:#859188;font-size:10px}.history-controls select{border:1px solid #e2e7e1;border-radius:6px;background:#fff;color:#66736a;padding:7px 9px;font:10px "DM Sans"}.history-summary{font-size:9px;color:#87938a}.trade-table th,.trade-table td{padding:12px 13px}.trade-type{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:5px 8px;font-size:9px;font-weight:700}.trade-type.buy{background:#edf5ee;color:#4d7a57}.trade-type.sell{background:#f8efed;color:#a65f56}.trade-type.hold{background:#f1f3f0;color:#748077}.empty-trades{padding:35px 8px;text-align:center;color:#89958c;font-size:11px}.trade-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-label select{border:1px solid #dfe5df;border-radius:7px;padding:10px;font:12px "DM Sans";color:var(--ink);background:white}.plan-callout{display:flex;gap:11px;align-items:center;margin:20px 0;padding:14px;border:1px solid #e8eee8;border-radius:9px;background:#f7faf7}.plan-clock{display:grid;place-items:center;width:31px;height:31px;border-radius:8px;background:#e7efe8;color:#50775a;font-size:17px}.plan-callout strong,.plan-callout small{display:block}.plan-callout strong{font-size:10px;color:#4c5c50}.plan-callout small{font-size:9px;color:#87938a;margin-top:4px}.plan-action{color:#4b7855;font-weight:700}.plan-action.sell{color:#a86157}.plan-status{font-size:9px;color:#87938a}.calendar-toolbar{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;text-align:center;margin:22px auto 14px;max-width:470px}.calendar-toolbar strong{font:700 14px Manrope;color:#3e4b42}.icon-button{border:0;background:#f0f4f0;color:#617365;width:30px;height:30px;border-radius:8px;font-size:20px;line-height:1;cursor:pointer}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;max-width:650px;margin:auto}.calendar-weekday{padding:7px 2px;text-align:center;color:#96a198;font-size:9px;font-weight:700}.calendar-day{position:relative;min-height:64px;border:1px solid #edf0ec;border-radius:8px;background:#fff;color:#78847b;padding:7px;text-align:left;font:10px "DM Sans"}.calendar-day:disabled{background:#fafbfa;color:#c1c9c2}.calendar-day.has-value{border-color:#d5e3d7;background:#f5f9f5;color:#355d41;cursor:pointer}.calendar-day.has-value:hover,.calendar-day.selected{outline:2px solid #719578;outline-offset:1px;background:#eaf2eb}.calendar-day .day-num{display:block;font-weight:700}.calendar-day .day-value{display:block;margin-top:6px;font-size:8px;color:#52795b;white-space:nowrap}.calendar-day.empty{visibility:hidden}.calendar-legend{display:flex;align-items:center;justify-content:center;gap:7px;color:#89958c;font-size:9px;margin:13px 0}.calendar-legend i{height:7px;width:7px;border-radius:50%;background:#75a580}.calendar-detail{max-width:650px;min-height:58px;margin:14px auto 0;padding:14px;border-radius:9px;background:#f6f8f6;color:#758279;font-size:10px}.calendar-detail strong{display:block;color:#3e4d42;font:700 16px Manrope;margin:4px 0}.calendar-detail small{display:block;color:#819087;margin-top:4px}.calendar-detail .detail-holdings{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.detail-holdings span{border:1px solid #e1e9e2;background:#fff;border-radius:6px;padding:6px 8px;color:#627068;font-size:9px}.conclusion-hero{padding:24px;margin-bottom:13px;background:linear-gradient(120deg,#fff,#f4f8f4)}.conclusion-hero h2{font-size:23px}.conclusion-hero>p:not(.eyebrow){max-width:760px;margin:13px 0;color:#66746a;font-size:12px;line-height:1.8}.conclusion-asof{font-size:9px;color:#919c94}.conclusion-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.conclusion-grid .card{min-height:130px}.conclusion-grid h3{font:700 13px Manrope;margin:0 0 10px;color:#3e4b42}.conclusion-grid p:not(.eyebrow){font-size:10px;line-height:1.75;color:#77847b;margin:0}.conclusion-view>.fine-print{margin-top:12px}
 @media(max-width:560px){.view-tabs{margin:0 -3px 14px}.view-tab{padding:10px 11px;font-size:10px}.calendar-day{min-height:51px;padding:5px}.calendar-day .day-value{font-size:7px;overflow:hidden;text-overflow:ellipsis}.conclusion-grid{grid-template-columns:1fr}.trade-table th,.trade-table td{padding:10px 8px}.history-controls{align-items:flex-start;gap:10px;flex-direction:column}.calendar-grid{gap:3px}}
+
+
+/* Visual refresh · 30 Sep 2026 */
+:root{
+  color-scheme:light;
+  --ink:#17283f;
+  --muted:#68788b;
+  --green:#14856f;
+  --border:#e4e9f0;
+  --panel:#ffffff;
+  --canvas:#f5f7fb;
+  --lime:#c9f36b;
+  --blue:#a9ddff;
+  --lavender:#eae5ff;
+  font-family:"DM Sans",sans-serif;
+  color:var(--ink);
+  background:var(--canvas);
+}
+body{
+  color:var(--ink);
+  background:
+    radial-gradient(ellipse at 8% 0%,#e6f6ef 0,transparent 31rem),
+    radial-gradient(ellipse at 96% 12%,#eeeaff 0,transparent 30rem),
+    var(--canvas);
+}
+.topbar{
+  height:70px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#ffffffed;
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid #e3e8f0;
+  box-shadow:0 4px 20px #283a5010;
+}
+.brand{letter-spacing:1.7px}
+.brand-mark{
+  width:34px;height:34px;border-radius:12px;
+  background:linear-gradient(140deg,#117d69,#21aa87);
+  box-shadow:0 5px 12px #16876f35;
+}
+.live-dot{background:#21b985;box-shadow:0 0 0 4px #21b98520}
+.shell{max-width:1280px;padding-top:30px}
+h1{font-size:clamp(28px,3vw,36px);letter-spacing:-1.05px}
+h2{font-size:18px;letter-spacing:-.45px}
+.eyebrow{color:#708097;letter-spacing:1.5px;font-size:9px}
+.subtle{font-size:13px}
+.button{
+  border-radius:10px;
+  background:linear-gradient(135deg,#11836d,#20a181);
+  box-shadow:0 5px 12px #14856f25;
+  padding:11px 15px;
+}
+.button:hover{background:linear-gradient(135deg,#0f705e,#17866c);transform:translateY(-1px)}
+.button.secondary{background:#eaf1f7;color:#35536c;box-shadow:none}
+.button.secondary:hover{background:#dce8f1}
+.text-button{color:#117e68}
+.hero-grid{gap:14px;margin-bottom:16px}
+.hero-card,.stat-card,.card{
+  border:1px solid #e4e9f0;
+  border-radius:17px;
+  box-shadow:0 8px 26px #273d5910,0 1px 2px #273d5908;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.card:hover,.stat-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px #273d5917,0 2px 4px #273d5909;
+  border-color:#d5e3ec;
+}
+.hero-card{
+  min-height:166px;
+  padding:21px 23px 18px;
+  border:0;
+  background:
+    radial-gradient(circle at 92% 8%,#c9f36b28 0 66px,transparent 67px),
+    radial-gradient(circle at 78% 112%,#63cdb330 0 106px,transparent 107px),
+    linear-gradient(130deg,#172d49,#21496a 64%,#166c67);
+  box-shadow:0 12px 25px #203d5b28;
+}
+.hero-top{color:#c3d7e7}
+.tag{border-radius:20px;background:#ffffff14;border-color:#ffffff35;padding:5px 9px}
+.hero-card>strong{font-size:32px;letter-spacing:-1.1px}
+.gain-chip{background:#c9f36b;color:#203b38}
+.hero-chart path{stroke:var(--lime);stroke-width:2.5}
+.stat-card{
+  min-height:166px;
+  padding:20px;
+  background:linear-gradient(145deg,#fff,#f8fbff);
+}
+.stat-card:nth-child(2){background:linear-gradient(145deg,#fff,#f0f8ff)}
+.stat-card:nth-child(3){background:linear-gradient(145deg,#fff,#eef9f4)}
+.stat-card:nth-child(4){background:linear-gradient(145deg,#fff,#f5f2ff)}
+.stat-card strong{font-size:22px}
+.stat-icon{
+  display:grid;place-items:center;
+  width:31px;height:31px;right:14px;top:14px;
+  border-radius:10px;background:#e9f3fb;color:#3381ae;font-size:15px;
+}
+.main-grid,.bottom-grid{gap:15px;margin-bottom:15px}
+.card{padding:20px}
+.section-head{gap:12px}
+.card-hint{font-size:10px;color:#8897a8;line-height:1.5}
+.view-tabs{
+  gap:5px;
+  margin:0 0 22px;
+  padding:5px;
+  border:1px solid #e7ebf1;
+  border-radius:14px;
+  background:#ffffffc9;
+  box-shadow:0 4px 12px #273d5908;
+}
+.view-tab{
+  border:0;border-radius:10px;
+  padding:11px 16px;
+  color:#64758a;
+  transition:background .15s ease,color .15s ease;
+}
+.view-tab:hover{background:#eff6f4;color:#157f6a}
+.view-tab.active{
+  background:#e7f6ef;
+  color:#08745d;
+  box-shadow:inset 0 0 0 1px #ccebdd;
+}
+.tab-count,.tab-schedule{background:#eef1fb;color:#586987}
+.performance-card,.allocation-card,.positions-card,.notes-card,.activity-card,
+.transaction-card,.plan-card,.calendar-card,.conclusion-grid .card{
+  background:#ffffffed;
+}
+.chart-summary strong{font-size:20px}
+.chart-summary span{color:#12856e}
+.chart-area svg .grid{stroke:#e7edf3;stroke-dasharray:3 6}
+.chart-area svg .line{stroke:#15977c;stroke-width:3.3}
+.chart-empty{color:#68788b;background:#ffffffde}
+.donut-wrap{padding-block:23px}
+.donut{box-shadow:0 8px 20px #263e5612}
+.donut:before{inset:14px}
+.key.equity{background:#168c72}
+.key.cash{background:#c9f36b}
+.risk-note{border-top-color:#edf1f5}
+.risk-dot{background:#f0ad4e;box-shadow:0 0 0 4px #f0ad4e22}
+.positions-card{padding-bottom:15px}
+.positions-head{margin-bottom:15px}
+thead{border-block-color:#e8edf2;background:#f8fafc}
+th{color:#708096;font-size:9px;padding:12px}
+td{color:#52647a;font-size:11px;border-bottom-color:#edf1f5;padding:13px 10px}
+.name-cell{color:#203b53}
+.ticker{border-radius:10px;background:#e7f6ef;color:#0b7d63}
+.fine-print{color:#8392a3;line-height:1.6}
+.note-date,.count-pill{background:#eef3f8;color:#61728b;border-radius:20px}
+.benchmark-row{border-top-color:#e9eef3}
+.activity-list>div{border-bottom-color:#edf1f5;padding-block:11px}
+.activity-icon{border-radius:9px;background:#e8f6ef;color:#13866e}
+.activity-list strong{color:#243f57}
+footer{color:#8392a3}
+footer .text-button{color:#13866e}
+dialog{border-radius:18px;box-shadow:0 24px 80px #17283f50}
+.form-label input,.price-row input,.form-label select,.history-controls select,.section-head select{
+  border-color:#dce4ec;border-radius:9px;
+}
+.form-label input:focus,.price-row input:focus,.form-label select:focus{
+  outline:3px solid #25a88830;border-color:#168b70;
+}
+.plan-callout{border-color:#dbeee6;border-radius:13px;background:#f2faf6}
+.plan-clock{border-radius:10px;background:#dcf3e9;color:#13866e}
+.calendar-day{border-color:#e7ecf1;border-radius:11px}
+.calendar-day.has-value{border-color:#c6e7d9;background:#eff9f4;color:#08765d}
+.calendar-day.has-value:hover,.calendar-day.selected{
+  outline:2px solid #31a888;outline-offset:1px;background:#dcf4e9;
+}
+.calendar-detail{border-radius:13px;background:#f2f7fb;color:#5f7287}
+.detail-holdings span{border-color:#dfe8ef;border-radius:9px}
+.conclusion-hero{
+  border:0;
+  background:
+    radial-gradient(circle at 95% 5%,#c9f36b62 0 85px,transparent 86px),
+    linear-gradient(115deg,#e9f7ef,#eff6ff 55%,#f2efff);
+}
+.conclusion-hero h2{font-size:27px}
+.conclusion-hero>p:not(.eyebrow){font-size:13px;color:#4e6378}
+.conclusion-grid .card{min-height:145px}
+.conclusion-grid h3{font-size:14px;color:#213c55}
+.conclusion-grid p:not(.eyebrow){font-size:11px;color:#64778b}
+.market-card{margin-bottom:15px}
+.market-card .delayed-tag{font-size:9px;color:#8a691d;background:#fff5d9;border-radius:20px;padding:7px 10px;font-weight:700;letter-spacing:.5px}
+.market-tape{overflow:hidden;border-radius:12px;background:#f8fafc;margin-top:14px;min-height:54px}
+:focus-visible{outline:3px solid #1ca18366;outline-offset:2px}
+@media(max-width:850px){
+  .shell{padding-top:25px}
+  .hero-card,.stat-card{min-height:132px}
+}
+@media(max-width:560px){
+  .topbar{height:62px}
+  .shell{padding:20px 14px 16px}
+  .view-tabs{border-radius:12px;margin-inline:-2px}
+  .view-tab{padding:10px 12px}
+  .hero-card{min-height:150px}
+  .stat-card{min-height:114px}
+  .card{border-radius:15px;padding:16px}
+  .conclusion-hero{padding:21px}
+  .calendar-day{border-radius:9px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important}
+}
