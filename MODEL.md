@@ -81,3 +81,25 @@ Detta används för att förbättra modellen, inte för att efterhandsförklara 
 
 ## Viktig begränsning
 Dashboarden använder inte automatiskt verifierad realtidsfundamental data. Saknade datapunkter ska förbli saknade. Inga köp eller försäljningar genomförs automatiskt.
+
+## Data layer v1
+Scannern använder ett explicit datafält per bolag: marknadsvärde, 3-årig omsättningstillväxt, EPS-tillväxt, ROIC, rörelsemarginal, FCF-marginal, nettoskuld/EBITDA, P/E, EV/EBIT, 6/12 månaders momentum, insiderägande, analytikertäckning, likviditet, sektor, katalysator, risknotering, källa och datum.
+
+### Två separata scores
+- **Business Score**: kvalitet, tillväxt, balansräkning och insiderägande.
+- **Investment Score**: Business Score kompletterat med värdering, momentum och risk.
+
+Detta minskar risken att ett fantastiskt bolag automatiskt blir en fantastisk investering till vilket pris som helst.
+
+### Datadisciplin
+CSV-importen kräver inga påhittade värden. Saknade fält förblir saknade och sänker datatäckningen. Varje rad bör ha källa och datum. Innan data används i ett investeringsbeslut ska den verifieras mot primärkälla eller annan tillförlitlig marknadsdata.
+
+### Portföljrisk
+Dashboarden visar toppvikt och ett enkelt koncentrationsmått (HHI) för registrerade innehav. Nästa steg är sektorkorrelation, volatilitet, beta och samlad riskbudget.
+
+### Nästa utvecklingssteg
+1. Koppla scanner-importen till en verifierad finansiell datakälla.
+2. Bygga historiskt universum med survivorship-/look-ahead-kontroll.
+3. Göra walk-forward backtest av faktorvikterna.
+4. Lägga till revisionsdata, FCF-avkastning, EV/Sales, ROIC-trend och kapitalallokering.
+5. Göra portföljoptimering utifrån korrelation och riskbudget, inte bara bolagsscore.
