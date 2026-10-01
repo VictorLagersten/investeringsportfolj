@@ -52,6 +52,29 @@ function readData() {
 }
 function persist() { localStorage.setItem(STORE, JSON.stringify(data)); }
 
+let sharedJournal=null;
+async function syncSharedJournal(){
+  try{
+    const response=await fetch("./data/portfolio-journal.json?ts="+Date.now(),{cache:"no-store"});
+    if(!response.ok)return;
+    const journal=await response.json(); sharedJournal=journal;
+    const portfolio=journal.portfolio||{};
+    if(Number.isFinite(Number(portfolio.cash)))data.cash=Number(portfolio.cash);
+    for(const item of portfolio.holdings||[]){
+      const h=data.holdings.find(x=>x.ticker===item.ticker);
+      if(h){h.quantity=Number(item.quantity);h.cost=Number(item.cost);}
+    }
+    for(const t of journal.transactions||[]){
+      const exists=data.transactions.some(x=>x.id===t.id||(x.type===t.type&&x.ticker===t.ticker&&Number(x.quantity)===Number(t.quantity)&&Number(x.price)===Number(t.price)&&(x.date||null)===(t.date||null)));
+      if(!exists)data.transactions.push({...t});
+    }
+    const note=document.querySelector("#chatAnalysis");
+    const latest=(journal.research||[]).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""))[0];
+    if(note&&latest)note.textContent=(latest.date?latest.date+" · ":"")+latest.summary;
+    persist();render();
+  }catch(error){console.warn("Gemensam journal kunde inte hämtas",error)}
+}
+
 let marketDataState = { fetchedAt: null, source: null, ok: false };
 
 async function loadMarketData() {
@@ -185,6 +208,12 @@ function renderTransactions() {
   document.querySelector("#tradeEmpty").hidden=rows.length>0;
   document.querySelector("#historySummary").textContent=data.transactions.length+" registrerade affärer";
   document.querySelector("#tradeCount").textContent=String(data.transactions.length);
+  const recentEl=document.querySelector(".activity-card .activity-list");
+  const countEl=document.querySelector(".activity-card .count-pill");
+  if(countEl)countEl.textContent=data.transactions.length+" affärer";
+  const recent=[...data.transactions].sort((a,b)=>(a.date||"").localeCompare(b.date||"")).slice(-3).reverse();
+  const safe=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
+  if(recentEl)recentEl.innerHTML=recent.map(t=>"<div><span class=\\"activity-icon\\">↗</span><div><strong>"+safe(t.name)+"</strong><small>"+Number(t.quantity).toLocaleString("sv-SE")+" aktier · köp "+precise.format(t.price)+(t.commission?" · courtage "+money.format(t.commission):"")+(t.date?" · "+dateLabel(t.date):" · datum saknas")+"</small></div><span class=\\"activity-date\\">Köp</span></div>").join("");
 }
 function renderPlans() {
   const plans=[...data.plans].sort((a,b)=>a.date.localeCompare(b.date));
@@ -332,4 +361,5 @@ document.querySelector("#planForm").addEventListener("submit",event=>{
 });
 document.querySelector("#calendarPrev").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()-1);renderCalendar();});
 document.querySelector("#calendarNext").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()+1);renderCalendar();});
+syncSharedJournal();
 render();
