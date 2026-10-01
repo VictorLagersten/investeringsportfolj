@@ -182,7 +182,7 @@ function buyDecision(c){
    estimatedTradeCost:friction.cost,expectedReturn:expectedReturn(c),conviction:conviction(c),horizonShort:horizonScore(c,"short"),horizonMedium:horizonScore(c,"medium"),horizonLong:horizonScore(c,"long"),fit:fit.score};
 }
 function sellDecision(h){
- const c=model.candidates.find(x=>x.ticker===h.ticker),p=portfolioContext(),current=p.weights.find(x=>x.ticker===h.ticker)?.weight??0;
+ const c=allCandidates().find(x=>x.ticker===h.ticker),p=portfolioContext(),current=p.weights.find(x=>x.ticker===h.ticker)?.weight??0;
  if(!c)return{status:"OMPRÖVA",ticker:h.ticker,name:h.name,weight:current,score:null,targetPct:null,reasons:["Ingen verifierad profil"],blockers:["Fundamental data saknas"]};
  const s=factorScore(c),conf=confidence(c),target=positionPct(c),reasons=[];
  if(s<58)reasons.push("Score under 58");
@@ -213,7 +213,7 @@ function renderLearning(){
  el.innerHTML="<strong>"+j.length+" utvärderbara beslut · "+sharedResearch.length+" publicerade chattanalyser</strong><span>"+(scored.length?scored.length+" med utfall · träffbild "+hit.toFixed(0)+"%":"Ingen träffbild ännu; utfall saknas och ska inte hittas på.")+"</span>";
 }
 function renderModel(){
- const total=typeof valueNow==="function"?valueNow():0,candidates=[...model.candidates].sort((a,b)=>(opportunityScore(b)??-1)-(opportunityScore(a)??-1));
+ const total=typeof valueNow==="function"?valueNow():0,candidates=allCandidates().sort((a,b)=>(opportunityScore(b)??-1)-(opportunityScore(a)??-1));
  renderDecisionEngine();renderLearning();
  const rows=document.querySelector("#modelRows");if(!rows)return;
  rows.innerHTML=candidates.length?candidates.map(c=>{const s=factorScore(c),conf=confidence(c),pos=positionPct(c),cv=conviction(c),er=expectedReturn(c);
@@ -234,7 +234,7 @@ function openCandidate(existing){
  const d=document.querySelector("#modelDialog"),f=document.querySelector("#modelForm");if(!d||!f)return;
  f.dataset.id=c.id;
  ["name","ticker","type"].forEach(k=>{if(f.elements[k])f.elements[k].value=c[k]??""});
- FACTORS.forEach(([k,label])=>{if(f.elements[k]){f.elements[k].value=c[k]??"";f.querySelector("[name='"+k+"']").previousElementSibling.textContent=label+" (0–100)"}}});
+ FACTORS.forEach(([k,label])=>{if(f.elements[k]){f.elements[k].value=c[k]??"";f.querySelector("[name='"+k+"']").previousElementSibling.textContent=label+" (0–100)"}});
  ["shortExpectedReturn","mediumExpectedReturn","longExpectedReturn","downsidePct","dataQuality"].forEach(k=>{if(f.elements[k])f.elements[k].value=c[k]??""});
  if(f.elements.thesis)f.elements.thesis.value=c.thesis||"";
  if(f.elements.invalidation)f.elements.invalidation.value=c.invalidation||"";
