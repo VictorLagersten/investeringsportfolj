@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-10-01T03:40:20.641Z",
+  "universeCount": 0,
+  "quotedCount": 0,
+  "freshDiscoveryCount": 0,
+  "quoteCoverage": 0,
+  "freshCoverage": 0,
+  "limitations": [
+    "Discovery is not fundamental verification",
+    "Point-in-time fundamentals are not yet populated",
+    "Handelsbanken venue mapping requires explicit validation"
+  ]
+}
