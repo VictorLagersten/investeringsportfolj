@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "updatedAt": "2026-10-01T10:40:00+02:00",
+  "portfolio": {
+    "startCapital": 50000,
+    "cash": 174.84,
+    "asOf": "2026-10-01",
+    "holdings": [
+      {
+        "ticker": "SAND",
+        "quantity": 40,
+        "cost": 374.1
+      },
+      {
+        "ticker": "NIBE B",
+        "quantity": 328,
+        "cost": 45.7
+      },
+      {
+        "ticker": "BONEX",
+        "quantity": 87,
+        "cost": 228.0068965517
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "id": "paper-initial-sandvik",
+      "type": "buy",
+      "name": "Sandvik",
+      "ticker": "SAND",
+      "quantity": 40,
+      "price": 374.1,
+      "date": null,
+      "commission": null
+    },
+    {
+      "id": "paper-initial-nibe",
+      "type": "buy",
+      "name": "NIBE Industrier B",
+      "ticker": "NIBE B",
+      "quantity": 328,
+      "price": 45.7,
+      "date": null,
+      "commission": null
+    },
+    {
+      "id": "paper-initial-bonex",
+      "type": "buy",
+      "name": "BONESUPPORT",
+      "ticker": "BONEX",
+      "quantity": 44,
+      "price": 227.2,
+      "date": null,
+      "commission": null
+    },
+    {
+      "id": "paper-2026-10-01-bonex-43",
+      "type": "buy",
+      "name": "BONESUPPORT",
+      "ticker": "BONEX",
+      "quantity": 43,
+      "price": 228.6,
+      "commission": 9,
+      "date": "2026-10-01",
+      "note": "Engångsavvikelse från tisdagstestet; paperhandel. Ordervärde 9 829,80 kr, courtage 9 kr."
+    }
+  ],
+  "research": [
+    {
+      "id": "chat-sync-2026-10-01-data-audit",
+      "date": "2026-10-01",
+      "title": "Datakvalitet och beslutsstatus",
+      "summary": "Universumsskanningen hittade 964 bolag, men 0 av 964 når dashboardens gräns på 55 % datatäckning. Upptäckt är inte en verifierad investeringsanalys. Därför finns ännu inga datastödda kandidater eller köpbeslut; saknade fundamenta ska inte omvandlas till score. Säljmotorn flaggar innehav utan verifierad profil för omprövning, inte automatisk försäljning. Marknadspriser uppdateras separat och är fördröjda."
+    }
+  ],
+  "candidates": []
+}
