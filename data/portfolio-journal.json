@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-01T10:40:00+02:00",
+  "updatedAt": "2026-10-01T13:13:00+02:00",
   "portfolio": {
     "startCapital": 50000,
     "cash": 174.84,
@@ -72,6 +72,17 @@
       "date": "2026-10-01",
       "title": "Datakvalitet och beslutsstatus",
       "summary": "Universumsskanningen hittade 964 bolag, men 0 av 964 når dashboardens gräns på 55 % datatäckning. Upptäckt är inte en verifierad investeringsanalys. Därför finns ännu inga datastödda kandidater eller köpbeslut; saknade fundamenta ska inte omvandlas till score. Säljmotorn flaggar innehav utan verifierad profil för omprövning, inte automatisk försäljning. Marknadspriser uppdateras separat och är fördröjda."
+    },
+    {
+      "id": "pretrade-2026-10-02",
+      "date": "2026-10-01",
+      "title": "Preliminär plan inför fredag 2 oktober kl. 10",
+      "summary": "Preliminär bedömning före fredagens schemalagda handel: ingen försäljning eller nytt köp är i nuläget underbyggt av publicerade verifierade kandidater. Behåll Sandvik 40, NIBE B 328 och BONESUPPORT 87 tills morgondagens pris-, nyhets- och riskkontroll. Ingen köporder utan en datastödd kandidat; kassan enligt journalen är cirka 175 kr. BONESUPPORT väger cirka 40,5 % och ska få särskild koncentrations- och värderingskontroll, men prisfall ensamt utlöser inte försäljning. Sandvik är i tyst period inför Q3-rapport 22 oktober; BONESUPPORT Q3-rapport är 22 oktober och NIBE Q3-rapport 23 november enligt respektive bolagskalender. Beslut låses först efter fredagens verifiering. Detta är paperhandel.",
+      "sources": [
+        "https://www.home.sandvik/en/investors/calendar/",
+        "https://www.bonesupport.com/en/financial-calendar",
+        "https://www.nibegroup.com/investors/calendar-2025-2026"
+      ]
     }
   ],
   "candidates": []
