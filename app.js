@@ -213,7 +213,7 @@ function renderTransactions() {
   if(countEl)countEl.textContent=data.transactions.length+" affärer";
   const recent=[...data.transactions].sort((a,b)=>(a.date||"").localeCompare(b.date||"")).slice(-3).reverse();
   const safe=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
-  if(recentEl)recentEl.innerHTML=recent.map(t=>"<div><span class=\\"activity-icon\\">↗</span><div><strong>"+safe(t.name)+"</strong><small>"+Number(t.quantity).toLocaleString("sv-SE")+" aktier · köp "+precise.format(t.price)+(t.commission?" · courtage "+money.format(t.commission):"")+(t.date?" · "+dateLabel(t.date):" · datum saknas")+"</small></div><span class=\\"activity-date\\">Köp</span></div>").join("");
+  if(recentEl)recentEl.innerHTML=recent.map(t=>"<div><span class=\"activity-icon\">↗</span><div><strong>"+safe(t.name)+"</strong><small>"+Number(t.quantity).toLocaleString("sv-SE")+" aktier · köp "+precise.format(t.price)+(t.commission?" · courtage "+money.format(t.commission):"")+(t.date?" · "+dateLabel(t.date):" · datum saknas")+"</small></div><span class=\"activity-date\">Köp</span></div>").join("");
 }
 function renderPlans() {
   const plans=[...data.plans].sort((a,b)=>a.date.localeCompare(b.date));
