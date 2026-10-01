@@ -23,8 +23,19 @@ const INITIAL = {
 };
 const money = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", maximumFractionDigits: 0 });
 const precise = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-let data = readData();
+const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });let data = readData();
+const SYNCED_TRADE = { id: "paper-2026-10-01-bonex-43", type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 43, price: 228.60, commission: 9, date: "2026-10-01", note: "Engångsavvikelse från tisdagstestet; paperhandel journalförd i chatten." };
+if (!data.transactions.some(t => t.id === SYNCED_TRADE.id || (t.type === "buy" && t.ticker === "BONEX" && Number(t.quantity) === 43 && Number(t.price) === 228.60 && t.date === "2026-10-01"))) {
+  const bonex = data.holdings.find(h => h.ticker === "BONEX");
+  const debit = SYNCED_TRADE.quantity * SYNCED_TRADE.price + SYNCED_TRADE.commission;
+  if (bonex && Number(data.cash) >= debit) {
+    bonex.cost = (bonex.quantity * bonex.cost + debit) / (bonex.quantity + SYNCED_TRADE.quantity);
+    bonex.quantity += SYNCED_TRADE.quantity;
+    data.cash = Number((data.cash - debit).toFixed(2));
+    data.transactions.push(SYNCED_TRADE);
+    persist();
+  }
+}
 let selectedCalendarDate = [...data.history].sort((a,b)=>a.date.localeCompare(b.date)).at(-1)?.date ?? today();
 let calendarMonth = new Date(selectedCalendarDate + "T12:00:00");
 const positions = document.querySelector("#positions");
