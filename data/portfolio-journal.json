@@ -141,6 +141,51 @@
     "minimumConfidenceForDecision": 75,
     "rotationRule": "Compare holdings with eligible candidates only when both have at least 75% confidence; a score gap of 10 points triggers review, never an automatic trade.",
     "scoreChangeDetector": "Compare latest score per ticker with prior saved score in local browser storage; first observation is baseline.",
-    "dataStatus": "No published candidate currently has enough verified factor data for an Investment Engine Score; do not infer or fabricate scores."
+    "dataStatus": "0 fully scoreable candidates; 6 existing research leads shown without scores pending the missing factor evidence.",
+    "researchQueueUpdatedAt": "2026-10-02",
+    "researchQueue": [
+      {
+        "name": "Saab",
+        "ticker": "SAAB B",
+        "evidence": "Researchnoteringen 2 okt: GlobalEye i Nederländerna är en avsiktsförklaring, inte en order; Kanada-spåret är ett icke-bindande term sheet.",
+        "next": "Verifiera bindande orderläge, orderstock, marginal, värdering, balansräkning och insiderdata.",
+        "source": "https://www.saab.com/newsroom/press-releases"
+      },
+      {
+        "name": "SEB",
+        "ticker": "SEB A",
+        "evidence": "Researchnoteringen 2 okt: återköpsprogram pågår till senast 20 okt.",
+        "next": "Hämta senaste rapportdata och verifiera kapitalrelationer, kreditförluster, värdering, insiderdata och momentum.",
+        "source": "https://sebgroup.com/press/press-releases/2026/seb-completes-latest-share-buyback-programme-and-initiates-new-programme2"
+      },
+      {
+        "name": "C-RAD",
+        "ticker": "CRAD B",
+        "evidence": "Q2-notering: omsättning +16%, EBIT 38 Mkr (23% marginal), orderingång −15%; transformationsarbete och långa säljcykler noterade.",
+        "next": "Följ orderingång och marginaltrend; komplettera värdering, kassaflöde, balansräkning, insiderdata och momentum.",
+        "source": "https://c-rad.com/press-releases/c-rads-interim-report-q226/"
+      },
+      {
+        "name": "MSAB",
+        "ticker": "MSAB B",
+        "evidence": "Q2/H1-notering: Q2-försäljning +52%, Q2 EBIT +12,6 Mkr; H1-marginal 2,3%. Upphandlingstidpunkt anges som risk.",
+        "next": "Verifiera helårsmarginal, kassakonvertering, orderpipeline, likviditet/skuld, värdering och insiderdata.",
+        "source": "https://view.news.eu.nasdaq.com/view?id=b0806a09a16b15b5df4ca36348a0f7b25&lang=en&src=micro"
+      },
+      {
+        "name": "Softronic",
+        "ticker": "SOF B",
+        "evidence": "Q2-notering: omsättning +11,9%, EBITA-marginal 9,9%, återkommande intäkter 44,3%, operativt kassaflöde 27,6 Mkr.",
+        "next": "Kontrollera trend mot tidigare kvartal, värdering, balansräkning, insiderdata och kursmomentum.",
+        "source": "https://news.cision.com/se/softronic-ab/r/delarsrapport-for-perioden--1-januari---30-juni-2026,c4375389"
+      },
+      {
+        "name": "Image Systems",
+        "ticker": "IS",
+        "evidence": "H1-notering: omsättning 47,7 Mkr mot 88,5 Mkr; EBITDA −7,9 Mkr; soliditet 44%. Finansieringsbehov/nyemission anges som risk.",
+        "next": "Verifiera finansieringsstatus, likviditet och skuld, återhämtning i orderingång, värdering och insiderdata.",
+        "source": "https://www.imagesystemsgroup.se/media-press/press-releases/lower-net-sales-in-a-quarter-characterized-by-challenging-market-conditions"
+      }
+    ]
   }
 }

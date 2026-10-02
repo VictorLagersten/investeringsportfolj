@@ -219,3 +219,8 @@ The current dashboard score uses ten factors on a 0–100 scale. Its canonical w
 Weights sum to 100%. A missing factor contributes a neutral 50 to the weighted calculation and never a positive score. A total Investment Engine Score is shown only after at least four of ten factor fields are present. Decision confidence remains a separate gate: below 75%, no buy or sell decision is produced. The interface shows the factor contributions and data coverage alongside the score.
 
 The change detector stores the prior score per ticker in that browser's local storage; its first observation is a baseline. Rotation review compares a current holding only with the best eligible candidate when both have at least 75% confidence. A gap of 10 points raises a review prompt, not an automatic trade. If verified candidate data is absent, the dashboard leaves scores and score gaps blank.
+
+
+
+### Oscoread researchkö
+The 2026-10-02 analysis also records six research leads (Saab, SEB, C-RAD, MSAB, Softronic and Image Systems). The dashboard displays the evidence already noted, a follow-up checklist and source link for each. These are explicitly unscored research leads, not eligible candidates or recommendations. They enter the scored candidate table only after adequate factor evidence is verified.

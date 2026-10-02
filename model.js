@@ -36,6 +36,7 @@ let model=readModel();
 let sharedResearch=[];
 let sharedCandidates=[];
 let sharedEngine=null;
+let sharedResearchQueue=[];
 function allCandidates(){
  const local=[...(model.candidates||[])], tickers=new Set(local.map(x=>x.ticker).filter(Boolean));
  return [...local,...sharedCandidates.filter(x=>!tickers.has(x.ticker)&&!local.some(y=>y.id===x.id))];
@@ -44,7 +45,7 @@ async function syncSharedJournal(){
  try{
   const r=await fetch("./data/portfolio-journal.json?ts="+Date.now(),{cache:"no-store"});
   if(!r.ok)return;
-  const j=await r.json();sharedResearch=Array.isArray(j.research)?j.research:[];sharedCandidates=Array.isArray(j.candidates)?j.candidates:[];sharedEngine=j.investmentEngine||null;
+  const j=await r.json();sharedResearch=Array.isArray(j.research)?j.research:[];sharedCandidates=Array.isArray(j.candidates)?j.candidates:[];sharedEngine=j.investmentEngine||null;sharedResearchQueue=Array.isArray(sharedEngine?.researchQueue)?sharedEngine.researchQueue:[];
   if(sharedEngine?.weights){model.version=sharedEngine.version||model.version;model.weights={...DEFAULT_MODEL.weights,...sharedEngine.weights};saveModel()}
   renderModel();renderJournal();renderLearning();
  }catch(error){console.warn("Gemensam analysjournal kunde inte hämtas",error)}
@@ -222,6 +223,13 @@ function renderLearning(){
  const hit=scored.length?scored.filter(x=>Math.sign(Number(x.actualReturn))===Math.sign(Number(x.expectedReturn))).length/scored.length*100:null;
  el.innerHTML="<strong>"+j.length+" utvärderbara beslut · "+sharedResearch.length+" publicerade chattanalyser</strong><span>"+(scored.length?scored.length+" med utfall · träffbild "+hit.toFixed(0)+"%":"Ingen träffbild ännu; utfall saknas och ska inte hittas på.")+"</span>";
 }
+function safeSource(url){try{const u=new URL(String(url||""));return u.protocol==="https:"?u.href:null}catch{return null}}
+function renderResearchQueue(){
+ const rows=document.querySelector("#researchQueueRows");if(!rows)return;
+ const date=document.querySelector("#researchQueueDate"),count=document.querySelector("#researchQueueCount");
+ if(date)date.textContent=sharedEngine?.researchQueueUpdatedAt||"–";if(count)count.textContent=sharedResearchQueue.length+" spår";
+ rows.innerHTML=sharedResearchQueue.length?sharedResearchQueue.map(x=>{const src=safeSource(x.source);return "<tr><td><strong>"+esc(x.name)+"</strong><small>"+esc(x.ticker||"")+" · researchspår</small></td><td>"+esc(x.evidence)+"</td><td>"+esc(x.next)+"</td><td><span class='decision mid'>Ej beräknad</span></td><td>"+(src?"<a class='research-source' href='"+esc(src)+"' target='_blank' rel='noopener noreferrer'>Öppna källa ↗</a>":"Källa saknas")+"</td></tr>"}).join(""):"<tr><td colspan='5' class='model-empty'>Inga researchspår publicerade.</td></tr>";
+}
 function renderFactorWeights(){
  const el=document.querySelector("#factorWeights");if(!el)return;
  const w=model.weights||DEFAULT_MODEL.weights;
@@ -249,16 +257,16 @@ function renderRotation(candidates){
 }
 function renderModel(){
  const total=typeof valueNow==="function"?valueNow():0,candidates=allCandidates().sort((a,b)=>(opportunityScore(b)??-1)-(opportunityScore(a)??-1));
- renderDecisionEngine();renderLearning();renderFactorWeights();
+ renderDecisionEngine();renderLearning();renderFactorWeights();renderResearchQueue();
  const rows=document.querySelector("#modelRows");if(!rows)return;
  rows.innerHTML=candidates.length?candidates.map(c=>{const s=factorScore(c),conf=confidence(c),pos=positionPct(c),cv=conviction(c),er=expectedReturn(c);
- return "<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+" · "+esc(c.horizon||"adaptiv")+"</small></td><td><b class='model-score "+(s>=72?"good":s>=62?"mid":"")+"'>"+(s==null?"–":s.toFixed(0))+"</b></td><td>"+conf+"%</td><td>"+(cv==null?"–":cv.toFixed(0))+"</td><td>"+(er==null?"–":(er>=0?"+":"")+er.toFixed(1)+"%")+"</td><td>"+(pos==null?"–":pos.toFixed(1)+"%")+"</td><td><button class='text-button model-edit' data-id='"+esc(c.id)+"'>Redigera</button></td></tr>" }).join(""):"<tr><td colspan='7' class='model-empty'>Inga kandidater är publicerade med tillräckligt verifierade datapunkter. Scores lämnas tomma tills underlag finns.</td></tr>";
+ return "<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+" · "+esc(c.horizon||"adaptiv")+"</small></td><td><b class='model-score "+(s>=72?"good":s>=62?"mid":"")+"'>"+(s==null?"–":s.toFixed(0))+"</b></td><td>"+conf+"%</td><td>"+(cv==null?"–":cv.toFixed(0))+"</td><td>"+(er==null?"–":(er>=0?"+":"")+er.toFixed(1)+"%")+"</td><td>"+(pos==null?"–":pos.toFixed(1)+"%")+"</td><td><button class='text-button model-edit' data-id='"+esc(c.id)+"'>Redigera</button></td></tr>" }).join(""):"<tr><td colspan='7' class='model-empty'>Inga scorebara kandidater ännu. Se researchkön nedan; dessa spår saknar ännu tillräckliga faktordata.</td></tr>";
  document.querySelector("#modelRegime").value=model.regime;
  document.querySelector("#modelRegimeText").textContent=model.regime==="risk_on"?"Risk-on · större utrymme för growth/momentum":"Risk-off"===model.regime?"Risk-off · högre beviskrav och mindre positioner":"Neutral · adaptiv viktning över tre tidshorisonter";
  const scored=candidates.filter(c=>factorScore(c)!=null);
  renderFactorDetail(scored[0]||null);renderScoreChanges(candidates);renderRotation(candidates);
  document.querySelector("#modelTop").textContent=scored.length?scored[0].name+" · conviction "+conviction(scored[0]).toFixed(0):"Ingen kandidat är tillräckligt datastödd";
- document.querySelector("#modelCoverage").textContent=scored.length+" av "+candidates.length+" kandidater når miniminivån (minst 4/10 faktorer).";
+ document.querySelector("#modelCoverage").textContent=scored.length+" scorebara kandidater · "+sharedResearchQueue.length+" researchspår utan score.";
  const alerts=[];const risk=portfolioRiskBudget();
  if(risk.topWeight>.30)alerts.push("Toppvikt över 30%: koncentrationsrisk.");
  if(risk.maxSector>.45)alerts.push("En sektor över 45% av portföljen.");
@@ -320,4 +328,5 @@ function initResearchTools(){
 }
 document.addEventListener("DOMContentLoaded",()=>{addModelListeners();renderModel();initResearchTools();syncSharedJournal()});
 window.InvesternModel={render:renderModel,read:()=>model,save:saveModel,buyDecision,sellDecision,opportunityScore,conviction,expectedReturn};
+
 

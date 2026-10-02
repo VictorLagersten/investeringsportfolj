@@ -40,3 +40,7 @@ Det här är en paperportfölj, inte en koppling till Avanza eller Nordnet. Webb
 Fliken **Investeringsmotor** visar nu modellens tio faktorvikter, faktorernas bidrag till Investment Engine Score, scoreförändringar över tid och en jämförelse mellan befintliga innehav och verifierade kandidater. Okända faktorer räknas neutralt (50/100), men sänker datatäckningen. Minst fyra faktorer krävs för score och minst 75% dataconfidence för beslut. Scorehistoriken sparas i den aktuella webbläsaren.
 
 Inga kandidatpoäng publiceras utan tillräckliga verifierade datapunkter. Paperportföljens innehav och handelsjournal ligger kvar i `data/portfolio-journal.json`.
+
+
+
+Under poängsatta kandidater visas nu även en researchkö med sex befintliga bevakningsspår, senaste noterade datapunkt, vad som behöver verifieras härnäst och länk till källa. Researchspåren saknar medvetet score tills faktaunderlaget räcker.

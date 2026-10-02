@@ -235,3 +235,17 @@ dialog{border-radius:18px;box-shadow:0 24px 80px #17283f50}
 .rotation-card{overflow:hidden}
 @media(max-width:800px){.factor-weight-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.factor-weight-grid{gap:10px}.rotation-card .table-wrap{margin-inline:-6px}}
+
+
+/* Research queue */
+.research-queue-card table{table-layout:fixed;min-width:980px}
+.research-queue-card th:nth-child(1){width:12%}
+.research-queue-card th:nth-child(2){width:31%}
+.research-queue-card th:nth-child(3){width:31%}
+.research-queue-card th:nth-child(4){width:12%}
+.research-queue-card th:nth-child(5){width:14%}
+.research-queue-card td:nth-child(2),.research-queue-card td:nth-child(3){white-space:normal;line-height:1.55;vertical-align:top}
+.research-queue-card td strong{display:block;color:#243f57}
+.research-queue-card td small{display:block;color:#8492a1;font-size:9px;margin-top:4px}
+.research-source{color:#117e68;font-size:10px;font-weight:700;text-decoration:none}
+.research-source:hover{text-decoration:underline}
