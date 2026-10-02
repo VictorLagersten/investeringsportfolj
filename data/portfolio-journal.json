@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-01T13:20:00+02:00",
+  "updatedAt": "2026-10-02T14:50:00+02:00",
   "portfolio": {
     "startCapital": 50000,
     "cash": 174.84,
@@ -82,6 +82,31 @@
         "https://www.home.sandvik/en/investors/calendar/",
         "https://www.bonesupport.com/en/financial-calendar",
         "https://www.nibegroup.com/investors/calendar-2025-2026"
+      ]
+    },
+    {
+      "id": "daily-close-review-2026-10-01",
+      "date": "2026-10-02",
+      "title": "Stängningsrapport 1 okt och plan inför 6 okt",
+      "summary": "Verifierad rapport, 2 okt 14:47 CEST. Stängning 1 okt: SAND 358,50 kr (-4,60%, ca 2,50m aktier), NIBE B 44,71 kr (-1,02%, 6,21m), BONEX 226,00 kr (-0,70%, 705 860). OMXS30 enligt Nasdaq 3 249,03 (-0,61% från 3 268,98). Portföljens stängningsvärde 48 841,72 kr inkl 174,84 kr kassa; dagsförändring -982,08 kr/-1,97%; från start -2,32%; ca 1,36 procentenheter sämre än OMXS30 den dagen. Vikter SAND 29,4%, NIBE 30,0%, BONEX 40,3%, kassa 0,36%. Separat intradag 2 okt 14:47 CEST (fördröjd Yahoo): SAND 362,40, NIBE 44,81, BONEX 225,00, indikativt värde 48 943,52 kr. Ska ej blandas med gårdagens stängning. Datavarning: Yahoo-index ^OMX i dashboardens marknadsfil visar föregående 3 226,5852, i konflikt med Nasdaq OMX OMXS30 3 249,03; använd Nasdaq för officiell benchmark och rätta inte historiken tyst. Innehav: SAND 40 BEHÅLL — tes: Q2 rekordstark orderingång +17%, organisk tillväxt 17%, justerad EBITA-marginal 22,6%; invalidation: order/marginal/cash flow försämras varaktigt eller rapporten bryter tesen. NIBE B 328 BEHÅLL/OMPRÖVA — Q2 sales +7,6%, rörelsemarginal 11,4% mot 9,4%, men tullpåverkan och försiktiga hushåll, kanadensiska tullar och NIBE Stoves pressar outlook; invalidation: marginalåterhämtning stannar av, kassaflöde/skuld försämras. BONEX 87 OMPRÖVA koncentration, ej automatisk sälj — Q2 sales +25% (+30% valutajusterat), rörelseresultat 89,6m mot 54,9m; 40,3% portföljvikt och FI rapporterar offentlig nettokortposition 1,51% per 29 sep (JPMorgan); invalidation: sämre försäljningsmomentum, marginal/kassaflöde, produkt/regulatorisk risk. Kandidat-/researchprioritet utan score: Saab (GlobalEye i NL endast avsiktsförklaring, ännu ingen order; Kanada icke-bindande term sheet); SEB (återköpsprogram till senast 20 okt); C-RAD (Q2 omsättning +16%, EBIT 38m/23% marginal, orderingång -15%; transformation och långa säljcykler); MSAB (Q2 sales +52%, Q2 EBIT vände till +12,6m, H1 marginal bara 2,3%, procurement timing risk); Softronic (Q2 sales +11,9%, EBITA-marginal 9,9%, återkommande intäkterandel 44,3%, operativt kassaflöde 27,6m); Image Systems (H1 sales 47,7m mot 88,5m, EBITDA -7,9m, soliditet 44%, kapitalbehov/rights issue risk). 964 bolag upptäckta i scanner, 0 når 55% verifierad datatäckning; kandidater=[], inga score eller köpordrar. Reddit/Avanza-sökning: inga färska, tydligt relevanta publika inlägg verifierade; Avanza Forum-indexering ofullständig, sentiment bedöms ej. Publika portföljer/förvaltarrapporter saknar tillräckligt färsk och jämförbar data för kopieringssignal; äldre innehav är ej handelsorder. Makro: Riksbanken 24 sep lämnade räntan 1,75% men höjde prognosbanan, stigande inflation från energi/försvagad krona riskerar värderingsmultiplar. Nästa handelsfönster tisdag 6 okt 10:00; preliminärt BEHÅLL alla, särskild review BONEX-vikt och sök/validera nya kandidater först. Prislista Handelsbanken app/internetbank: svenska/nordiska 0,09%, min 9 kr/order; ingen FX eller lokala avgifter för svenska aktier. Senaste BONEX köpavgift 9 kr. Äldre courtage saknas i transaktionslogg; beräknad enligt samma tariff blir SAND 13,47, NIBE 13,49, urspr BONEX 9,00 men historiska avräkningsnotor ej verifierade. Om paper-ISK är enda samlade ISK/KF/PEPP-underlaget under 300 000 kr, 2026 års grundnivå är skattefri; faktisk kundskatt okänd. Ingen affär denna körning. Lärandelogg: ännu 0 utvärderbara beslut. Alla aktiekurser fördröjda; closes från Yahoo chart file cross-checkade med publicerade historiktabeller; index från Nasdaq.",
+      "sources": [
+        "https://www.investing.com/equities/sandvik-historical-data",
+        "https://stockanalysis.com/quote/sto/NIBE.B/history/",
+        "https://www.investing.com/equities/bonesupport-holding-ab-historical-data",
+        "https://indexes.nasdaqomx.com/index/history/omxs30",
+        "https://www.home.sandvik/en/news-and-media/news/2026/07/interim-report-second-quarter-2026/",
+        "https://www.nibegroup.com/news/nibe-industrier-ab-publ-interim-report-2-2026",
+        "https://investor.bonesupport.com/en/investors/press-releases/bonesupport-holding-ab-publ-publishes-q2-2026-interim-report",
+        "https://www.fi.se/en/our-registers/net-short-positions/emittent?id=549300COLY053IGTLD63",
+        "https://www.saab.com/newsroom/press-releases",
+        "https://sebgroup.com/press/press-releases/2026/seb-completes-latest-share-buyback-programme-and-initiates-new-programme2",
+        "https://c-rad.com/press-releases/c-rads-interim-report-q226/",
+        "https://view.news.eu.nasdaq.com/view?id=b0806a09a16b15b5df4ca36348a0f7b25&lang=en&src=micro",
+        "https://news.cision.com/se/softronic-ab/r/delarsrapport-for-perioden--1-januari---30-juni-2026,c4375389",
+        "https://www.imagesystemsgroup.se/media-press/press-releases/lower-net-sales-in-a-quarter-characterized-by-challenging-market-conditions",
+        "https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-oforandrad-pa-175-procent6/",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
       ]
     }
   ],
