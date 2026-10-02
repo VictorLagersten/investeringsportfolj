@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-02T14:50:00+02:00",
+  "updatedAt": "2026-10-02T15:01:00+02:00",
   "portfolio": {
     "startCapital": 50000,
     "cash": 174.84,
@@ -107,6 +107,16 @@
         "https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-oforandrad-pa-175-procent6/",
         "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
         "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
+      ]
+    },
+    {
+      "id": "missed-friday-window-2026-10-02",
+      "date": "2026-10-02",
+      "title": "Handelsfönster 2 okt kl. 10 missat – ingen affär",
+      "summary": "Automationskörningen anlände 2 oktober kl. 15:01 CEST, efter det låsta fredagsfönstret kl. 10:00. Därför fattades inget köp-/säljbeslut vid fönstret och ingen order simulerades retroaktivt. Innehav/kassa lämnas oförändrade enligt journalen: SAND 40, NIBE B 328, BONEX 87, kassa 174,84 kr. Fördröjd Yahoo-intradagsdata från kl. 14:47 (SAND 362,40, NIBE 44,81, BONEX 225,00) är senare än beslutsfönstret och används inte som öppningskurs eller exekveringspris. Nästa ordinarie fönster tisdag 6 oktober kl. 10:00; där ska kurser och nyheter verifieras vid tidpunkten. Ingen courtagekostnad denna körning. Skäl till ingen affär: handelsfönstret passerat, inte en retroaktiv slutsats om marknadssignaler. Paperhandel.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel"
       ]
     }
   ],
