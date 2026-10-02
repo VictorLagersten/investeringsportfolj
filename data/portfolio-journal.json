@@ -118,6 +118,22 @@
         "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json",
         "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel"
       ]
+    },
+    {
+      "id": "daily-close-review-2026-10-02",
+      "date": "2026-10-02",
+      "title": "Daglig rapport 2 okt — stängningsdata ej fullt verifierbar; ingen affär",
+      "summary": "Rapport skapad 2 okt 2026 kl. 18:00 CEST. Ingen handel. Senaste verifierade journalpositioner från 1 okt: SAND 40, NIBE B 328, BONEX 87, kassa 174,84 kr. Stängningsvärden för alla tre innehav kunde inte verifieras konsekvent i oberoende prisflöden, så portföljens officiella dags- och totalavkastning markeras ej fastställd. Dashboardens Yahoo-data hämtad 17:58:22 CEST (fördröjd, inte exekveringsdata) visar SAND 362,00, NIBE 44,44, BONEX 222,60; den ger enbart indikativ värdering 48 597,36 kr, dagsförändring −244,36 kr/−0,50% jämfört med journalens 1 okt stängningsvärde 48 841,72 kr och −2,81% från 50 000 kr. Dessa siffror är inte bokförd stängning: NIBE:s andra historiktabell visar 44,90 kr 2 okt och BONEX-tabellen saknar 2 okt-rad. OMXS30: Nasdaq indexhistorik anger 3 251,63 den 2 okt mot 3 226,59 den 1 okt, +0,78%; detta korrigerar den tidigare rapportens felaktiga hänvisning till Nasdaq 3 249,03 för 1 okt. Den tidigare siffran får inte skrivas över i historiken; denna notering dokumenterar rättelsen. Portföljens dagsjämförelse mot index blir därför preliminär/ej fastställd tills aktiestängningarna verifierats. Innehavstes/status: SAND 40 BEHÅLL — Q2 orderingång +17%, organisk tillväxt +17%, justerad EBITA-marginal 22,6%; ompröva vid varaktigt försämrade order, marginal eller kassaflöde. NIBE B 328 BEHÅLL/OMPRÖVA — Q2 försäljning +7,6%, rörelsemarginal 11,4% mot 9,4%, men svag hushållsefterfrågan/tullar och räntekänslighet; ompröva om marginal-/kassaflödesåterhämtning sviktar. BONEX 87 OMPRÖVA koncentration, inte automatisk sälj — Q2 försäljning +25% (+30% valutajusterat) och rörelseresultat 89,6m mot 54,9m; cirka 40% vikt enligt tidigare journalvärdering; ompröva vid försäljnings-, marginal-, kassaflödes- eller regulatorisk försämring. Makro: Riksbanken lämnade 23 sep styrräntan 1,75%, men angav energipriser och svagare krona som inflationsrisk; högre räntebana kan pressa multiplar. Dagens sökning hittade ingen ny bolagsspecifik primärhändelse som ändrar teserna; det är inte bevis för att inga nyheter finns. Kandidater: ingen score/köpbeslut. Research leads kvar utan poäng: Saab, SEB, C-RAD, MSAB, Softronic, Image Systems; behöver färska fundamenta, värdering, balans/kassaflöde, insiders och kurs/volym. Senaste scannerstatus 0/964 med verifierad täckning över 55%. Reddit/Avanza Forum och offentliga fondportföljer kontrollerades endast via indexerade publika sökresultat; täckningen är ofullständig och inget sentiment används som faktaunderlag eller signal. Handelsbanken app/internetbank enligt officiell prislista: svenska/nordiska aktier 0,09%, min 9 kr per affär; svenska affärer saknar valutaavgift, inga lokala skatter verifierade. ISK-skatt hålls separat; 2026 skattefritt grundbelopp upp till 300 000 kr sammanlagt över ISK/KF/PEPP, faktisk total privat nivå okänd. Inga avgifter tillkommer idag. Historiska initiala courtagefält saknas och lämnas okorrigerade. Lärande: ännu inga utvärderbara modellbeslut. Nästa handelsfönster tisdag 6 okt kl. 10:00; verifiera då färska priser och nyheter innan beslut. Prisdata i dashboarden är fördröjd.",
+      "sources": [
+        "https://indexes.nasdaqomx.com/index/history/omxs30",
+        "https://www.investing.com/indices/omx-stockholm-30-historical-data",
+        "https://www.investing.com/equities/sandvik-historical-data",
+        "https://se.investing.com/equities/nibe-industrier-b-historical-data",
+        "https://se.investing.com/equities/bonesupport-holding-ab-historical-data",
+        "https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-oforandrad-pa-175-procent6/",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
+      ]
     }
   ],
   "candidates": [],
