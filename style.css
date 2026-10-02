@@ -219,3 +219,19 @@ dialog{border-radius:18px;box-shadow:0 24px 80px #17283f50}
 .decision.mid{background:#f3ead6;color:#765b24}
 .decision.bad{background:#f3dddd;color:#8a3434}
 .decision-grid{margin-top:18px}
+
+/* Investment Engine v3 */
+.model-view{gap:15px}
+.factor-weights-card{background:linear-gradient(135deg,#fff,#f7fbff)}
+.factor-weight-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;margin-top:14px}
+.factor-weight{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 12px;align-items:center}
+.factor-weight strong{display:block;font-size:10px;color:#30465b}
+.factor-weight small{display:block;margin-top:3px;font-size:8px;line-height:1.4;color:#8290a0}
+.factor-weight>b{font-size:11px;color:#117e68}
+.factor-weight>i{grid-column:1 / -1;display:block;height:5px;border-radius:8px;background:#edf1f5;overflow:hidden}
+.factor-weight>i>span{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#168a71,#8bcf85)}
+.weight-total{grid-column:1 / -1;justify-self:end;padding-top:6px;color:#263f56;font-size:10px}
+.score-detail-grid .model-card{min-width:0}
+.rotation-card{overflow:hidden}
+@media(max-width:800px){.factor-weight-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.factor-weight-grid{gap:10px}.rotation-card .table-wrap{margin-inline:-6px}}

@@ -32,3 +32,11 @@ Det här är en paperportfölj, inte en koppling till Avanza eller Nordnet. Webb
 - Fliken **Planering** är en lokal anteckningslista för möjliga ändringar inför tisdagens genomgång kl. 10. Planer är inte order och genomför ingen handel.
 - Fliken **Slutsats** sammanfattar registrerat resultat, fördelning, affärshistorik och nästa genomgång.
 - Historik, planer och affärer sparas lokalt i webbläsaren och delas inte mellan enheter. Dashboarden är inte kopplad till en mäklare och handlar inte automatiskt.
+
+
+
+## Investeringsmotorn v3
+
+Fliken **Investeringsmotor** visar nu modellens tio faktorvikter, faktorernas bidrag till Investment Engine Score, scoreförändringar över tid och en jämförelse mellan befintliga innehav och verifierade kandidater. Okända faktorer räknas neutralt (50/100), men sänker datatäckningen. Minst fyra faktorer krävs för score och minst 75% dataconfidence för beslut. Scorehistoriken sparas i den aktuella webbläsaren.
+
+Inga kandidatpoäng publiceras utan tillräckliga verifierade datapunkter. Paperportföljens innehav och handelsjournal ligger kvar i `data/portfolio-journal.json`.

@@ -1,7 +1,7 @@
 const MODEL_STORE = "investern-model-v2";
 
 const DEFAULT_MODEL = {
-  version:"2.1.0",
+  version:"3.0.0",
   regime:"neutral",
   riskFreeRate:2.0,
   maxPositionPct:25,
@@ -9,27 +9,33 @@ const DEFAULT_MODEL = {
   startingCapital:50000,
   trading:{courtagePct:0.09,minCourtageSEK:9,fxPct:0.25,minTradeSEK:750},
   horizons:{shortMaxDays:56,mediumMaxMonths:12,longMinMonths:12},
-  weights:{quality:18,growth:18,valuation:14,momentum:12,insider:8,catalyst:8,balance:10,risk:12},
-  candidates:[],journal:[],backtests:[],factorLearning:{},modelVersions:[]
+  weights:{quality:14,growth:14,valuation:10,momentum:16,insider:5,catalyst:12,balance:10,risk:10,marketRegime:5,smallCapPotential:4},
+  candidates:[],journal:[],backtests:[],factorLearning:{},modelVersions:[],scoreHistory:[]
 };
 
 const FACTORS=[
- ["quality","Kvalitet"],["growth","Tillväxt"],["valuation","Värdering"],["momentum","Momentum"],
- ["insider","Insider/ägande"],["catalyst","Katalysator"],["balance","Balansräkning"],["risk","Risk"]
+ ["quality","Kvalitet","ROIC, marginaler och kassaflöde"],["growth","Tillväxt","Omsättning, vinst och acceleration"],
+ ["valuation","Värdering","Pris i relation till fundamenta"],["momentum","Momentum","Trend och relativ styrka"],
+ ["insider","Insider/ägande","Ägande och rapporterade transaktioner"],["catalyst","Katalysator","Verifierade händelser och tidshorisont"],
+ ["balance","Balansräkning","Skuld, likviditet och finansieringsbehov"],["risk","Riskkontroll","Nedsida, volatilitet och likviditet"],
+ ["marketRegime","Marknadsregim","Passform mot marknad och sektorläge"],["smallCapPotential","Småbolagspotential","Skalbarhet, nisch och asymmetri"]
 ];
 
 function readModel(){
  try{
   const saved=JSON.parse(localStorage.getItem(MODEL_STORE));
   if(!saved)return structuredClone(DEFAULT_MODEL);
-  return {...structuredClone(DEFAULT_MODEL),...saved,weights:{...DEFAULT_MODEL.weights,...(saved.weights||{})},
+  const savedWeights=saved.weights||{};
+  const weights=savedWeights.marketRegime==null||savedWeights.smallCapPotential==null?{...DEFAULT_MODEL.weights}:{...DEFAULT_MODEL.weights,...savedWeights};
+  return {...structuredClone(DEFAULT_MODEL),...saved,weights,
     trading:{...DEFAULT_MODEL.trading,...(saved.trading||{})},horizons:{...DEFAULT_MODEL.horizons,...(saved.horizons||{})},
-    candidates:saved.candidates||[],journal:saved.journal||[],backtests:saved.backtests||[],factorLearning:saved.factorLearning||{}};
+    candidates:saved.candidates||[],journal:saved.journal||[],backtests:saved.backtests||[],factorLearning:saved.factorLearning||{},scoreHistory:saved.scoreHistory||[]};
  }catch{return structuredClone(DEFAULT_MODEL)}
 }
 let model=readModel();
 let sharedResearch=[];
 let sharedCandidates=[];
+let sharedEngine=null;
 function allCandidates(){
  const local=[...(model.candidates||[])], tickers=new Set(local.map(x=>x.ticker).filter(Boolean));
  return [...local,...sharedCandidates.filter(x=>!tickers.has(x.ticker)&&!local.some(y=>y.id===x.id))];
@@ -38,7 +44,8 @@ async function syncSharedJournal(){
  try{
   const r=await fetch("./data/portfolio-journal.json?ts="+Date.now(),{cache:"no-store"});
   if(!r.ok)return;
-  const j=await r.json();sharedResearch=Array.isArray(j.research)?j.research:[];sharedCandidates=Array.isArray(j.candidates)?j.candidates:[];
+  const j=await r.json();sharedResearch=Array.isArray(j.research)?j.research:[];sharedCandidates=Array.isArray(j.candidates)?j.candidates:[];sharedEngine=j.investmentEngine||null;
+  if(sharedEngine?.weights){model.version=sharedEngine.version||model.version;model.weights={...DEFAULT_MODEL.weights,...sharedEngine.weights};saveModel()}
   renderModel();renderJournal();renderLearning();
  }catch(error){console.warn("Gemensam analysjournal kunde inte hämtas",error)}
 }
@@ -51,12 +58,15 @@ function weighted(parts){
  const weight=valid.reduce((s,x)=>s+(x.w||0),0);
  return weight?valid.reduce((s,x)=>s+clamp(x.v)*(x.w||0),0)/weight:null;
 }
+function factorCoverage(c){return FACTORS.filter(([k])=>num(c[k])!=null).length}
 function factorScore(c){
+ if(factorCoverage(c)<4)return null;
  const w=model.weights||DEFAULT_MODEL.weights;
- return weighted(FACTORS.map(([k])=>({v:num(c[k]),w:Number(w[k]??0)})));
+ const total=FACTORS.reduce((s,[k])=>s+Number(w[k]||0),0)||100;
+ return FACTORS.reduce((s,[k])=>s+(num(c[k])==null?50:clamp(num(c[k])))*Number(w[k]||0),0)/total;
 }
 function confidence(c){
- const filled=FACTORS.filter(([k])=>num(c[k])!=null).length;
+ const filled=factorCoverage(c);
  const sourceQuality=c.dataQuality==null?0.5:clamp(Number(c.dataQuality))/100;
  return Math.round((filled/FACTORS.length*.75+sourceQuality*.25)*100);
 }
@@ -95,8 +105,8 @@ function conviction(c){
 }
 function opportunityScore(c){
  const cv=conviction(c); if(cv==null)return null;
- const small=c.smallCap?8:0, catalyst=timeToCatalyst(c)!=null&&timeToCatalyst(c)<=180?5:0;
- return clamp(cv+small+catalyst);
+ const catalyst=timeToCatalyst(c)!=null&&timeToCatalyst(c)<=180?5:0;
+ return clamp(cv+catalyst);
 }
 function portfolioContext(){
  const total=typeof valueNow==="function"?valueNow():0;
@@ -157,7 +167,7 @@ function buyDecision(c){
  const s=factorScore(c),conf=confidence(c),p=portfolioContext(),existing=p.weights.find(h=>h.ticker===c.ticker);
  const current=existing?.weight??0,target=positionPct(c),gap=target-current,fit=portfolioFit(c,target);
  const blockers=[],reasons=[];
- if(s==null)blockers.push("Saknar tillräcklig faktordata");
+ if(s==null)blockers.push("Färre än 4 av 10 verifierade faktorer");
  if(conf<75)blockers.push("Dataconfidence under 75%");
  if(s!=null&&s<68)blockers.push("Grundscore under 68");
  if(model.regime==="risk_off"&&s!=null&&s<80)blockers.push("Risk-off kräver score ≥80");
@@ -183,7 +193,7 @@ function buyDecision(c){
 }
 function sellDecision(h){
  const c=allCandidates().find(x=>x.ticker===h.ticker),p=portfolioContext(),current=p.weights.find(x=>x.ticker===h.ticker)?.weight??0;
- if(!c)return{status:"OMPRÖVA",ticker:h.ticker,name:h.name,weight:current,score:null,targetPct:null,reasons:["Ingen verifierad profil"],blockers:["Fundamental data saknas"]};
+ if(!c||factorCoverage(c)<4||confidence(c)<75)return{status:"OMPRÖVA",ticker:h.ticker,name:h.name,weight:current,score:null,targetPct:null,reasons:[],blockers:[!c?"Ingen verifierad profil":factorCoverage(c)<4?"Färre än 4 verifierade faktorer":"Dataconfidence under 75%; ingen säljsignal beräknas"]};
  const s=factorScore(c),conf=confidence(c),target=positionPct(c),reasons=[];
  if(s<58)reasons.push("Score under 58");
  if(conf<70)reasons.push("Dataconfidence under 70%");
@@ -204,7 +214,7 @@ function renderDecisionEngine(){
  return "<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+"</small></td><td>"+(d.score==null?"–":d.score.toFixed(0))+"</td><td>"+d.confidence+"%</td><td>"+d.targetPct.toFixed(1)+"%</td><td>"+(d.expectedReturn==null?"–":(d.expectedReturn>=0?"+":"")+d.expectedReturn.toFixed(1)+"%")+"</td><td><b class='decision "+cls+"'>"+d.status+"</b></td><td>"+esc((d.blockers.length?d.blockers:d.reasons).join(" · "))+"</td></tr>" }).join(""):"<tr><td colspan='7' class='model-empty'>Inga verifierade kandidater ännu.</td></tr>";
  const holdings=portfolioContext().holdings;
  sellEl.innerHTML=holdings.length?holdings.map(h=>{const d=sellDecision(h),cls=d.status==="SÄLJ/ROTERA"?"bad":d.status==="BEHÅLL"?"good":"mid";
- return "<tr><td><strong>"+esc(h.name)+"</strong><small>"+esc(h.ticker)+"</small></td><td>"+(d.score==null?"–":d.score.toFixed(0))+"</td><td>"+(d.weight*100).toFixed(1)+"%</td><td>"+(d.targetPct==null?"–":d.targetPct.toFixed(1)+"%")+"</td><td><b class='decision "+cls+"'>"+d.status+"</b></td><td>"+esc(d.reasons.join(" · ")||"Ingen tydlig säljsignal")+"</td></tr>" }).join(""):"<tr><td colspan='6'>Inga innehav.</td></tr>";
+ return "<tr><td><strong>"+esc(h.name)+"</strong><small>"+esc(h.ticker)+"</small></td><td>"+(d.score==null?"–":d.score.toFixed(0))+"</td><td>"+(d.weight*100).toFixed(1)+"%</td><td>"+(d.targetPct==null?"–":d.targetPct.toFixed(1)+"%")+"</td><td><b class='decision "+cls+"'>"+d.status+"</b></td><td>"+esc(d.blockers?.join(" · ")||d.reasons.join(" · ")||"Ingen tydlig säljsignal")+"</td></tr>" }).join(""):"<tr><td colspan='6'>Inga innehav.</td></tr>";
 }
 function renderLearning(){
  const el=document.querySelector("#modelLearning");if(!el)return;
@@ -212,17 +222,43 @@ function renderLearning(){
  const hit=scored.length?scored.filter(x=>Math.sign(Number(x.actualReturn))===Math.sign(Number(x.expectedReturn))).length/scored.length*100:null;
  el.innerHTML="<strong>"+j.length+" utvärderbara beslut · "+sharedResearch.length+" publicerade chattanalyser</strong><span>"+(scored.length?scored.length+" med utfall · träffbild "+hit.toFixed(0)+"%":"Ingen träffbild ännu; utfall saknas och ska inte hittas på.")+"</span>";
 }
+function renderFactorWeights(){
+ const el=document.querySelector("#factorWeights");if(!el)return;
+ const w=model.weights||DEFAULT_MODEL.weights;
+ el.innerHTML=FACTORS.map(([k,name,meaning])=>"<div class='factor-weight'><div><strong>"+esc(name)+"</strong><small>"+esc(meaning)+"</small></div><b>"+Number(w[k]||0)+"%</b><i><span style='width:"+clamp(Number(w[k]||0)*2)+"%'></span></i></div>").join("")+"<strong class='weight-total'>Totalt "+FACTORS.reduce((s,[k])=>s+Number(w[k]||0),0)+"%</strong>";
+}
+function renderFactorDetail(c){
+ const intro=document.querySelector("#factorDetailIntro"),rows=document.querySelector("#factorDetailRows");if(!rows)return;
+ if(!c){intro.textContent="Ingen kandidat med verifierad faktorprofil att förklara ännu.";rows.innerHTML="<tr><td colspan='4' class='model-empty'>Lägg till eller importera verifierade data.</td></tr>";return}
+ const w=model.weights||DEFAULT_MODEL.weights,total=FACTORS.reduce((s,[k])=>s+Number(w[k]||0),0)||100;
+ const coverage=factorCoverage(c),score=factorScore(c);intro.textContent=c.name+" · Investment Engine Score "+(score==null?"ej beräknad":""+score.toFixed(1))+" · "+coverage+"/10 faktorer ifyllda";
+ rows.innerHTML=FACTORS.map(([k,name])=>{const v=num(c[k]),weight=Number(w[k]||0),used=v==null?50:clamp(v),contribution=used*weight/total;return "<tr><td>"+esc(name)+"</td><td>"+weight+"%</td><td>"+(v==null?"50 · neutral (saknas)":v.toFixed(0))+"</td><td>"+contribution.toFixed(1)+" p</td></tr>"}).join("")+"<tr><td><strong>Summa</strong></td><td>100%</td><td></td><td><strong>"+(score==null?"–":score.toFixed(1)+" p")+"</strong></td></tr>";
+}
+function renderScoreChanges(candidates){
+ const el=document.querySelector("#changeRows");if(!el)return;
+ const track=candidates.filter(c=>factorScore(c)!=null),history=model.scoreHistory||(model.scoreHistory=[]),today=new Date().toISOString().slice(0,10);
+ track.forEach(c=>{const prior=[...history].reverse().find(x=>x.ticker===c.ticker);const score=Number(factorScore(c).toFixed(1));if(!prior||prior.score!==score){history.push({ticker:c.ticker,name:c.name,score,priorScore:prior?prior.score:null,change:prior?Number((score-prior.score).toFixed(1)):null,date:today});}});
+ model.scoreHistory=history.slice(-300);saveModel();
+ const latest=track.map(c=>{const x=[...history].reverse().find(y=>y.ticker===c.ticker);return {c,x}});
+ el.innerHTML=latest.length?latest.map(({c,x})=>"<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+"</small></td><td>"+(x.priorScore==null?"Baslinje":x.priorScore.toFixed(1))+"</td><td>"+x.score.toFixed(1)+"</td><td>"+(x.change==null?"–":(x.change>0?"+":"")+x.change.toFixed(1))+" p</td><td>"+esc(x.date)+"</td></tr>").join(""):"<tr><td colspan='5' class='model-empty'>Ingen verifierad kandidat-score att följa ännu.</td></tr>";
+}
+function renderRotation(candidates){
+ const el=document.querySelector("#rotationRows");if(!el)return;const holdings=portfolioContext().holdings||[];
+ const eligible=candidates.filter(c=>factorScore(c)!=null&&confidence(c)>=75);
+ el.innerHTML=holdings.length?holdings.map(h=>{const own=candidates.find(c=>String(c.ticker).toUpperCase()===String(h.ticker).toUpperCase()),ownScore=own&&confidence(own)>=75?factorScore(own):null;const alternatives=eligible.filter(c=>String(c.ticker).toUpperCase()!==String(h.ticker).toUpperCase()).sort((a,b)=>factorScore(b)-factorScore(a));const best=alternatives[0],bestScore=best?factorScore(best):null;const gap=ownScore!=null&&bestScore!=null?bestScore-ownScore:null;let note="Jämförbar score saknas";if(gap!=null)note=gap>=10?"Alternativet leder med minst 10 p · granska tes och friktion":gap<=-10?"Innehavet leder med minst 10 p":"Liten score-skillnad · ingen rotationssignal";return "<tr><td><strong>"+esc(h.name)+"</strong><small>"+esc(h.ticker)+" · "+Number(h.quantity)+" st</small></td><td>"+(ownScore==null?"–":ownScore.toFixed(1))+"</td><td>"+(best?esc(best.name):"–")+"</td><td>"+(bestScore==null?"–":bestScore.toFixed(1))+"</td><td>"+(gap==null?"–":(gap>0?"+":"")+gap.toFixed(1)+" p")+"</td><td>"+esc(note)+"</td></tr>"}).join(""):"<tr><td colspan='6' class='model-empty'>Inga registrerade innehav.</td></tr>";
+}
 function renderModel(){
  const total=typeof valueNow==="function"?valueNow():0,candidates=allCandidates().sort((a,b)=>(opportunityScore(b)??-1)-(opportunityScore(a)??-1));
- renderDecisionEngine();renderLearning();
+ renderDecisionEngine();renderLearning();renderFactorWeights();
  const rows=document.querySelector("#modelRows");if(!rows)return;
  rows.innerHTML=candidates.length?candidates.map(c=>{const s=factorScore(c),conf=confidence(c),pos=positionPct(c),cv=conviction(c),er=expectedReturn(c);
- return "<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+" · "+esc(c.horizon||"adaptiv")+"</small></td><td><b class='model-score "+(s>=72?"good":s>=62?"mid":"")+"'>"+(s==null?"–":s.toFixed(0))+"</b></td><td>"+conf+"%</td><td>"+(cv==null?"–":cv.toFixed(0))+"</td><td>"+(er==null?"–":(er>=0?"+":"")+er.toFixed(1)+"%")+"</td><td>"+(pos==null?"–":pos.toFixed(1)+"%")+"</td><td><button class='text-button model-edit' data-id='"+esc(c.id)+"'>Redigera</button></td></tr>" }).join(""):"<tr><td colspan='7' class='model-empty'>Lägg till eller importera verifierade kandidater.</td></tr>";
+ return "<tr><td><strong>"+esc(c.name)+"</strong><small>"+esc(c.ticker||"")+" · "+esc(c.horizon||"adaptiv")+"</small></td><td><b class='model-score "+(s>=72?"good":s>=62?"mid":"")+"'>"+(s==null?"–":s.toFixed(0))+"</b></td><td>"+conf+"%</td><td>"+(cv==null?"–":cv.toFixed(0))+"</td><td>"+(er==null?"–":(er>=0?"+":"")+er.toFixed(1)+"%")+"</td><td>"+(pos==null?"–":pos.toFixed(1)+"%")+"</td><td><button class='text-button model-edit' data-id='"+esc(c.id)+"'>Redigera</button></td></tr>" }).join(""):"<tr><td colspan='7' class='model-empty'>Inga kandidater är publicerade med tillräckligt verifierade datapunkter. Scores lämnas tomma tills underlag finns.</td></tr>";
  document.querySelector("#modelRegime").value=model.regime;
  document.querySelector("#modelRegimeText").textContent=model.regime==="risk_on"?"Risk-on · större utrymme för growth/momentum":"Risk-off"===model.regime?"Risk-off · högre beviskrav och mindre positioner":"Neutral · adaptiv viktning över tre tidshorisonter";
  const scored=candidates.filter(c=>factorScore(c)!=null);
+ renderFactorDetail(scored[0]||null);renderScoreChanges(candidates);renderRotation(candidates);
  document.querySelector("#modelTop").textContent=scored.length?scored[0].name+" · conviction "+conviction(scored[0]).toFixed(0):"Ingen kandidat är tillräckligt datastödd";
- document.querySelector("#modelCoverage").textContent=scored.length+" av "+candidates.length+" kandidater har preliminär faktorprofil.";
+ document.querySelector("#modelCoverage").textContent=scored.length+" av "+candidates.length+" kandidater når miniminivån (minst 4/10 faktorer).";
  const alerts=[];const risk=portfolioRiskBudget();
  if(risk.topWeight>.30)alerts.push("Toppvikt över 30%: koncentrationsrisk.");
  if(risk.maxSector>.45)alerts.push("En sektor över 45% av portföljen.");
@@ -256,7 +292,7 @@ function addModelListeners(){
   const i=model.candidates.findIndex(x=>x.id===id);if(i>=0)model.candidates[i]=c;else model.candidates.push(c);
   saveModel();renderModel();document.querySelector("#modelDialog").close();
  });
- document.querySelector("#modelRows")?.addEventListener("click",e=>{const b=e.target.closest(".model-edit");if(b)openCandidate(model.candidates.find(c=>c.id===b.dataset.id))});
+ document.querySelector("#modelRows")?.addEventListener("click",e=>{const b=e.target.closest(".model-edit");if(b){const c=model.candidates.find(c=>c.id===b.dataset.id);renderFactorDetail(c);openCandidate(c)}});
 }
 function renderJournal(){
  const el=document.querySelector("#journalRows");if(!el)return;
@@ -284,3 +320,4 @@ function initResearchTools(){
 }
 document.addEventListener("DOMContentLoaded",()=>{addModelListeners();renderModel();initResearchTools();syncSharedJournal()});
 window.InvesternModel={render:renderModel,read:()=>model,save:saveModel,buyDecision,sellDecision,opportunityScore,conviction,expectedReturn};
+

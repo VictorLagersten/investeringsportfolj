@@ -205,3 +205,17 @@ Position sizing ska ta hänsyn till toppvikt, sektor, korrelation, volatilitet o
 Vid varje tisdag/fredag 10:00-genomgång ska modellen i princip ställa:
 **"Om hela kapitalet var kontant nu, vilka positioner skulle ge bäst riskjusterad kapitaltillväxt över de tre tidshorisonterna?"**
 Sedan jämförs svaret med den faktiska portföljen och endast meningsfulla kapitalförflyttningar föreslås.
+
+
+
+## Dashboard Investment Engine v3 · 2026-10-02
+
+The current dashboard score uses ten factors on a 0–100 scale. Its canonical weights are recorded in `data/portfolio-journal.json` under `investmentEngine`:
+
+- Momentum 16%, growth 14%, quality 14%, valuation 10%
+- Catalysts 12%, balance sheet 10%, risk control 10%, insider/ownership 5%
+- Market-regime fit 5%, small-cap potential 4%
+
+Weights sum to 100%. A missing factor contributes a neutral 50 to the weighted calculation and never a positive score. A total Investment Engine Score is shown only after at least four of ten factor fields are present. Decision confidence remains a separate gate: below 75%, no buy or sell decision is produced. The interface shows the factor contributions and data coverage alongside the score.
+
+The change detector stores the prior score per ticker in that browser's local storage; its first observation is a baseline. Rotation review compares a current holding only with the best eligible candidate when both have at least 75% confidence. A gap of 10 points raises a review prompt, not an automatic trade. If verified candidate data is absent, the dashboard leaves scores and score gaps blank.

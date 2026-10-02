@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-02T15:01:00+02:00",
+  "updatedAt": "2026-10-02",
   "portfolio": {
     "startCapital": 50000,
     "cash": 174.84,
@@ -120,5 +120,27 @@
       ]
     }
   ],
-  "candidates": []
+  "candidates": [],
+  "investmentEngine": {
+    "version": "3.0.0",
+    "updatedAt": "2026-10-02",
+    "weights": {
+      "quality": 14,
+      "growth": 14,
+      "valuation": 10,
+      "momentum": 16,
+      "insider": 5,
+      "catalyst": 12,
+      "balance": 10,
+      "risk": 10,
+      "marketRegime": 5,
+      "smallCapPotential": 4
+    },
+    "scoreScale": "0-100 per factor; missing factors contribute neutral 50 points but reduce coverage",
+    "minimumVerifiedFactors": 4,
+    "minimumConfidenceForDecision": 75,
+    "rotationRule": "Compare holdings with eligible candidates only when both have at least 75% confidence; a score gap of 10 points triggers review, never an automatic trade.",
+    "scoreChangeDetector": "Compare latest score per ticker with prior saved score in local browser storage; first observation is baseline.",
+    "dataStatus": "No published candidate currently has enough verified factor data for an Investment Engine Score; do not infer or fabricate scores."
+  }
 }
