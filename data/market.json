@@ -2,7 +2,7 @@
   "version": 1,
   "source": "Yahoo Finance chart endpoint",
   "disclaimer": "Market data may be delayed. This file is for dashboard analysis and is not an execution feed.",
-  "fetchedAt": "2026-10-04T11:10:16.220Z",
+  "fetchedAt": "2026-10-04T18:01:20.654Z",
   "quotes": {
     "SAND": {
       "symbol": "SAND.ST",
@@ -12,7 +12,7 @@
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-04T11:10:16.064Z"
+      "fetchedAt": "2026-10-04T18:01:20.445Z"
     },
     "NIBE B": {
       "symbol": "NIBE-B.ST",
@@ -22,7 +22,7 @@
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-04T11:10:16.117Z"
+      "fetchedAt": "2026-10-04T18:01:20.558Z"
     },
     "BONEX": {
       "symbol": "BONEX.ST",
@@ -32,17 +32,17 @@
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-04T11:10:16.161Z"
+      "fetchedAt": "2026-10-04T18:01:20.606Z"
     },
     "OMXS30": {
       "symbol": "^OMX",
-      "price": 3260.5059,
-      "previousClose": 3226.5852,
-      "dayPct": 1.051287906483922,
+      "price": 3260.506,
+      "previousClose": 3226.59,
+      "dayPct": 1.0511406779293297,
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-04T11:10:16.219Z"
+      "fetchedAt": "2026-10-04T18:01:20.654Z"
     }
   }
 }
