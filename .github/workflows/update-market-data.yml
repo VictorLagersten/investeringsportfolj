@@ -1,6 +1,9 @@
 name: Update market data
 
 on:
+  push:
+    paths-ignore:
+      - "data/market.json"
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
