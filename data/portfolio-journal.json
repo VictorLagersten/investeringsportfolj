@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-02",
+  "updatedAt": "2026-10-05",
   "portfolio": {
     "startCapital": 50000,
     "cash": 174.84,
@@ -127,6 +127,22 @@
       "sources": [
         "https://indexes.nasdaqomx.com/index/history/omxs30",
         "https://www.investing.com/indices/omx-stockholm-30-historical-data",
+        "https://www.investing.com/equities/sandvik-historical-data",
+        "https://se.investing.com/equities/nibe-industrier-b-historical-data",
+        "https://se.investing.com/equities/bonesupport-holding-ab-historical-data",
+        "https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-oforandrad-pa-175-procent6/",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
+      ]
+    },
+    {
+      "id": "daily-review-2026-10-05",
+      "date": "2026-10-05",
+      "title": "Måndagsstatus 5 okt kl. 10:27 — senaste stängning 2 okt; priser avviker",
+      "summary": "Rapport verifierad 5 okt 2026 kl. 10:27 CEST. Körningen kom före ordinarie 18:00-rapport; ingen handel. Senast avslutade börsdag är fredag 2 okt. Journalförda positioner fortsatt oförändrade: SAND 40, NIBE B 328, BONEX 87, kassa 174,84 kr; inga nya affärer sedan 1 okt. Aktiekurserna för 2 okt är fortfarande motstridiga mellan dashboardens fördröjda Yahoo-feed och externa historiktabeller. Dashboardfilens 5 okt snapshot hämtades 09:15 CEST (intradag, inte stängning): SAND 361,90, NIBE 44,80, BONEX 227,20. Endast indikativt värde då: 49 111,64 kr; ingen officiell dagsavkastning fastställs. Dashboardens 2 okt föregående-stängningsvärden var SAND 362,00, NIBE 44,44, BONEX 222,60, medan indexhistoriken i samma fil säger OMXS30 3 260,51. En sökning i externa historiktabeller visade SAND 360,70 och NIBE 44,90, vilket inte matchar dashboardens stängningsreferenser; BONEX 2 okt kunde inte verifieras. Den officiella Nasdaq OMXS30-sidan anger 3 251,63 den 2 okt, inte 3 260,51. Därför går det inte att ge en fullständigt verifierad portföljavkastning eller exakt aktiv avkastning mot benchmark; inga markeringar har skrivits in i portfölj.asOf och inga priser har hittats på. Rättelsehantering: tidigare 1 okt-rapport angav felaktigt Nasdaq 3 249,03; Nasdaq historik anger 3 226,59 den 1 okt. Korrigeringen står dokumenterad i föregående researchnotering och den ursprungliga rapporten skrivs inte om. Stängningsvärden 1 okt enligt journalens tidigare kontrollerade priser gav 48 841,72 kr. Intradagssiffror ska hållas separata från stängningsrapporten. Innehav: SAND BEHÅLL — tes från Q2 orderingång +17%, organisk tillväxt +17%, justerad EBITA-marginal 22,6%; omprövning vid varaktigt sämre order, marginal eller kassaflöde. NIBE B BEHÅLL/OMPRÖVA — Q2 försäljning +7,6%, EBIT-marginal 11,4% mot 9,4%, men hushållsefterfrågan, tullar och ränterisk; ompröva vid utebliven marginal/kassaflödesåterhämtning. BONEX OMPRÖVA koncentration, inte automatisk sälj — Q2 försäljning +25% (30% valutajusterat) och rörelseresultat 89,6m mot 54,9m; cirka 40% vikt med tidigare markeringar; ompröva vid försämrad försäljning/marginal/kassaflöde eller produkt/regulatorisk risk. Prisfall ensamt är inte säljsignal. Makro: Riksbanken höll 23 sep räntan på 1,75% men lyfte energi och kronförsvagning som inflationsrisk; press kan drabba multiplar särskilt i räntekänsliga NIBE. Ingen ny verifierad bolagsspecifik primärnyhet hittades i den begränsade sökningen som ändrar teserna. Kandidater fortsatt utan score: Saab (behöver bindande order, valuation, marginal, balance sheet, insider, momentum); SEB (senaste kapital-/kreditdata och valuation); C-RAD (orderingång, marginal, orderkonvertering); MSAB (uthållighet i lönsamhet/kassakonvertering); Softronic (tillväxt och kassaflöde mot historik, valuation); Image Systems (finansieringsläge, orderingång, skulder). Ingen candidate får poäng på ofullständigt underlag; scanner senast rapporterad 0/964 med verifierad täckning över 55%. Forum/Avanza samt publika förvaltarportföljer kontrolleras bara via publikt indexerade träffar; bevakningen är ofullständig och de används inte som faktakälla eller ensam signal. Handelsbanken app/internetbank: 0,09%, minimum 9 kr per svensk/nordisk affär; FX 0 och lokala avgifter 0 för svenska SEK-aktier; ingen affär denna körning. ISK-skatt rapporteras separat; 2026 grundnivå 300 000 kr sammanlagt över ISK/KF/PEPP, kundens övriga sparande okänt. Historiska initiala courtage saknas och lämnas orörda. Lärandelogg: fortfarande inga utvärderbara modellbeslut efter endast enstaka affär och saknad avgiftshistorik. Nästa paperhandelsfönster tisdag 6 okt kl. 10:00; gör pris-/nyhetskontroll vid beslutstidpunkten. Prisuppgifter är fördröjda och inte exekveringsdata.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/market.json",
+        "https://indexes.nasdaqomx.com/index/history/omxs30",
         "https://www.investing.com/equities/sandvik-historical-data",
         "https://se.investing.com/equities/nibe-industrier-b-historical-data",
         "https://se.investing.com/equities/bonesupport-holding-ab-historical-data",
