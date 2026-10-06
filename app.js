@@ -169,7 +169,7 @@ function renderPositions(){
     const quoteLabel=h.quoteStatus==="market"?"Fördröjd marknadskurs":"Referenskurs";
     const movementText=hasMovement?(movement>=0?"+":"")+pct.format(movement)+"%":"–";
     const movementTitle=hasMovement?"Dagens rörelse från senaste tillgängliga stängning":"Dagens rörelse saknas: färsk kurs eller jämförbar stängningskurs saknas";
-    return `<tr><td><div class="name-cell"><span class="ticker">${h.ticker}</span><span class="company">${h.name}<small>${h.name==="NIBE Industrier B"?"Industri":h.name==="BONESUPPORT"?"Medicinteknik":"Industri"}</small></span></div></td><td>${h.quantity}</td><td title="${quoteLabel}">${precise.format(h.price)}</td><td>${money.format(market)}</td><td class="${hasMovement?(movement>=0?"up":"down"):"stat-note"}" title="${movementTitle}">${movementText}</td><td class="${totalGain>=0?"up":"down"}">${signedMoney(totalGain)} <small>(${totalPct>=0?"+":""}${pct.format(totalPct)}%)</small></td></tr>`;
+    return `<tr><td><div class="name-cell"><span class="ticker">${h.ticker==="ASSA ABLOY B"?"ASSA":h.ticker}</span><span class="company">${h.name}<small>${h.name==="NIBE Industrier B"?"Industri":h.name==="BONESUPPORT"?"Medicinteknik":"Industri"}</small></span></div></td><td>${h.quantity}</td><td title="${quoteLabel}">${precise.format(h.price)}</td><td>${money.format(market)}</td><td class="${hasMovement?(movement>=0?"up":"down"):"stat-note"}" title="${movementTitle}">${movementText}</td><td class="${totalGain>=0?"up":"down"}">${signedMoney(totalGain)} <small>(${totalPct>=0?"+":""}${pct.format(totalPct)}%)</small></td></tr>`;
   }).join("");
 }
 function selectedHistory() {
@@ -310,7 +310,7 @@ function render() {
   document.querySelector("#portfolioValue").textContent = precise.format(total);
   document.querySelector("#totalReturn").textContent = `${signedMoney(overall)} · ${overallPct >= 0 ? "+" : ""}${pct.format(overallPct)}%`;
   document.querySelector("#dayValue").textContent = hasDailyComparison ? signedMoney(day) : "–";
-  document.querySelector("#dayPercent").textContent = hasDailyComparison ? `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % från jämförbara dagskurser` : "Kompletta jämförbara dagskurser saknas";
+  document.querySelector("#dayPercent").textContent = hasDailyComparison ? `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % från jämförbara dagskurser` : marketDataState.updatedNames.length ? "Delvis kursdata · saknar rörelse för: "+marketDataState.missingNames.join(", ") : "Kompletta jämförbara dagskurser saknas";
   document.querySelector("#dayValue").className = hasDailyComparison ? (day >= 0 ? "up" : "down") : "stat-note";
   document.querySelector("#cashValue").textContent = money.format(data.cash);
   document.querySelector("#stockExposure").textContent = `${(equity / total * 100).toLocaleString("sv-SE",{maximumFractionDigits:1})}% i aktier`;
@@ -322,6 +322,13 @@ function render() {
   document.querySelector("#benchmark").textContent = hasBenchmarkComparison ? `${dayPct-data.benchmarkDayPct >= 0 ? "+" : ""}${pct.format(dayPct-data.benchmarkDayPct)} pp` : "–";
   document.querySelector("#benchmark").className = hasBenchmarkComparison ? (dayPct >= data.benchmarkDayPct ? "up" : "down") : "stat-note";
   document.querySelector("#asof").textContent = `${dateLabel(data.asOf,{day:"numeric",month:"short",year:"numeric"})} · referensvärdering`;
+  const hour=new Date().getHours();
+  document.querySelector(".welcome h1").textContent=(hour<10?"God morgon":hour<18?"God dag":"God kväll")+", Victor";
+  document.querySelector(".note-date").textContent=dateLabel(today(),{day:"numeric",month:"short"}).toUpperCase();
+  const riskLabel=document.querySelector(".risk-note small");
+  if(riskLabel)riskLabel.textContent="Koncentrerad · "+data.holdings.length+" innehav · värden enligt kursstatus ovan";
+  const dailyStatus=document.querySelector("#dailyDataSummary");
+  if(dailyStatus)dailyStatus.textContent=hasDailyComparison?"Portföljens dagsrörelse "+signedMoney(day)+" ("+(dayPct>=0?"+":"")+pct.format(dayPct)+"%). Jämförelsen mot OMXS30 "+(hasBenchmarkComparison?"är "+(dayPct-data.benchmarkDayPct>=0?"+":"")+pct.format(dayPct-data.benchmarkDayPct)+" procentenheter.":"saknar komplett benchmarkkurs."):"Dagsrörelsen för hela portföljen visas när alla innehav har färska kurser och jämförbar stängningskurs. Delkurser och saknade innehav visas i tabellen ovan.";
   const values = sorted.slice(-7).map(p=>p.value);
   if (values.length > 1) {
     const lo=Math.min(...values), hi=Math.max(...values), span=hi-lo || 1;
