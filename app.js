@@ -303,7 +303,9 @@ function render() {
   const overall = total - data.startCapital;
   const overallPct = overall / data.startCapital * 100;
   const sorted = verifiedHistory();
-  const hasDailyComparison=marketDataState.complete&&data.holdings.length>0&&data.holdings.every(h=>Number.isFinite(h.previousPrice)&&Number.isFinite(h.dayPct));
+  const todayIso=new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+  const tradesToday=data.transactions.some(t=>t.date===todayIso);
+  const hasDailyComparison=!tradesToday&&marketDataState.complete&&data.holdings.length>0&&data.holdings.every(h=>Number.isFinite(h.previousPrice)&&Number.isFinite(h.dayPct));
   const day=hasDailyComparison?data.holdings.reduce((sum,h)=>sum+h.quantity*(h.price-h.previousPrice),0):null;
   const priorValue=hasDailyComparison?data.cash+data.holdings.reduce((sum,h)=>sum+h.quantity*h.previousPrice,0):null;
   const dayPct=hasDailyComparison&&priorValue>0?day/priorValue*100:null;
@@ -329,7 +331,7 @@ function render() {
   const riskLabel=document.querySelector(".risk-note small");
   if(riskLabel)riskLabel.textContent="Koncentrerad · "+data.holdings.length+" innehav · värden enligt kursstatus ovan";
   const dailyStatus=document.querySelector("#dailyDataSummary");
-  if(dailyStatus)dailyStatus.textContent=hasDailyComparison?"Portföljens dagsrörelse "+signedMoney(day)+" ("+(dayPct>=0?"+":"")+pct.format(dayPct)+"%). Jämförelsen mot OMXS30 "+(hasBenchmarkComparison?"är "+(dayPct-data.benchmarkDayPct>=0?"+":"")+pct.format(dayPct-data.benchmarkDayPct)+" procentenheter.":"saknar komplett benchmarkkurs."):"Dagsrörelsen för hela portföljen visas när alla innehav har färska kurser och jämförbar stängningskurs. Delkurser och saknade innehav visas i tabellen ovan.";
+  if(dailyStatus)dailyStatus.textContent=tradesToday?"Dagens portföljavkastning och jämförelse mot OMXS30 visas inte: journalen innehåller affärer idag och exakta avslutskurser/tider saknas.":hasDailyComparison?"Portföljens dagsrörelse "+signedMoney(day)+" ("+(dayPct>=0?"+":"")+pct.format(dayPct)+"%). Jämförelsen mot OMXS30 "+(hasBenchmarkComparison?"är "+(dayPct-data.benchmarkDayPct>=0?"+":"")+pct.format(dayPct-data.benchmarkDayPct)+" procentenheter.":"saknar komplett benchmarkkurs."):"Dagsrörelsen för hela portföljen visas när alla innehav har färska kurser och jämförbar stängningskurs. Delkurser och saknade innehav visas i tabellen ovan.";
   const values = sorted.slice(-7).map(p=>p.value);
   if (values.length > 1) {
     const lo=Math.min(...values), hi=Math.max(...values), span=hi-lo || 1;
