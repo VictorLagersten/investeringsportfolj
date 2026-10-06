@@ -1,25 +1,26 @@
 const STORE = "investern-ing-dashboard-v2";
 const INITIAL = {
   startCapital: 50000,
-  cash: 10031.20,
+  cash: 192.40,
   totalFees: 62.04,
   benchmarkDayPct: 0,
   asOf: "2026-10-06",
   holdings: [
     { ticker: "ASSA ABLOY B", name: "ASSA ABLOY B", quantity: 41, price: 352.40, previousPrice: 352.40, cost: 352.40, dayPct: 0 },
     { ticker: "NIBE B", name: "NIBE B", quantity: 328, price: 45.02, previousPrice: 45.02, cost: 45.70, dayPct: 0 },
-    { ticker: "BONEX", name: "BONESUPPORT", quantity: 44, price: 230.60, previousPrice: 230.60, cost: 227.20, dayPct: 0 }
+    { ticker: "BONEX", name: "BONESUPPORT", quantity: 87, price: 230.60, previousPrice: 230.60, cost: 228.00, dayPct: 0 }
   ],
   history: [
     { date: "2026-09-28", value: 50000 },
     { date: "2026-09-29", value: 50197.08 },
     { date: "2026-09-30", value: 50589.64 },
-    { date: "2026-10-06", value: 49392.56 }
+    { date: "2026-10-06", value: 49469.56 }
   ],
   transactions: [
     { type: "buy", name: "Sandvik", ticker: "SAND", quantity: 40, price: 374.10, commission: 0, date: "2026-09-29" },
     { type: "buy", name: "NIBE B", ticker: "NIBE B", quantity: 328, price: 45.70, commission: 0, date: "2026-09-29" },
     { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 44, price: 227.20, commission: 0, date: "2026-09-29" },
+    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 43, price: 228.60, commission: 9, date: "2026-10-01" },
     { type: "sell", name: "Sandvik", ticker: "SAND", quantity: 40, price: 362.30, commission: 13.04, date: "2026-10-06" },
     { type: "buy", name: "ASSA ABLOY B", ticker: "ASSA ABLOY B", quantity: 41, price: 352.40, commission: 13.00, date: "2026-10-06" }
   ],
