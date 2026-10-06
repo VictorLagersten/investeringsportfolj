@@ -42,7 +42,7 @@
   },
   {
     "date": "2026-10-06",
-    "time": "10:00",
+    "time": null,
     "symbol": "ASSA-B",
     "action": "BUY",
     "shares": 41,
@@ -52,7 +52,7 @@
   },
   {
     "date": "2026-10-06",
-    "time": "10:00",
+    "time": null,
     "symbol": "SANDVIK",
     "action": "SELL",
     "shares": 40,
