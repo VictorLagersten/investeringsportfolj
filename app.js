@@ -313,7 +313,7 @@ function render() {
   document.querySelector("#portfolioValue").textContent = precise.format(total);
   document.querySelector("#totalReturn").textContent = `${signedMoney(overall)} · ${overallPct >= 0 ? "+" : ""}${pct.format(overallPct)}%`;
   document.querySelector("#dayValue").textContent = hasDailyComparison ? signedMoney(day) : "–";
-  document.querySelector("#dayPercent").textContent = hasDailyComparison ? `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % från jämförbara dagskurser` : marketDataState.updatedNames.length ? "Delvis kursdata · saknar rörelse för: "+[...marketDataState.missingNames,...(marketDataState.movementMissingNames||[])].join(", ") : "Kompletta jämförbara dagskurser saknas";
+  document.querySelector("#dayPercent").textContent = tradesToday ? "Dagens affärer saknar verifierade avslutspriser" : hasDailyComparison ? `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % från jämförbara dagskurser` : marketDataState.updatedNames.length ? "Delvis kursdata · saknar rörelse för: "+[...marketDataState.missingNames,...(marketDataState.movementMissingNames||[])].join(", ") : "Kompletta jämförbara dagskurser saknas";
   document.querySelector("#dayValue").className = hasDailyComparison ? (day >= 0 ? "up" : "down") : "stat-note";
   document.querySelector("#cashValue").textContent = money.format(data.cash);
   document.querySelector("#stockExposure").textContent = `${(equity / total * 100).toLocaleString("sv-SE",{maximumFractionDigits:1})}% i aktier`;
