@@ -1,7 +1,7 @@
 {
   "startCapital": 50000,
-  "cash": 192.4,
-  "totalFees": 71,
+  "cash": 2.12,
+  "totalFees": 80,
   "asOf": "2026-10-06",
   "holdings": [
     {
@@ -13,8 +13,8 @@
     {
       "symbol": "NIBE-B",
       "name": "NIBE B",
-      "shares": 328,
-      "price": 45.02
+      "shares": 332,
+      "price": 45.32
     },
     {
       "symbol": "BONEX",
@@ -23,11 +23,11 @@
       "price": 230.6
     }
   ],
-  "note": "Carry-forward restored from the documented 2026-10-01 BONESUPPORT buy of 43 shares; after the 2026-10-06 Sandvik sale and ASSA ABLOY purchase, residual cash is 192.40 SEK.",
+  "note": "Efter paperkompletteringen 2026-10-06: ASSA ABLOY B 41, NIBE B 332, BONESUPPORT 87; kassa 2,12 SEK. NIBE-tillägg 4 aktier till fördröjd Yahoo-referens 45,32 SEK, inte verifierat avslutspris.",
   "feeReconciliation": {
     "initialAggregateInferred": 35.96,
     "method": "50,000.00 start capital minus 39,950.40 gross initial purchases and 10,013.64 documented cash before the 2026-10-01 buy; initial fee slips are not available and no per-trade allocation is asserted.",
-    "knownLaterFees": 35.04
+    "knownLaterFees": 44.04
   },
-  "priceNotes": "Fallback prices are reference marks, not a synchronized current valuation: NIBE B 45.02 and BONESUPPORT 230.60 are the 2026-10-05 closing references; ASSA ABLOY B 352.40 is the 2026-10-06 paper-trade reference. Current marks come from the delayed hourly market feed only when all held-stock quotes are fresh."
+  "priceNotes": "Fallbackvärden är blandade referensmarkeringar, inte en synkron aktuell värdering: ASSA ABLOY B 352,40 kr är 6 okt-paperreferens; NIBE B 45,32 kr är fördröjd Yahoo-referens observerad 6 okt 14:37:53 CEST och använd för paperkompletteringen; BONESUPPORT 230,60 kr är 5 okt-stängningsreferens. GitHub-marknadsfilen saknar ASSA ABLOY-kurs, därför visas portföljens referensvärden tills komplett färsk kursfeed finns."
 }
