@@ -343,6 +343,8 @@ function render() {
   renderCalendar();
   renderConclusion();
   updateMarketStatus();
+  if(window.InvesternModel?.refreshPortfolio)window.InvesternModel.refreshPortfolio();
+  if(window.InvesternScanner?.refreshPortfolio)window.InvesternScanner.refreshPortfolio();
 }
 function addHistory(date,value,snapshot=null) {
   const item={date,value:Number(value),verified:true,origin:"local",source:"Manuellt sparad verifierad värdering",...(snapshot?{snapshot}:{})};
