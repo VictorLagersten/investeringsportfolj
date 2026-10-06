@@ -56,7 +56,7 @@ async function loadMasterData(){
     const ledgerTransactions=ledger.map((item,index)=>{
       const symbol=String(item.symbol||"");
       const isSell=String(item.action).toUpperCase()==="SELL";
-      return {id:"ledger-"+item.date+"-"+symbol+"-"+item.action+"-"+index,type:isSell?"sell":"buy",name:names[symbol]||symbol,ticker:tickers[symbol]||symbol,quantity:Number(item.shares),price:Number(item.price),commission:item.fee==null?null:Number(item.fee),date:item.date||null,time:item.time||null};
+      return {id:"ledger-"+item.date+"-"+symbol+"-"+item.action+"-"+index,type:isSell?"sell":"buy",name:names[symbol]||symbol,ticker:tickers[symbol]||symbol,quantity:Number(item.shares),price:Number(item.price),commission:item.fee==null?null:Number(item.fee),date:item.date||null,time:item.time||null,note:item.note||null};
     });
     const buysBySymbol={};
     for(const t of ledgerTransactions)if(t.type==="buy"){
@@ -87,8 +87,6 @@ async function loadMasterData(){
     render();
   }catch(error){masterDataState={ok:false,error:String(error?.message||error)};console.warn("Masterdata kunde inte hämtas",error);updateMarketStatus()}
 }
-
-let marketDataState = { fetchedAt: null, source: null, ok: false };
 
 let marketDataState = { fetchedAt: null, source: null, ok: false, error: null };
 let masterDataState = { ok: false, error: null };
@@ -251,7 +249,7 @@ function renderTransactions() {
     const type=t.type==="sell"?"Försäljning":"Köp";
     const fee=t.commission!=null?"<small>Courtage "+precise.format(t.commission)+"</small>":"<small>Courtage ej angivet</small>";
     const note=t.note?" title=\""+safe(t.note)+"\"":"";
-    return "<tr"+note+"><td>"+(t.date?dateLabel(t.date,{day:"numeric",month:"short",year:"numeric"}):"Datum saknas")+"</td><td><span class=\"trade-type "+t.type+"\">"+type+"</span></td><td><strong>"+safe(t.name)+"</strong> <small>"+safe(t.ticker||"")+"</small></td><td>"+Number(t.quantity).toLocaleString("sv-SE")+"</td><td>"+precise.format(t.price)+"</td><td>"+money.format(t.quantity*t.price)+fee+"</td></tr>";
+    return "<tr"+note+"><td>"+(t.date?dateLabel(t.date,{day:"numeric",month:"short",year:"numeric"}):"Datum saknas")+"</td><td><span class=\"trade-type "+t.type+"\">"+type+"</span></td><td><strong>"+safe(t.name)+"</strong> <small>"+safe(t.ticker||"")+"</small></td><td>"+Number(t.quantity).toLocaleString("sv-SE")+"</td><td>"+precise.format(t.price)+(t.note?"<small>"+safe(t.note)+"</small>":"")+"</td><td>"+money.format(t.quantity*t.price)+fee+"</td></tr>";
   }).join("");
   document.querySelector("#tradeEmpty").hidden=rows.length>0;
   document.querySelector("#historySummary").textContent=data.transactions.length+" registrerade affärer · totalt courtage "+precise.format(data.totalFees||0);
@@ -301,7 +299,7 @@ function renderConclusion() {
   document.querySelector("#conclusionPerformance").textContent="Registrerat resultat är "+signedMoney(ret)+". Det finns "+data.history.length+" sparade dagsvärderingar; kalendern visar vilka datum som har uppgifter.";
   document.querySelector("#conclusionAllocation").textContent=pct.format(share)+" % i aktier och "+money.format(data.cash)+" i kassa. Portföljen har "+data.holdings.length+" innehav, så enskilda bolag påverkar utfallet tydligt.";
   document.querySelector("#conclusionActivity").textContent="Historiken innehåller "+buys+" köp och "+sells+" försäljningar. Affärsdatum saknas för de tre ursprungliga köpen.";
-  document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" planerade ändringar finns noterade. Gå igenom dem på tisdag kl. 10 och jämför med verifierade kurser.":"Nästa veckogenomgång är tisdag kl. 10. Lägg in planer för beslut du vill följa upp; inget genomförs automatiskt.";
+  document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" planerade ändringar finns noterade. Gå igenom dem på tisdag kl. 10 och jämför med verifierade kurser." :"Nästa planerade paperhandelsfönster är tisdag/fredag kl. 10.00. Om körningen kommer efter fönstret eller data inte kan verifieras görs ingen retroaktiv affär. Endast paperhandel; inga riktiga order.";
 }
 function setView(name) {
   const views={dashboard:"#dashboardView",history:"#historyView",plan:"#planView",calendar:"#calendarView",conclusion:"#conclusionView",model:"#modelView",scanner:"#scannerView"};
