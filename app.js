@@ -1,41 +1,33 @@
 const STORE = "investern-ing-dashboard-v2";
 const INITIAL = {
   startCapital: 50000,
-  cash: 10013.64,
-  benchmarkDayPct: 0.35,
-  asOf: "2026-09-30",
+  cash: 10031.20,
+  totalFees: 62.04,
+  benchmarkDayPct: 0,
+  asOf: "2026-10-06",
   holdings: [
-    { ticker: "SAND", name: "Sandvik", quantity: 40, price: 380, previousPrice: 378.5, cost: 374.1, dayPct: 0.40 },
-    { ticker: "NIBE B", name: "NIBE Industrier B", quantity: 328, price: 45.6, previousPrice: 45.16, cost: 45.7, dayPct: 0.97 },
-    { ticker: "BONEX", name: "BONESUPPORT", quantity: 44, price: 236.8, previousPrice: 232.2, cost: 227.2, dayPct: 1.98 }
+    { ticker: "ASSA ABLOY B", name: "ASSA ABLOY B", quantity: 41, price: 352.40, previousPrice: 352.40, cost: 352.40, dayPct: 0 },
+    { ticker: "NIBE B", name: "NIBE B", quantity: 328, price: 45.02, previousPrice: 45.02, cost: 45.70, dayPct: 0 },
+    { ticker: "BONEX", name: "BONESUPPORT", quantity: 44, price: 230.60, previousPrice: 230.60, cost: 227.20, dayPct: 0 }
   ],
   history: [
     { date: "2026-09-28", value: 50000 },
     { date: "2026-09-29", value: 50197.08 },
-    { date: "2026-09-30", value: 50589.64 }
+    { date: "2026-09-30", value: 50589.64 },
+    { date: "2026-10-06", value: 49392.56 }
   ],
   transactions: [
-    { type: "buy", name: "Sandvik", ticker: "SAND", quantity: 40, price: 374.1, date: null },
-    { type: "buy", name: "NIBE Industrier B", ticker: "NIBE B", quantity: 328, price: 45.7, date: null },
-    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 44, price: 227.2, date: null }
+    { type: "buy", name: "Sandvik", ticker: "SAND", quantity: 40, price: 374.10, commission: 0, date: "2026-09-29" },
+    { type: "buy", name: "NIBE B", ticker: "NIBE B", quantity: 328, price: 45.70, commission: 0, date: "2026-09-29" },
+    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 44, price: 227.20, commission: 0, date: "2026-09-29" },
+    { type: "sell", name: "Sandvik", ticker: "SAND", quantity: 40, price: 362.30, commission: 13.04, date: "2026-10-06" },
+    { type: "buy", name: "ASSA ABLOY B", ticker: "ASSA ABLOY B", quantity: 41, price: 352.40, commission: 13.00, date: "2026-10-06" }
   ],
   plans: []
 };
 const money = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", maximumFractionDigits: 0 });
 const precise = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });let data = structuredClone(INITIAL);
-const SYNCED_TRADE = { id: "paper-2026-10-01-bonex-43", type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 43, price: 228.60, commission: 9, date: "2026-10-01", note: "Engångsavvikelse från tisdagstestet; paperhandel journalförd i chatten." };
-if (!data.transactions.some(t => t.id === SYNCED_TRADE.id || (t.type === "buy" && t.ticker === "BONEX" && Number(t.quantity) === 43 && Number(t.price) === 228.60 && t.date === "2026-10-01"))) {
-  const bonex = data.holdings.find(h => h.ticker === "BONEX");
-  const debit = SYNCED_TRADE.quantity * SYNCED_TRADE.price + SYNCED_TRADE.commission;
-  if (bonex && Number(data.cash) >= debit) {
-    bonex.cost = (bonex.quantity * bonex.cost + debit) / (bonex.quantity + SYNCED_TRADE.quantity);
-    bonex.quantity += SYNCED_TRADE.quantity;
-    data.cash = Number((data.cash - debit).toFixed(2));
-    data.transactions.push(SYNCED_TRADE);
-    persist();
-  }
-}
 let selectedCalendarDate = [...data.history].sort((a,b)=>a.date.localeCompare(b.date)).at(-1)?.date ?? today();
 let calendarMonth = new Date(selectedCalendarDate + "T12:00:00");
 const positions = document.querySelector("#positions");
@@ -67,8 +59,8 @@ async function loadMasterData(){
     });
     const buysBySymbol={};
     for(const t of ledgerTransactions)if(t.type==="buy"){
-      const source=ledger[t.id.split("-").at(-1)];
-      const key=source?.symbol;
+      const index=ledgerTransactions.indexOf(t);
+      const key=ledger[index]?.symbol;
       if(!key)continue;
       const item=buysBySymbol[key]||(buysBySymbol[key]={shares:0,cost:0});
       item.shares+=t.quantity;item.cost+=t.quantity*t.price+t.commission;
