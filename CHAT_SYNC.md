@@ -1,21 +1,23 @@
-# Dashboard chat sync
+# Dashboard sync
 
-## Source of truth
+## Canonical data
 
-Use `data/portfolio-journal.json` as the shared record for portfolio quantities, average cost, cash, paper trades, research notes, and verified candidates. The dashboard loads this file automatically when it opens. Market prices remain in the separate market data feed.
+- `portfolio.json` is the canonical current paper account: starting capital, holdings, cash, reference prices and cumulative fee total.
+- `ledger.json` is the canonical transaction list.
+- `data/portfolio-journal.json` contains analyses, research, decision notes and source links.
 
-When a conversation in the Investerning project contains a completed portfolio analysis or paper trade, update the shared journal in that same task and commit the change to `main`. Include date, rationale, evidence/source and uncertainty. Add trades only when the paper transaction is confirmed; keep unknown dates and fees null. Never invent scores, returns, prices, or transaction details.
+When recording a confirmed **paper** trade, update the ledger and current portfolio together, reconcile cash and fees, and append a dated journal note. Preserve historical transactions. Correct a mistaken summary with a clearly identified correction note; do not replace a recorded trade with an invented one. Keep unknown dates, fees, fills and returns null/unknown. Reference prices must not be represented as exact fills.
 
-## Scope and limitations
+Initial transactions may have unknown transaction-level fees even when an aggregate cash reconciliation is available. State the method and uncertainty; do not allocate an aggregate across individual trades without evidence.
 
-The dashboard is public on GitHub Pages. Do not put credentials, private account details, or non-public personal data in the shared journal. It is paper trading only; do not place real orders.
+## Dashboard refresh
 
-GitHub Pages cannot read ChatGPT conversations. A conversation must be available to the assistant in the current task, and the assistant must explicitly publish its verified result to the shared journal. This file is not an automatic transcript feed for unrelated chats. ChatGPT project context and the dashboard are separate systems.
+The dashboard fetches `portfolio.json` and `ledger.json` from the same Pages origin with cache-busting on page load and every five minutes. The model journal is checked every five minutes. Portfolio valuations may use `data/market.json` only when the delayed hourly feed is fresh (at most 90 minutes) and has a quote for each holding. Otherwise use the reference prices and make that fallback visible. The feed runs hourly at minute 17 (GitHub may delay scheduled runs).
 
-## Dashboard behavior
+GitHub Pages deploys repository commits from `main` and the root directory. Verify the completed Pages deployment and the live dashboard after publishing.
 
-- On page load, merge the shared holdings, trades and research from `data/portfolio-journal.json`.
-- Do not let browser-local storage become the canonical shared ledger.
-- Keep candidate tables empty until adequate verified data is available.
-- Preserve historical records; append or update by stable IDs to avoid duplicates.
-- Check the GitHub Pages deployment after publishing changes.
+## Chat and paper trading boundaries
+
+GitHub Pages cannot read ChatGPT history directly. Only information explicitly reviewed and published to these shared files appears in the dashboard; ordinary chat messages do not sync automatically.
+
+The portfolio is paper trading only. Never place real trades. The scheduled analysis windows are Tuesday/Friday at 10:00 Europe/Stockholm; the daily report is at 18:00. If an automation starts after a locked window or verified inputs are missing, record no trade rather than simulating one retroactively. No scheduled start time is guaranteed to run exactly on time.
