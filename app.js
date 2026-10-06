@@ -1,43 +1,47 @@
 const STORE = "investern-ing-dashboard-v2";
+const LOCAL_STORE = "investern-ing-dashboard-local-v1";
 const INITIAL = {
-  startCapital: 50000,
-  cash: 192.40,
-  totalFees: 71.00,
-  benchmarkDayPct: 0,
-  asOf: "2026-10-06",
+  startCapital: 50000, cash: 2.12, totalFees: 80, benchmarkDayPct: null, asOf: "2026-10-06",
   holdings: [
-    { ticker: "ASSA ABLOY B", name: "ASSA ABLOY B", quantity: 41, price: 352.40, previousPrice: 352.40, cost: 352.40, dayPct: 0 },
-    { ticker: "NIBE B", name: "NIBE B", quantity: 328, price: 45.02, previousPrice: 45.02, cost: 45.70, dayPct: 0 },
-    { ticker: "BONEX", name: "BONESUPPORT", quantity: 87, price: 230.60, previousPrice: 230.60, cost: 227.891954, dayPct: 0 }
+    {ticker:"ASSA ABLOY B",name:"ASSA ABLOY B",quantity:41,price:352.40,previousPrice:null,cost:352.717073,dayPct:null,quoteStatus:"reference"},
+    {ticker:"NIBE B",name:"NIBE B",quantity:332,price:45.32,previousPrice:null,cost:45.722530,dayPct:null,quoteStatus:"reference"},
+    {ticker:"BONEX",name:"BONESUPPORT",quantity:87,price:230.60,previousPrice:null,cost:227.995402,dayPct:null,quoteStatus:"reference"}
   ],
-  history: [
-    { date: "2026-09-28", value: 50000 },
-    { date: "2026-09-29", value: 50197.08 },
-    { date: "2026-09-30", value: 50589.64 },
-    { date: "2026-10-06", value: 49469.56 }
+  history:[
+    {date:"2026-09-28",value:50000,verified:false,origin:"legacy-dashboard"},
+    {date:"2026-09-29",value:50197.08,verified:false,origin:"legacy-dashboard"},
+    {date:"2026-09-30",value:50589.64,verified:false,origin:"legacy-dashboard"}
   ],
-  transactions: [
-    { type: "buy", name: "Sandvik", ticker: "SAND", quantity: 40, price: 374.10, commission: null, date: null },
-    { type: "buy", name: "NIBE B", ticker: "NIBE B", quantity: 328, price: 45.70, commission: null, date: null },
-    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 44, price: 227.20, commission: null, date: null },
-    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 43, price: 228.60, commission: 9, date: "2026-10-01" },
-    { type: "sell", name: "Sandvik", ticker: "SAND", quantity: 40, price: 362.30, commission: 13.04, date: "2026-10-06" },
-    { type: "buy", name: "ASSA ABLOY B", ticker: "ASSA ABLOY B", quantity: 41, price: 352.40, commission: 13.00, date: "2026-10-06" }
+  transactions:[
+    {type:"buy",name:"Sandvik",ticker:"SAND",quantity:40,price:374.10,commission:null,date:null},
+    {type:"buy",name:"NIBE B",ticker:"NIBE B",quantity:328,price:45.70,commission:null,date:null},
+    {type:"buy",name:"BONESUPPORT",ticker:"BONEX",quantity:44,price:227.20,commission:null,date:null},
+    {type:"buy",name:"BONESUPPORT",ticker:"BONEX",quantity:43,price:228.60,commission:9,date:"2026-10-01"},
+    {type:"sell",name:"Sandvik",ticker:"SAND",quantity:40,price:362.30,commission:13.04,date:"2026-10-06"},
+    {type:"buy",name:"ASSA ABLOY B",ticker:"ASSA ABLOY B",quantity:41,price:352.40,commission:13,date:"2026-10-06"},
+    {type:"buy",name:"NIBE B",ticker:"NIBE B",quantity:4,price:45.32,commission:9,date:"2026-10-06"}
   ],
-  plans: []
+  plans:[]
 };
 const money = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", maximumFractionDigits: 0 });
 const precise = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });let data = structuredClone(INITIAL);
-let selectedCalendarDate = [...data.history].sort((a,b)=>a.date.localeCompare(b.date)).at(-1)?.date ?? today();
-let calendarMonth = new Date(selectedCalendarDate + "T12:00:00");
-const positions = document.querySelector("#positions");
-const priceDialog = document.querySelector("#priceDialog");
-const snapshotDialog = document.querySelector("#snapshotDialog");
+const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });let data=structuredClone(INITIAL);
+let localState={};
+try{localState=JSON.parse(localStorage.getItem(LOCAL_STORE)||"{}")||{}}catch{localState={}}
+data.plans=Array.isArray(localState.plans)?localState.plans:[];
+if(Array.isArray(localState.history)){
+  const localByDate=new Map(localState.history.filter(p=>p&&p.date&&p.verified===true).map(p=>[p.date,p]));
+  data.history=[...data.history.filter(p=>!localByDate.has(p.date)),...localByDate.values()];
+}
+let selectedCalendarDate=verifiedHistory().at(-1)?.date??today();
+let calendarMonth=new Date((selectedCalendarDate||today())+"T12:00:00");
+const positions=document.querySelector("#positions");
+const priceDialog=document.querySelector("#priceDialog");
+const snapshotDialog=document.querySelector("#snapshotDialog");
 
-function readData() { return structuredClone(INITIAL); }
-function persist() {
-  // The published portfolio and ledger are canonical; never seed or restore portfolio state from localStorage.
+function verifiedHistory(){return data.history.filter(p=>p.verified===true).sort((a,b)=>a.date.localeCompare(b.date))}
+function persist(){
+  localStorage.setItem(LOCAL_STORE,JSON.stringify({plans:data.plans,history:data.history.filter(p=>p.verified===true&&p.origin==="local")}));
   localStorage.removeItem(STORE);
 }
 
