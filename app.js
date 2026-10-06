@@ -218,7 +218,7 @@ function renderTransactions() {
     return "<tr"+note+"><td>"+(t.date?dateLabel(t.date,{day:"numeric",month:"short",year:"numeric"}):"Datum saknas")+"</td><td><span class=\"trade-type "+t.type+"\">"+type+"</span></td><td><strong>"+safe(t.name)+"</strong> <small>"+safe(t.ticker||"")+"</small></td><td>"+Number(t.quantity).toLocaleString("sv-SE")+"</td><td>"+precise.format(t.price)+"</td><td>"+money.format(t.quantity*t.price)+fee+"</td></tr>";
   }).join("");
   document.querySelector("#tradeEmpty").hidden=rows.length>0;
-  document.querySelector("#historySummary").textContent=data.transactions.length+" registrerade affärer";
+  document.querySelector("#historySummary").textContent=data.transactions.length+" registrerade affärer · totalt courtage "+precise.format(data.totalFees||0);
   document.querySelector("#tradeCount").textContent=String(data.transactions.length);
   const recentEl=document.querySelector(".activity-card .activity-list");
   const countEl=document.querySelector(".activity-card .count-pill");
