@@ -136,13 +136,13 @@ async function loadBroadUniverse(){
     rows.forEach(x=>{
       if(!x.ticker)return;
       const prior=existing.get(x.ticker);
-      const merged={...(prior||{}),ticker:x.ticker,name:x.name||prior?.name||x.ticker,currentPrice:x.currentPrice??prior?.currentPrice??null,dayPct:x.dayPct??prior?.dayPct??null,marketCap:x.marketCap??prior?.marketCap??null,pe:x.pe??prior?.pe??null,sector:x.sector||prior?.sector||"",source:x.source||"Broad universe discovery",asOf:x.asOf||j.generatedAt||prior?.asOf||""};
+      const merged={...(prior||{}),ticker:x.ticker,name:x.name||prior?.name||x.ticker,currentPrice:x.currentPrice??prior?.currentPrice??null,dayPct:x.dayPct??prior?.dayPct??null,marketCap:x.marketCap??prior?.marketCap??null,pe:x.pe??prior?.pe??null,sector:x.sector||prior?.sector||"",source:x.source||"Broad universe discovery",exchange:x.exchange||prior?.exchange||"",market:x.market||prior?.market||"",currency:x.currency||prior?.currency||"",listed:x.listed??prior?.listed,asOf:x.asOf||j.generatedAt||prior?.asOf||""};
       existing.set(x.ticker,merged);
     });
     scannerRows=[...existing.values()];
     saveScanner(); renderScanner();
     const note=document.querySelector("#scannerUniverseNote");
-    if(note)note.textContent="Automatiskt universum: "+rows.length.toLocaleString("sv-SE")+" upptäckta bolag. Upptäckt är inte samma sak som verifierat investeringscase.";
+    if(note){const localOnly=Math.max(0,scannerRows.length-rows.length);note.textContent="Automatiskt universum: "+rows.length.toLocaleString("sv-SE")+" bolag, data från "+(j.generatedAt?new Date(j.generatedAt).toLocaleString("sv-SE",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"okänt datum")+". Tabellen innehåller "+scannerRows.length.toLocaleString("sv-SE")+" unika bolag totalt"+(localOnly?" ("+localOnly.toLocaleString("sv-SE")+" lokala/importerade tillägg)":"")+"; upptäckt är inte verifierat investeringscase.";}
   }catch{}
 }
 
@@ -153,5 +153,5 @@ function initScanner(){
   renderScanner();
   loadBroadUniverse();
 }
-window.InvesternScanner={render:renderScanner,rows:()=>scannerRows};
+window.InvesternScanner={render:renderScanner,refreshPortfolio:renderPortfolioRisk,rows:()=>scannerRows};
 document.addEventListener("DOMContentLoaded",initScanner);
