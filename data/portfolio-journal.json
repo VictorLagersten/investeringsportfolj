@@ -20,10 +20,10 @@
       {
         "ticker": "BONEX",
         "quantity": 87,
-        "cost": 227.2
+        "cost": 227.8919540229885
       }
     ],
-    "cumulativeCommission": 62.04
+    "cumulativeCommission": 71
   },
   "transactions": [
     {
@@ -95,10 +95,16 @@
   ],
   "research": [
     {
+      "id": "dashboard-audit-reconciliation-2026-10-06",
+      "date": "2026-10-06",
+      "title": "Avstämning: portfölj, affärslogg och dashboard",
+      "summary": "Kronologisk avstämning: start 50 000 kr; ursprungliga bruttoköp 39 950,40 kr; dokumenterad kassa före 1 okt 10 013,64 kr; därför är ursprungligt aggregerat courtage 35,96 kr härlett, men de ursprungliga datumen och avgifterna per affär saknas. 1 okt köptes 43 BONESUPPORT för 228,60 kr + 9 kr, vilket gav 87 BONESUPPORT och 174,84 kr i kassa. 6 okt:s paperrotation sålde 40 Sandvik till 362,30 kr (avgift 13,04) och köpte 41 ASSA ABLOY B till 352,40 kr (avgift 13,00), referenspriser inte exakta fyllnader. Efter affärerna: ASSA 41, NIBE 328, BONESUPPORT 87, kassa 192,40 kr. Totalt courtage 35,96 + 9 + 13,04 + 13 = 71,00 kr. Värderingen med portfolio.json-referenserna 352,40/45,02/230,60 är 49 469,56 kr, inte en synkron live- eller stängningsvärdering. Dashboardens marknadsfeed hämtas från Yahoo Finance timvis och kan vara fördröjd; chattanalyser förs inte in automatiskt. Pappershandel endast; inga riktiga order."
+    },
+    {
       "id": "masterdata-correction-2026-10-06-bonex-carryforward",
       "date": "2026-10-06",
       "title": "Rättelse: återställd BONESUPPORT-affär från 1 okt",
-      "summary": "portfolio.json saknade den redan journalförda paperaffären från 1 okt: köp av 43 BONESUPPORT för 228,60 kr per aktie med 9 kr courtage. Affären har lagts till som en saknad rad i ledger.json utan att ändra de befintliga transaktionerna. Masterpositionen är därmed 87 BONESUPPORT. Efter Sandvikförsäljningen och ASSA ABLOY-köpet 6 okt är kvarvarande kassa 192,40 kr; ingen ny affär har lagts till för 6 okt. Total courtagehistorik är fortsatt 62,04 kr enligt masterposten."
+      "summary": "Rättelse till 6 okt masterdata: den journalförda paperaffären 1 okt (+43 BONESUPPORT, 228,60 kr, 9 kr courtage) ska ligga kvar i portföljen. Den separata 6 okt paperrotationen (sälj 40 Sandvik, köp 41 ASSA ABLOY B; referenspriser, ej verifierade exakta fyllnader) ger 87 BONESUPPORT och 192,40 kr i kassa. Samlat registrerat courtage är 71,00 kr när 35,96 kr i ursprungligt aggregerat courtage härleds ur startkapital, ursprungliga bruttoköp och dokumenterad kassa före 1 okt; avgifter per ursprunglig affär är okända och förblir ej fördelade. Ingen riktig order har lagts."
     },
     {
       "id": "chat-sync-2026-10-01-data-audit",
