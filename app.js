@@ -2,13 +2,13 @@ const STORE = "investern-ing-dashboard-v2";
 const INITIAL = {
   startCapital: 50000,
   cash: 192.40,
-  totalFees: 62.04,
+  totalFees: 71.00,
   benchmarkDayPct: 0,
   asOf: "2026-10-06",
   holdings: [
     { ticker: "ASSA ABLOY B", name: "ASSA ABLOY B", quantity: 41, price: 352.40, previousPrice: 352.40, cost: 352.40, dayPct: 0 },
     { ticker: "NIBE B", name: "NIBE B", quantity: 328, price: 45.02, previousPrice: 45.02, cost: 45.70, dayPct: 0 },
-    { ticker: "BONEX", name: "BONESUPPORT", quantity: 87, price: 230.60, previousPrice: 230.60, cost: 228.00, dayPct: 0 }
+    { ticker: "BONEX", name: "BONESUPPORT", quantity: 87, price: 230.60, previousPrice: 230.60, cost: 227.891954, dayPct: 0 }
   ],
   history: [
     { date: "2026-09-28", value: 50000 },
@@ -17,9 +17,9 @@ const INITIAL = {
     { date: "2026-10-06", value: 49469.56 }
   ],
   transactions: [
-    { type: "buy", name: "Sandvik", ticker: "SAND", quantity: 40, price: 374.10, commission: 0, date: "2026-09-29" },
-    { type: "buy", name: "NIBE B", ticker: "NIBE B", quantity: 328, price: 45.70, commission: 0, date: "2026-09-29" },
-    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 44, price: 227.20, commission: 0, date: "2026-09-29" },
+    { type: "buy", name: "Sandvik", ticker: "SAND", quantity: 40, price: 374.10, commission: null, date: null },
+    { type: "buy", name: "NIBE B", ticker: "NIBE B", quantity: 328, price: 45.70, commission: null, date: null },
+    { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 44, price: 227.20, commission: null, date: null },
     { type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 43, price: 228.60, commission: 9, date: "2026-10-01" },
     { type: "sell", name: "Sandvik", ticker: "SAND", quantity: 40, price: 362.30, commission: 13.04, date: "2026-10-06" },
     { type: "buy", name: "ASSA ABLOY B", ticker: "ASSA ABLOY B", quantity: 41, price: 352.40, commission: 13.00, date: "2026-10-06" }
@@ -56,7 +56,7 @@ async function loadMasterData(){
     const ledgerTransactions=ledger.map((item,index)=>{
       const symbol=String(item.symbol||"");
       const isSell=String(item.action).toUpperCase()==="SELL";
-      return {id:"ledger-"+item.date+"-"+symbol+"-"+item.action+"-"+index,type:isSell?"sell":"buy",name:names[symbol]||symbol,ticker:tickers[symbol]||symbol,quantity:Number(item.shares),price:Number(item.price),commission:Number(item.fee||0),date:item.date,time:item.time};
+      return {id:"ledger-"+item.date+"-"+symbol+"-"+item.action+"-"+index,type:isSell?"sell":"buy",name:names[symbol]||symbol,ticker:tickers[symbol]||symbol,quantity:Number(item.shares),price:Number(item.price),commission:item.fee==null?null:Number(item.fee),date:item.date||null,time:item.time||null};
     });
     const buysBySymbol={};
     for(const t of ledgerTransactions)if(t.type==="buy"){
@@ -64,8 +64,10 @@ async function loadMasterData(){
       const key=ledger[index]?.symbol;
       if(!key)continue;
       const item=buysBySymbol[key]||(buysBySymbol[key]={shares:0,cost:0});
-      item.shares+=t.quantity;item.cost+=t.quantity*t.price+t.commission;
+      item.shares+=t.quantity;item.cost+=t.quantity*t.price;
     }
+    if(!Array.isArray(ledger)||!Array.isArray(portfolio.holdings)||!Number.isFinite(Number(portfolio.cash)))throw new Error("Masterdata har fel format");
+    masterDataState={ok:true,error:null};
     data.cash=Number(portfolio.cash);
     data.asOf=portfolio.asOf;
     data.totalFees=Number(portfolio.totalFees||0);
@@ -83,10 +85,14 @@ async function loadMasterData(){
     data.benchmarkDayPct=0;
     persist();
     render();
-  }catch(error){console.warn("Masterdata kunde inte hämtas",error)}
+  }catch(error){masterDataState={ok:false,error:String(error?.message||error)};console.warn("Masterdata kunde inte hämtas",error);updateMarketStatus()}
 }
 
 let marketDataState = { fetchedAt: null, source: null, ok: false };
+
+let marketDataState = { fetchedAt: null, source: null, ok: false, error: null };
+let masterDataState = { ok: false, error: null };
+let refreshInFlight = false;
 
 async function loadMarketData() {
   try {
@@ -94,44 +100,73 @@ async function loadMarketData() {
     if (!response.ok) throw new Error("market data HTTP " + response.status);
     const payload = await response.json();
     const quotes = payload.quotes || {};
-    let updated = false;
-    data.holdings.forEach(h => {
-      const q = quotes[h.ticker];
-      const price = Number(q?.price);
-      if (!Number.isFinite(price) || price <= 0) return;
-      h.previousPrice = h.price;
-      h.price = price;
-      if (Number.isFinite(Number(q.dayPct))) h.dayPct = Number(q.dayPct);
-      updated = true;
-    });
-    if (updated) {
-      marketDataState = { fetchedAt: payload.fetchedAt || null, source: payload.source || null, ok: true };
-      data.asOf = payload.fetchedAt || data.asOf;
-      persist();
-      render();
-    } else {
-      marketDataState = { fetchedAt: payload.fetchedAt || null, source: payload.source || null, ok: false };
+    const fetchedMs = Date.parse(payload.fetchedAt || "");
+    const ageMs = Date.now() - fetchedMs;
+    if (!Number.isFinite(fetchedMs) || ageMs < 0 || ageMs > 90 * 60 * 1000) {
+      throw new Error("Kursfilen är äldre än 90 minuter eller saknar tidsstämpel");
     }
-    updateMarketStatus();
+
+    const quoteKeys = {
+      "ASSA ABLOY B": "ASSA-B",
+      "ASSA-B": "ASSA-B",
+      "NIBE B": "NIBE B",
+      "NIBE-B": "NIBE B",
+      "BONEX": "BONEX"
+    };
+    const matched = data.holdings.map(holding => ({
+      holding,
+      quote: quotes[quoteKeys[holding.ticker] || holding.ticker]
+    }));
+    const missing = matched.filter(({ quote }) => !Number.isFinite(Number(quote?.price)) || Number(quote.price) <= 0);
+    if (missing.length) {
+      throw new Error("Saknar färsk kurs för " + missing.map(x => x.holding.name).join(", "));
+    }
+
+    matched.forEach(({ holding, quote }) => {
+      const priorClose = Number(quote.previousClose);
+      holding.previousPrice = Number.isFinite(priorClose) && priorClose > 0 ? priorClose : holding.price;
+      holding.price = Number(quote.price);
+      holding.dayPct = Number.isFinite(Number(quote.dayPct)) ? Number(quote.dayPct) : 0;
+    });
+    const benchmark = quotes.OMXS30;
+    data.benchmarkDayPct = Number.isFinite(Number(benchmark?.dayPct)) ? Number(benchmark.dayPct) : 0;
+    marketDataState = { fetchedAt: payload.fetchedAt, source: payload.source || null, ok: true, error: null };
+    render();
   } catch (error) {
-    marketDataState = { fetchedAt: null, source: null, ok: false, error: String(error) };
+    marketDataState = { ...marketDataState, ok: false, error: String(error?.message || error) };
     updateMarketStatus();
+  }
+}
+
+async function refreshDashboardData() {
+  if (refreshInFlight) return;
+  refreshInFlight = true;
+  try {
+    await loadMasterData();
+    await loadMarketData();
+  } finally {
+    refreshInFlight = false;
   }
 }
 
 function updateMarketStatus() {
   const el = document.querySelector("#asof");
   if (!el) return;
+  const masterText = masterDataState.ok
+    ? "Portfölj " + dateLabel(data.asOf, { day: "numeric", month: "short" }) + " · GitHub"
+    : "GitHub-masterdata saknas · reservvärden";
   if (marketDataState.ok && marketDataState.fetchedAt) {
     const d = new Date(marketDataState.fetchedAt);
-    el.textContent = "Marknadsdata " + d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }) + " · automatisk";
-    el.title = "Senaste hämtning: " + d.toLocaleString("sv-SE") + ". " + (marketDataState.source || "");
+    el.textContent = masterText + " · kurser " + d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }) + " · fördröjda";
+    el.title = "Portfölj och affärer hämtas från portfolio.json och ledger.json. Kurskälla: " +
+      (marketDataState.source || "marknadsfil") + ", hämtad " + d.toLocaleString("sv-SE") + ". Kursflödet kan vara fördröjt.";
   } else {
-    el.textContent = "Marknadsdata väntar på uppdatering · manuell fallback";
+    el.textContent = masterText + " · visar referenskurser";
+    el.title = "Marknadsfilen saknas, är ofullständig eller äldre än 90 minuter. Visade priser är referenspriser från portfolio.json. " +
+      (marketDataState.error || "");
   }
 }
 
-// Current prices are supplied by portfolio.json; do not overwrite them with a separate quote cache.
 function today() {
   const d = new Date();
   return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
@@ -210,11 +245,11 @@ function renderChart() {
 
 function renderTransactions() {
   const filter=document.querySelector("#tradeFilter").value;
-  const rows=[...data.transactions].filter(t=>filter==="all"||t.type===filter).sort((a,b)=>(a.date||"9999-99-99").localeCompare(b.date||"9999-99-99"));
+  const rows=[...data.transactions].filter(t=>filter==="all"||t.type===filter).sort((a,b)=>(a.date||"0000-00-00").localeCompare(b.date||"0000-00-00"));
   const safe=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
   document.querySelector("#tradeRows").innerHTML=rows.map(t=>{
     const type=t.type==="sell"?"Försäljning":"Köp";
-    const fee=t.commission!=null?"<small>Court. "+precise.format(t.commission)+"</small>":"";
+    const fee=t.commission!=null?"<small>Courtage "+precise.format(t.commission)+"</small>":"<small>Courtage ej angivet</small>";
     const note=t.note?" title=\""+safe(t.note)+"\"":"";
     return "<tr"+note+"><td>"+(t.date?dateLabel(t.date,{day:"numeric",month:"short",year:"numeric"}):"Datum saknas")+"</td><td><span class=\"trade-type "+t.type+"\">"+type+"</span></td><td><strong>"+safe(t.name)+"</strong> <small>"+safe(t.ticker||"")+"</small></td><td>"+Number(t.quantity).toLocaleString("sv-SE")+"</td><td>"+precise.format(t.price)+"</td><td>"+money.format(t.quantity*t.price)+fee+"</td></tr>";
   }).join("");
@@ -301,7 +336,7 @@ function render() {
   document.querySelector("#donut").style.background = `conic-gradient(#52795b 0 ${equityPct}%,#d6e0d7 ${equityPct}% 100%)`;
   document.querySelector("#benchmark").textContent = hasDailyComparison ? `${dayPct-data.benchmarkDayPct >= 0 ? "+" : ""}${pct.format(dayPct-data.benchmarkDayPct)} pp` : "–";
   document.querySelector("#benchmark").className = hasDailyComparison ? (dayPct >= data.benchmarkDayPct ? "up" : "down") : "stat-note";
-  document.querySelector("#asof").textContent = `${dateLabel(data.asOf,{day:"numeric",month:"short",year:"numeric"})} · stängning`;
+  document.querySelector("#asof").textContent = `${dateLabel(data.asOf,{day:"numeric",month:"short",year:"numeric"})} · referensvärdering`;
   const values = sorted.slice(-7).map(p=>p.value);
   if (values.length > 1) {
     const lo=Math.min(...values), hi=Math.max(...values), span=hi-lo || 1;
@@ -330,7 +365,7 @@ function openPrices() {
   form.elements.date.value=today();
   priceDialog.showModal();
 }
-document.querySelector("#updatePrices").addEventListener("click",openPrices);
+document.querySelector("#updatePrices").addEventListener("click",refreshDashboardData);
 document.querySelector("#cancelPrices").addEventListener("click",()=>priceDialog.close());
 document.querySelector("#priceForm").addEventListener("submit",event=>{
   event.preventDefault();
@@ -377,4 +412,5 @@ document.querySelector("#planForm").addEventListener("submit",event=>{
 document.querySelector("#calendarPrev").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()-1);renderCalendar();});
 document.querySelector("#calendarNext").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()+1);renderCalendar();});
 render();
-loadMasterData();
+refreshDashboardData();
+window.setInterval(refreshDashboardData, 5 * 60 * 1000);
