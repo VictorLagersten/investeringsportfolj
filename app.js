@@ -23,7 +23,7 @@ const INITIAL = {
 };
 const money = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", maximumFractionDigits: 0 });
 const precise = new Intl.NumberFormat("sv-SE", { style: "currency", currency: "SEK", minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });let data = readData();
+const pct = new Intl.NumberFormat("sv-SE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });let data = structuredClone(INITIAL);
 const SYNCED_TRADE = { id: "paper-2026-10-01-bonex-43", type: "buy", name: "BONESUPPORT", ticker: "BONEX", quantity: 43, price: 228.60, commission: 9, date: "2026-10-01", note: "Engångsavvikelse från tisdagstestet; paperhandel journalförd i chatten." };
 if (!data.transactions.some(t => t.id === SYNCED_TRADE.id || (t.type === "buy" && t.ticker === "BONEX" && Number(t.quantity) === 43 && Number(t.price) === 228.60 && t.date === "2026-10-01"))) {
   const bonex = data.holdings.find(h => h.ticker === "BONEX");
@@ -42,44 +42,55 @@ const positions = document.querySelector("#positions");
 const priceDialog = document.querySelector("#priceDialog");
 const snapshotDialog = document.querySelector("#snapshotDialog");
 
-function readData() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORE));
-    return saved?.holdings && saved?.history ? { ...structuredClone(INITIAL), ...saved, transactions: saved.transactions ?? structuredClone(INITIAL.transactions), plans: saved.plans ?? [] } : structuredClone(INITIAL);
-  } catch {
-    return structuredClone(INITIAL);
-  }
+function readData() { return structuredClone(INITIAL); }
+function persist() {
+  // The published portfolio and ledger are canonical; never seed or restore portfolio state from localStorage.
+  localStorage.removeItem(STORE);
 }
-function persist() { localStorage.setItem(STORE, JSON.stringify(data)); }
 
-let sharedJournal=null;
-async function syncSharedJournal(){
+async function loadMasterData(){
   try{
-    const response=await fetch("./data/portfolio-journal.json?ts="+Date.now(),{cache:"no-store"});
-    if(!response.ok)return;
-    const journal=await response.json(); sharedJournal=journal;
-    const portfolio=journal.portfolio||{};
-    if(Number.isFinite(Number(portfolio.cash)))data.cash=Number(portfolio.cash);
-    const nameByTicker={"SAND":"Sandvik","NIBE B":"NIBE Industrier B","BONEX":"BONESUPPORT","ASSA ABLOY B":"ASSA ABLOY B"};
-    data.holdings=(portfolio.holdings||[]).map(item=>{
-      const prior=data.holdings.find(x=>x.ticker===item.ticker);
-      const referencePrice=Number(item.referencePrice??item.cost??prior?.price??0);
-      return prior
-        ? {...prior,quantity:Number(item.quantity),cost:Number(item.cost??prior.cost)}
-        : {ticker:item.ticker,name:nameByTicker[item.ticker]||item.ticker,quantity:Number(item.quantity),price:referencePrice,previousPrice:referencePrice,cost:Number(item.cost??referencePrice),dayPct:0};
+    const stamp=Date.now();
+    const [portfolioResponse,ledgerResponse]=await Promise.all([
+      fetch(new URL("portfolio.json?ts="+stamp,location.href),{cache:"no-store"}),
+      fetch(new URL("ledger.json?ts="+stamp,location.href),{cache:"no-store"})
+    ]);
+    if(!portfolioResponse.ok||!ledgerResponse.ok)throw new Error("Masterdata kunde inte hämtas ("+portfolioResponse.status+"/"+ledgerResponse.status+")");
+    const portfolio=await portfolioResponse.json();
+    const ledger=await ledgerResponse.json();
+    const names={"ASSA-B":"ASSA ABLOY B","NIBE-B":"NIBE B","BONEX":"BONESUPPORT","SANDVIK":"Sandvik"};
+    const tickers={"ASSA-B":"ASSA ABLOY B","NIBE-B":"NIBE B","BONEX":"BONEX","SANDVIK":"SAND"};
+    const ledgerTransactions=ledger.map((item,index)=>{
+      const symbol=String(item.symbol||"");
+      const isSell=String(item.action).toUpperCase()==="SELL";
+      return {id:"ledger-"+item.date+"-"+symbol+"-"+item.action+"-"+index,type:isSell?"sell":"buy",name:names[symbol]||symbol,ticker:tickers[symbol]||symbol,quantity:Number(item.shares),price:Number(item.price),commission:Number(item.fee||0),date:item.date,time:item.time};
     });
-    for(const t of journal.transactions||[]){
-      const exists=data.transactions.some(x=>x.id===t.id||(x.type===t.type&&x.ticker===t.ticker&&Number(x.quantity)===Number(t.quantity)&&Number(x.price)===Number(t.price)&&(x.date||null)===(t.date||null)));
-      if(!exists)data.transactions.push({...t});
+    const buysBySymbol={};
+    for(const t of ledgerTransactions)if(t.type==="buy"){
+      const source=ledger[t.id.split("-").at(-1)];
+      const key=source?.symbol;
+      if(!key)continue;
+      const item=buysBySymbol[key]||(buysBySymbol[key]={shares:0,cost:0});
+      item.shares+=t.quantity;item.cost+=t.quantity*t.price+t.commission;
     }
-    const note=document.querySelector("#chatAnalysis");
-    const researchEntries=journal.research||[];
-    const latest=researchEntries.reduce((best,item)=>!best||String(item.date||"")>=String(best.date||"")?item:best,null);
-    if(note&&latest)note.textContent=(latest.date?latest.date+" · ":"")+latest.summary;
-    const noteDate=document.querySelector(".notes-card .note-date");
-    if(noteDate&&latest?.date)noteDate.textContent=dateLabel(latest.date,{day:"numeric",month:"short"}).replace(".","").toUpperCase("sv-SE");
-    persist();render();
-  }catch(error){console.warn("Gemensam journal kunde inte hämtas",error)}
+    data.cash=Number(portfolio.cash);
+    data.asOf=portfolio.asOf;
+    data.totalFees=Number(portfolio.totalFees||0);
+    data.holdings=(portfolio.holdings||[]).map(item=>{
+      const symbol=item.symbol, average=buysBySymbol[symbol];
+      const price=Number(item.price),quantity=Number(item.shares);
+      const cost=average?.shares?average.cost/average.shares:price;
+      return {ticker:tickers[symbol]||symbol,name:item.name||names[symbol]||symbol,quantity,price,previousPrice:price,cost,dayPct:0};
+    });
+    data.transactions=ledgerTransactions;
+    data.history=data.history.filter(point=>point.date!==portfolio.asOf);
+    const currentValue=data.cash+data.holdings.reduce((sum,h)=>sum+h.quantity*h.price,0);
+    data.history.push({date:portfolio.asOf,value:currentValue,snapshot:{cash:data.cash,holdings:data.holdings.map(h=>({name:h.name,ticker:h.ticker,quantity:h.quantity,price:h.price}))}});
+    data.history.sort((a,b)=>a.date.localeCompare(b.date));
+    data.benchmarkDayPct=0;
+    persist();
+    render();
+  }catch(error){console.warn("Masterdata kunde inte hämtas",error)}
 }
 
 let marketDataState = { fetchedAt: null, source: null, ok: false };
@@ -127,8 +138,7 @@ function updateMarketStatus() {
   }
 }
 
-loadMarketData();
-setInterval(loadMarketData, 60 * 1000);
+// Current prices are supplied by portfolio.json; do not overwrite them with a separate quote cache.
 function today() {
   const d = new Date();
   return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
@@ -370,5 +380,5 @@ document.querySelector("#planForm").addEventListener("submit",event=>{
 });
 document.querySelector("#calendarPrev").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()-1);renderCalendar();});
 document.querySelector("#calendarNext").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()+1);renderCalendar();});
-syncSharedJournal();
 render();
+loadMasterData();
