@@ -4,7 +4,7 @@
 .assessment-main h2{font-size:42px;line-height:1;margin:0 0 18px;letter-spacing:-.04em}
 .assessment-lead{font-size:16px;color:#d4dbe2;max-width:820px;margin:0}
 .assessment-lead strong{color:var(--text)}
-.assessment-points{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.assessment-points{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px}
 .assessment-points>div{padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(11,15,20,.35)}
 .assessment-points span{color:var(--accent);font-size:18px}
 .assessment-points strong{display:block;margin:5px 0;font-size:15px}
