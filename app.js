@@ -97,7 +97,7 @@ async function loadMarketData(){
     const feedAt=Date.parse(payload.fetchedAt||""),age=Date.now()-feedAt;
     if(!Number.isFinite(feedAt)||age<0||age>90*60*1000)throw new Error("Kursfilen är äldre än 90 minuter eller saknar tidsstämpel");
     const keys={"ASSA ABLOY B":"ASSA-B","ASSA-B":"ASSA-B","NIBE B":"NIBE B","NIBE-B":"NIBE B","BONEX":"BONEX"};
-    const updatedNames=[],missingNames=[];
+    const updatedNames=[],missingNames=[],movementMissingNames=[];
     data.holdings.forEach(holding=>{
       holding.previousPrice=null;holding.dayPct=null;holding.quoteStatus="reference";holding.quoteFetchedAt=null;
       const quote=quotes[keys[holding.ticker]||holding.ticker],quoteAt=Date.parse(quote?.fetchedAt||payload.fetchedAt||"");
@@ -109,13 +109,14 @@ async function loadMarketData(){
         holding.previousPrice=priorClose;
         const movement=quote.dayPct==null?NaN:Number(quote.dayPct);
         holding.dayPct=Number.isFinite(movement)?movement:(price/priorClose-1)*100;
-      }
+        if(!Number.isFinite(holding.dayPct))movementMissingNames.push(holding.name);
+      }else movementMissingNames.push(holding.name);
       updatedNames.push(holding.name);
     });
     const benchmark=quotes.OMXS30,bp=Number(benchmark?.price),bc=Number(benchmark?.previousClose),bt=Date.parse(benchmark?.fetchedAt||payload.fetchedAt||"");
     data.benchmarkDayPct=Number.isFinite(bp)&&bp>0&&Number.isFinite(bc)&&bc>0&&Number.isFinite(bt)&&Date.now()-bt>=0&&Date.now()-bt<=90*60*1000?(bp/bc-1)*100:null;
-    const complete=missingNames.length===0&&data.holdings.every(h=>h.dayPct!=null);
-    marketDataState={fetchedAt:payload.fetchedAt,source:payload.source||null,ok:updatedNames.length>0,complete,updatedNames,missingNames,error:null};
+    const complete=missingNames.length===0&&movementMissingNames.length===0&&data.holdings.every(h=>h.dayPct!=null);
+    marketDataState={fetchedAt:payload.fetchedAt,source:payload.source||null,ok:updatedNames.length>0,complete,updatedNames,missingNames,movementMissingNames,error:null};
     render();
   }catch(error){
     data.holdings.forEach(h=>{h.previousPrice=null;h.dayPct=null;h.quoteStatus="reference";h.quoteFetchedAt=null;});
@@ -140,7 +141,7 @@ function updateMarketStatus(){
   if(marketDataState.ok&&marketDataState.complete&&marketDataState.fetchedAt){
     el.textContent=master+" · kurser "+time(marketDataState.fetchedAt)+" · fördröjda";
   }else if(marketDataState.ok&&marketDataState.fetchedAt){
-    el.textContent=master+" · delvis kursdata "+time(marketDataState.fetchedAt)+" · uppdaterat: "+marketDataState.updatedNames.join(", ")+" · saknar: "+marketDataState.missingNames.join(", ");
+    el.textContent=master+" · delvis kursdata "+time(marketDataState.fetchedAt)+" · kurser: "+marketDataState.updatedNames.join(", ")+" · saknar kurs: "+(marketDataState.missingNames.join(", ")||"ingen")+" · saknar dagsrörelse: "+(marketDataState.movementMissingNames?.join(", ")||"ingen");
   }else{
     el.textContent=master+" · referenskurser"+(marketDataState.fetchedAt?" · kursfil "+time(marketDataState.fetchedAt):"");
   }
@@ -166,7 +167,7 @@ function renderPositions(){
   positions.innerHTML=data.holdings.map(h=>{
     const market=h.quantity*h.price,totalGain=h.quantity*(h.price-h.cost),totalPct=h.cost?(h.price/h.cost-1)*100:null;
     const movement=h.dayPct,hasMovement=Number.isFinite(movement);
-    const quoteLabel=h.quoteStatus==="market"?"Fördröjd marknadskurs":"Referenskurs";
+    const quoteLabel=h.quoteStatus==="market"?"Fördröjd marknadskurs · "+new Date(h.quoteFetchedAt).toLocaleString("sv-SE",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"Referenskurs från portfolio.json · ingen färsk kursfeed";
     const movementText=hasMovement?(movement>=0?"+":"")+pct.format(movement)+"%":"–";
     const movementTitle=hasMovement?"Dagens rörelse från senaste tillgängliga stängning":"Dagens rörelse saknas: färsk kurs eller jämförbar stängningskurs saknas";
     return `<tr><td><div class="name-cell"><span class="ticker">${h.ticker==="ASSA ABLOY B"?"ASSA":h.ticker}</span><span class="company">${h.name}<small>${h.name==="NIBE Industrier B"?"Industri":h.name==="BONESUPPORT"?"Medicinteknik":"Industri"}</small></span></div></td><td>${h.quantity}</td><td title="${quoteLabel}">${precise.format(h.price)}</td><td>${money.format(market)}</td><td class="${hasMovement?(movement>=0?"up":"down"):"stat-note"}" title="${movementTitle}">${movementText}</td><td class="${totalGain>=0?"up":"down"}">${signedMoney(totalGain)} <small>(${totalPct>=0?"+":""}${pct.format(totalPct)}%)</small></td></tr>`;
@@ -310,7 +311,7 @@ function render() {
   document.querySelector("#portfolioValue").textContent = precise.format(total);
   document.querySelector("#totalReturn").textContent = `${signedMoney(overall)} · ${overallPct >= 0 ? "+" : ""}${pct.format(overallPct)}%`;
   document.querySelector("#dayValue").textContent = hasDailyComparison ? signedMoney(day) : "–";
-  document.querySelector("#dayPercent").textContent = hasDailyComparison ? `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % från jämförbara dagskurser` : marketDataState.updatedNames.length ? "Delvis kursdata · saknar rörelse för: "+marketDataState.missingNames.join(", ") : "Kompletta jämförbara dagskurser saknas";
+  document.querySelector("#dayPercent").textContent = hasDailyComparison ? `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % från jämförbara dagskurser` : marketDataState.updatedNames.length ? "Delvis kursdata · saknar rörelse för: "+[...marketDataState.missingNames,...(marketDataState.movementMissingNames||[])].join(", ") : "Kompletta jämförbara dagskurser saknas";
   document.querySelector("#dayValue").className = hasDailyComparison ? (day >= 0 ? "up" : "down") : "stat-note";
   document.querySelector("#cashValue").textContent = money.format(data.cash);
   document.querySelector("#stockExposure").textContent = `${(equity / total * 100).toLocaleString("sv-SE",{maximumFractionDigits:1})}% i aktier`;
