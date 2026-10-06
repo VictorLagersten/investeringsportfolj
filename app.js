@@ -49,119 +49,101 @@ async function loadMasterData(){
       fetch(new URL("ledger.json?ts="+stamp,location.href),{cache:"no-store"})
     ]);
     if(!portfolioResponse.ok||!ledgerResponse.ok)throw new Error("Masterdata kunde inte hämtas ("+portfolioResponse.status+"/"+ledgerResponse.status+")");
-    const portfolio=await portfolioResponse.json();
-    const ledger=await ledgerResponse.json();
+    const portfolio=await portfolioResponse.json(), ledger=await ledgerResponse.json();
+    if(!Array.isArray(ledger)||!Array.isArray(portfolio.holdings)||!Number.isFinite(Number(portfolio.cash)))throw new Error("Masterdata har fel format");
     const names={"ASSA-B":"ASSA ABLOY B","NIBE-B":"NIBE B","BONEX":"BONESUPPORT","SANDVIK":"Sandvik"};
     const tickers={"ASSA-B":"ASSA ABLOY B","NIBE-B":"NIBE B","BONEX":"BONEX","SANDVIK":"SAND"};
-    const ledgerTransactions=ledger.map((item,index)=>{
-      const symbol=String(item.symbol||"");
-      const isSell=String(item.action).toUpperCase()==="SELL";
+    data.transactions=ledger.map((item,index)=>{
+      const symbol=String(item.symbol||""),isSell=String(item.action).toUpperCase()==="SELL";
       return {id:"ledger-"+item.date+"-"+symbol+"-"+item.action+"-"+index,type:isSell?"sell":"buy",name:names[symbol]||symbol,ticker:tickers[symbol]||symbol,quantity:Number(item.shares),price:Number(item.price),commission:item.fee==null?null:Number(item.fee),date:item.date||null,time:item.time||null,note:item.note||null};
     });
     const buysBySymbol={};
-    for(const t of ledgerTransactions)if(t.type==="buy"){
-      const index=ledgerTransactions.indexOf(t);
-      const key=ledger[index]?.symbol;
-      if(!key)continue;
-      const item=buysBySymbol[key]||(buysBySymbol[key]={shares:0,cost:0});
-      item.shares+=t.quantity;item.cost+=t.quantity*t.price;
-    }
-    if(!Array.isArray(ledger)||!Array.isArray(portfolio.holdings)||!Number.isFinite(Number(portfolio.cash)))throw new Error("Masterdata har fel format");
+    ledger.forEach(item=>{
+      if(String(item.action).toUpperCase()!=="BUY")return;
+      const key=String(item.symbol||""),position=buysBySymbol[key]||(buysBySymbol[key]={shares:0,cost:0});
+      const shares=Number(item.shares),price=Number(item.price);
+      position.shares+=shares;
+      position.cost+=shares*price+(item.fee==null?0:Number(item.fee));
+    });
     masterDataState={ok:true,error:null};
     data.cash=Number(portfolio.cash);
     data.asOf=portfolio.asOf;
     data.totalFees=Number(portfolio.totalFees||0);
-    data.holdings=(portfolio.holdings||[]).map(item=>{
-      const symbol=item.symbol, average=buysBySymbol[symbol];
-      const price=Number(item.price),quantity=Number(item.shares);
+    data.holdings=portfolio.holdings.map(item=>{
+      const symbol=item.symbol,average=buysBySymbol[symbol],price=Number(item.price),quantity=Number(item.shares);
       const cost=average?.shares?average.cost/average.shares:price;
-      return {ticker:tickers[symbol]||symbol,name:item.name||names[symbol]||symbol,quantity,price,previousPrice:price,cost,dayPct:0};
+      return {ticker:tickers[symbol]||symbol,name:item.name||names[symbol]||symbol,quantity,price,previousPrice:null,cost,dayPct:null,quoteStatus:"reference",quoteFetchedAt:null};
     });
-    data.transactions=ledgerTransactions;
-    data.history=data.history.filter(point=>point.date!==portfolio.asOf);
-    const currentValue=data.cash+data.holdings.reduce((sum,h)=>sum+h.quantity*h.price,0);
-    data.history.push({date:portfolio.asOf,value:currentValue,snapshot:{cash:data.cash,holdings:data.holdings.map(h=>({name:h.name,ticker:h.ticker,quantity:h.quantity,price:h.price}))}});
-    data.history.sort((a,b)=>a.date.localeCompare(b.date));
-    data.benchmarkDayPct=0;
+    data.benchmarkDayPct=null;
+    // Master reference marks are not added to the recorded daily history.
     persist();
     render();
   }catch(error){masterDataState={ok:false,error:String(error?.message||error)};console.warn("Masterdata kunde inte hämtas",error);updateMarketStatus()}
 }
 
-let marketDataState = { fetchedAt: null, source: null, ok: false, error: null };
-let masterDataState = { ok: false, error: null };
-let refreshInFlight = false;
+let marketDataState={fetchedAt:null,source:null,ok:false,complete:false,updatedNames:[],missingNames:[],error:null};
+let masterDataState={ok:false,error:null};
+let refreshInFlight=false;
 
-async function loadMarketData() {
-  try {
-    const response = await fetch("./data/market.json?ts=" + Date.now(), { cache: "no-store" });
-    if (!response.ok) throw new Error("market data HTTP " + response.status);
-    const payload = await response.json();
-    const quotes = payload.quotes || {};
-    const fetchedMs = Date.parse(payload.fetchedAt || "");
-    const ageMs = Date.now() - fetchedMs;
-    if (!Number.isFinite(fetchedMs) || ageMs < 0 || ageMs > 90 * 60 * 1000) {
-      throw new Error("Kursfilen är äldre än 90 minuter eller saknar tidsstämpel");
-    }
-
-    const quoteKeys = {
-      "ASSA ABLOY B": "ASSA-B",
-      "ASSA-B": "ASSA-B",
-      "NIBE B": "NIBE B",
-      "NIBE-B": "NIBE B",
-      "BONEX": "BONEX"
-    };
-    const matched = data.holdings.map(holding => ({
-      holding,
-      quote: quotes[quoteKeys[holding.ticker] || holding.ticker]
-    }));
-    const missing = matched.filter(({ quote }) => !Number.isFinite(Number(quote?.price)) || Number(quote.price) <= 0);
-    if (missing.length) {
-      throw new Error("Saknar färsk kurs för " + missing.map(x => x.holding.name).join(", "));
-    }
-
-    matched.forEach(({ holding, quote }) => {
-      const priorClose = Number(quote.previousClose);
-      holding.previousPrice = Number.isFinite(priorClose) && priorClose > 0 ? priorClose : holding.price;
-      holding.price = Number(quote.price);
-      holding.dayPct = Number.isFinite(Number(quote.dayPct)) ? Number(quote.dayPct) : 0;
+async function loadMarketData(){
+  try{
+    const response=await fetch("./data/market.json?ts="+Date.now(),{cache:"no-store"});
+    if(!response.ok)throw new Error("market data HTTP "+response.status);
+    const payload=await response.json(),quotes=payload.quotes||{};
+    const feedAt=Date.parse(payload.fetchedAt||""),age=Date.now()-feedAt;
+    if(!Number.isFinite(feedAt)||age<0||age>90*60*1000)throw new Error("Kursfilen är äldre än 90 minuter eller saknar tidsstämpel");
+    const keys={"ASSA ABLOY B":"ASSA-B","ASSA-B":"ASSA-B","NIBE B":"NIBE B","NIBE-B":"NIBE B","BONEX":"BONEX"};
+    const updatedNames=[],missingNames=[];
+    data.holdings.forEach(holding=>{
+      holding.previousPrice=null;holding.dayPct=null;holding.quoteStatus="reference";holding.quoteFetchedAt=null;
+      const quote=quotes[keys[holding.ticker]||holding.ticker],quoteAt=Date.parse(quote?.fetchedAt||payload.fetchedAt||"");
+      const quoteAge=Date.now()-quoteAt,price=Number(quote?.price),priorClose=Number(quote?.previousClose);
+      const valid=Number.isFinite(price)&&price>0&&Number.isFinite(quoteAt)&&quoteAge>=0&&quoteAge<=90*60*1000&&String(quote?.currency||"SEK")==="SEK";
+      if(!valid){missingNames.push(holding.name);return;}
+      holding.price=price;holding.quoteStatus="market";holding.quoteFetchedAt=quote.fetchedAt||payload.fetchedAt;
+      if(Number.isFinite(priorClose)&&priorClose>0){
+        holding.previousPrice=priorClose;
+        const movement=quote.dayPct==null?NaN:Number(quote.dayPct);
+        holding.dayPct=Number.isFinite(movement)?movement:(price/priorClose-1)*100;
+      }
+      updatedNames.push(holding.name);
     });
-    const benchmark = quotes.OMXS30;
-    data.benchmarkDayPct = Number.isFinite(Number(benchmark?.dayPct)) ? Number(benchmark.dayPct) : 0;
-    marketDataState = { fetchedAt: payload.fetchedAt, source: payload.source || null, ok: true, error: null };
+    const benchmark=quotes.OMXS30,bp=Number(benchmark?.price),bc=Number(benchmark?.previousClose),bt=Date.parse(benchmark?.fetchedAt||payload.fetchedAt||"");
+    data.benchmarkDayPct=Number.isFinite(bp)&&bp>0&&Number.isFinite(bc)&&bc>0&&Number.isFinite(bt)&&Date.now()-bt>=0&&Date.now()-bt<=90*60*1000?(bp/bc-1)*100:null;
+    const complete=missingNames.length===0&&data.holdings.every(h=>h.dayPct!=null);
+    marketDataState={fetchedAt:payload.fetchedAt,source:payload.source||null,ok:updatedNames.length>0,complete,updatedNames,missingNames,error:null};
     render();
-  } catch (error) {
-    marketDataState = { ...marketDataState, ok: false, error: String(error?.message || error) };
-    updateMarketStatus();
+  }catch(error){
+    data.holdings.forEach(h=>{h.previousPrice=null;h.dayPct=null;h.quoteStatus="reference";h.quoteFetchedAt=null;});
+    data.benchmarkDayPct=null;
+    marketDataState={...marketDataState,ok:false,complete:false,error:String(error?.message||error)};
+    render();
   }
 }
 
-async function refreshDashboardData() {
-  if (refreshInFlight) return;
-  refreshInFlight = true;
-  try {
-    await loadMasterData();
-    await loadMarketData();
-  } finally {
-    refreshInFlight = false;
-  }
+async function refreshDashboardData(){
+  if(refreshInFlight)return;
+  refreshInFlight=true;
+  try{await loadMasterData();await loadMarketData();}
+  finally{refreshInFlight=false;}
 }
 
-function updateMarketStatus() {
-  const el = document.querySelector("#asof");
-  if (!el) return;
-  const masterText = masterDataState.ok
-    ? "Portfölj " + dateLabel(data.asOf, { day: "numeric", month: "short" }) + " · GitHub"
-    : "GitHub-masterdata saknas · reservvärden";
-  if (marketDataState.ok && marketDataState.fetchedAt) {
-    const d = new Date(marketDataState.fetchedAt);
-    el.textContent = masterText + " · kurser " + d.toLocaleTimeString("sv-SE", { hour: "2-digit", minute: "2-digit" }) + " · fördröjda";
-    el.title = "Portfölj och affärer hämtas från portfolio.json och ledger.json. Kurskälla: " +
-      (marketDataState.source || "marknadsfil") + ", hämtad " + d.toLocaleString("sv-SE") + ". Kursflödet kan vara fördröjt.";
-  } else {
-    el.textContent = masterText + " · visar referenskurser";
-    el.title = "Marknadsfilen saknas, är ofullständig eller äldre än 90 minuter. Visade priser är referenspriser från portfolio.json. " +
-      (marketDataState.error || "");
+function updateMarketStatus(){
+  const el=document.querySelector("#asof"),label=document.querySelector("#positionPriceStatus");
+  if(!el)return;
+  const master=masterDataState.ok?"Portfölj "+dateLabel(data.asOf,{day:"numeric",month:"short"})+" · GitHub":"GitHub-masterdata saknas · reservvärden";
+  const time=value=>new Date(value).toLocaleTimeString("sv-SE",{hour:"2-digit",minute:"2-digit"});
+  if(marketDataState.ok&&marketDataState.complete&&marketDataState.fetchedAt){
+    el.textContent=master+" · kurser "+time(marketDataState.fetchedAt)+" · fördröjda";
+  }else if(marketDataState.ok&&marketDataState.fetchedAt){
+    el.textContent=master+" · delvis kursdata "+time(marketDataState.fetchedAt)+" · uppdaterat: "+marketDataState.updatedNames.join(", ")+" · saknar: "+marketDataState.missingNames.join(", ");
+  }else{
+    el.textContent=master+" · referenskurser"+(marketDataState.fetchedAt?" · kursfil "+time(marketDataState.fetchedAt):"");
+  }
+  el.title="Portfölj och affärer hämtas från portfolio.json och ledger.json. Kursfilen uppdateras ungefär varje timme och varje aktiekurs har egen tidsstämpel. Saknade kurser visas inte som nollrörelse. "+(marketDataState.error||"");
+  if(label){
+    label.textContent=marketDataState.complete?"Rörelser från fördröjd kursfeed":marketDataState.updatedNames.length?"Ofullständig feed · per aktie":"Referenskurser · rörelser saknas";
+    label.classList.toggle("market-label-warning",!marketDataState.complete);
   }
 }
 
