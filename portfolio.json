@@ -1,12 +1,27 @@
 {
   "startCapital": 50000,
-  "cash": 10031.20,
+  "cash": 192.4,
   "totalFees": 62.04,
   "asOf": "2026-10-06",
   "holdings": [
-    {"symbol":"ASSA-B","name":"ASSA ABLOY B","shares":41,"price":352.40},
-    {"symbol":"NIBE-B","name":"NIBE B","shares":328,"price":45.02},
-    {"symbol":"BONEX","name":"BONESUPPORT","shares":44,"price":230.60}
+    {
+      "symbol": "ASSA-B",
+      "name": "ASSA ABLOY B",
+      "shares": 41,
+      "price": 352.4
+    },
+    {
+      "symbol": "NIBE-B",
+      "name": "NIBE B",
+      "shares": 328,
+      "price": 45.02
+    },
+    {
+      "symbol": "BONEX",
+      "name": "BONESUPPORT",
+      "shares": 87,
+      "price": 230.6
+    }
   ],
-  "note": "Reference prices for the 2026-10-06 paper-trade decision; not claimed exact 10:00 fills."
+  "note": "Carry-forward restored from the documented 2026-10-01 BONESUPPORT buy of 43 shares; after the 2026-10-06 Sandvik sale and ASSA ABLOY purchase, residual cash is 192.40 SEK."
 }
