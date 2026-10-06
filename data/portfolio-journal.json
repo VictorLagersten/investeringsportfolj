@@ -3,13 +3,14 @@
   "updatedAt": "2026-10-06",
   "portfolio": {
     "startCapital": 50000,
-    "cash": 174.84,
-    "asOf": "2026-10-01",
+    "cash": 10031.2,
+    "asOf": "2026-10-06",
     "holdings": [
       {
-        "ticker": "SAND",
-        "quantity": 40,
-        "cost": 374.1
+        "ticker": "ASSA ABLOY B",
+        "quantity": 41,
+        "cost": 352.4,
+        "referencePrice": 352.4
       },
       {
         "ticker": "NIBE B",
@@ -18,10 +19,11 @@
       },
       {
         "ticker": "BONEX",
-        "quantity": 87,
-        "cost": 228.0068965517
+        "quantity": 44,
+        "cost": 227.2
       }
-    ]
+    ],
+    "cumulativeCommission": 62.04
   },
   "transactions": [
     {
@@ -64,6 +66,31 @@
       "commission": 9,
       "date": "2026-10-01",
       "note": "Engångsavvikelse från tisdagstestet; paperhandel. Ordervärde 9 829,80 kr, courtage 9 kr."
+    },
+    {
+      "id": "paper-2026-10-06-sell-sandvik-40",
+      "type": "sell",
+      "name": "Sandvik",
+      "ticker": "SAND",
+      "quantity": 40,
+      "price": 362.3,
+      "date": "2026-10-06",
+      "commission": 13.04,
+      "gross": 14492,
+      "net": 14478.96,
+      "note": "Paperhandel. 362,30 kr är verifierbart referenspris, inte exakt verifierad fyllnad kl. 10:00."
+    },
+    {
+      "id": "paper-2026-10-06-buy-assa-41",
+      "type": "buy",
+      "name": "ASSA ABLOY B",
+      "ticker": "ASSA ABLOY B",
+      "quantity": 41,
+      "price": 352.4,
+      "date": "2026-10-06",
+      "commission": 13,
+      "gross": 14448.4,
+      "note": "Paperhandel. 352,40 kr är verifierbart referenspris, inte exakt verifierad fyllnad kl. 10:00."
     }
   ],
   "research": [
@@ -188,6 +215,12 @@
         "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
         "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
       ]
+    },
+    {
+      "id": "paper-rotation-2026-10-06",
+      "date": "2026-10-06",
+      "title": "Paperportfölj efter rotation — referenspriser",
+      "summary": "Uppdaterad portfölj efter paperrotation 6 okt 2026: SÄLJ 40 Sandvik, referenspris 362,30 kr, brutto 14 492,00 kr, courtage 13,04 kr, netto 14 478,96 kr. KÖP 41 ASSA ABLOY B, referenspris 352,40 kr, brutto 14 448,40 kr, courtage 13,00 kr. Innehav efter rotation: ASSA ABLOY B 41, NIBE B 328, BONESUPPORT 44; kassa 10 031,20 kr; totalt registrerat courtage 62,04 kr. Affärspriserna är verifierbara referenspriser och ska inte tolkas som exakta fyllnader kl. 10:00. Det äldre innehavsläget har ersatts; Sandvik är inte längre ett innehav. Detta är paperhandel."
     }
   ],
   "candidates": [],
