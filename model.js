@@ -326,7 +326,7 @@ function initResearchTools(){
  });
  renderJournal();
 }
-document.addEventListener("DOMContentLoaded",()=>{addModelListeners();renderModel();initResearchTools();syncSharedJournal()});
+document.addEventListener("DOMContentLoaded",()=>{addModelListeners();renderModel();initResearchTools();syncSharedJournal();window.setInterval(syncSharedJournal,5*60*1000)});
 window.InvesternModel={render:renderModel,read:()=>model,save:saveModel,buyDecision,sellDecision,opportunityScore,conviction,expectedReturn};
 
 
