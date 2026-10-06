@@ -162,18 +162,19 @@ function dateLabel(date, options = { day: "numeric", month: "short" }) {
   const d = raw.includes("T") ? new Date(raw) : new Date(raw + "T12:00:00");
   return d.toLocaleDateString("sv-SE", options);
 }
-function renderPositions() {
-  positions.innerHTML = data.holdings.map(h => {
-    const market = h.quantity * h.price;
-    const totalGain = h.quantity * (h.price - h.cost);
-    const dayMove = h.dayPct ?? (h.previousPrice ? (h.price / h.previousPrice - 1) * 100 : 0);
-    const totalPct = h.cost ? (h.price / h.cost - 1) * 100 : 0;
-    return `<tr><td><div class="name-cell"><span class="ticker">${h.ticker}</span><span class="company">${h.name}<small>${h.name === "NIBE Industrier B" ? "Industri" : h.name === "BONESUPPORT" ? "Medicinteknik" : "Industri"}</small></span></div></td><td>${h.quantity}</td><td>${precise.format(h.price)}</td><td>${money.format(market)}</td><td class="${dayMove >= 0 ? "up" : "down"}">${dayMove >= 0 ? "+" : ""}${pct.format(dayMove)}%</td><td class="${totalGain >= 0 ? "up" : "down"}">${signedMoney(totalGain)} <small>(${totalPct >= 0 ? "+" : ""}${pct.format(totalPct)}%)</small></td></tr>`;
+function renderPositions(){
+  positions.innerHTML=data.holdings.map(h=>{
+    const market=h.quantity*h.price,totalGain=h.quantity*(h.price-h.cost),totalPct=h.cost?(h.price/h.cost-1)*100:null;
+    const movement=h.dayPct,hasMovement=Number.isFinite(movement);
+    const quoteLabel=h.quoteStatus==="market"?"Fördröjd marknadskurs":"Referenskurs";
+    const movementText=hasMovement?(movement>=0?"+":"")+pct.format(movement)+"%":"–";
+    const movementTitle=hasMovement?"Dagens rörelse från senaste tillgängliga stängning":"Dagens rörelse saknas: färsk kurs eller jämförbar stängningskurs saknas";
+    return `<tr><td><div class="name-cell"><span class="ticker">${h.ticker}</span><span class="company">${h.name}<small>${h.name==="NIBE Industrier B"?"Industri":h.name==="BONESUPPORT"?"Medicinteknik":"Industri"}</small></span></div></td><td>${h.quantity}</td><td title="${quoteLabel}">${precise.format(h.price)}</td><td>${money.format(market)}</td><td class="${hasMovement?(movement>=0?"up":"down"):"stat-note"}" title="${movementTitle}">${movementText}</td><td class="${totalGain>=0?"up":"down"}">${signedMoney(totalGain)} <small>(${totalPct>=0?"+":""}${pct.format(totalPct)}%)</small></td></tr>`;
   }).join("");
 }
 function selectedHistory() {
   const period = document.querySelector("#period").value;
-  const points = [...data.history].sort((a,b) => a.date.localeCompare(b.date));
+  const points = verifiedHistory();
   if (period === "all" || points.length < 2) return points;
   const last = new Date(points.at(-1).date + "T12:00:00");
   const months = period === "1m" ? 1 : period === "3m" ? 3 : 12;
@@ -206,7 +207,7 @@ function renderChart() {
   const change = latest - first;
   const changePct = first ? change / first * 100 : 0;
   valueOut.textContent = money.format(latest);
-  changeOut.textContent = points.length > 1 ? `${signedMoney(change)} · ${changePct >= 0 ? "+" : ""}${pct.format(changePct)} %` : "Första registrerade värdet";
+  changeOut.textContent = points.length > 1 ? `${signedMoney(change)} · ${changePct >= 0 ? "+" : ""}${pct.format(changePct)} %` : "Ingen avstämd historik ännu";
   changeOut.className = change >= 0 ? "up" : "down";
   if (points.length < 2) {
     chart.innerHTML = "";
@@ -260,7 +261,7 @@ function renderCalendar() {
   document.querySelector("#calendarMonth").textContent=new Intl.DateTimeFormat("sv-SE",{month:"long",year:"numeric"}).format(calendarMonth);
   const weekdays=["Mån","Tis","Ons","Tor","Fre","Lör","Sön"];
   const offset=(new Date(year,month,1).getDay()+6)%7, count=new Date(year,month+1,0).getDate();
-  const recorded=new Map(data.history.map(p=>[p.date,p]));
+  const recorded=new Map(verifiedHistory().map(p=>[p.date,p]));
   grid.innerHTML=weekdays.map(d=>"<div class=\"calendar-weekday\" role=\"columnheader\">"+d+"</div>").join("");
   for(let i=0;i<offset;i++)grid.insertAdjacentHTML("beforeend","<div class=\"calendar-day empty\" aria-hidden=\"true\"></div>");
   for(let n=1;n<=count;n++){
@@ -271,21 +272,22 @@ function renderCalendar() {
   grid.querySelectorAll(".calendar-day.has-value").forEach(b=>b.addEventListener("click",()=>{selectedCalendarDate=b.dataset.date;renderCalendar();}));
   const selected=recorded.get(selectedCalendarDate);
   if(!selected){detail.innerHTML="<span>Välj en markerad dag i kalendern.</span>";return;}
-  const sorted=[...data.history].sort((a,b)=>a.date.localeCompare(b.date)),idx=sorted.findIndex(p=>p.date===selectedCalendarDate),prior=idx>0?sorted[idx-1]:null;
+  const sorted=verifiedHistory(),idx=sorted.findIndex(p=>p.date===selectedCalendarDate),prior=idx>0?sorted[idx-1]:null;
   const positions=selected.snapshot?.holdings||selected.holdings;
   const holdings=positions?("<div class=\"detail-holdings\">"+positions.map(h=>"<span>"+h.name+": "+Number(h.quantity).toLocaleString("sv-SE")+" st"+(h.price!=null?" · "+precise.format(h.price):"")+"</span>").join("")+"</div>"):"<small>Innehav per aktie saknas för den här äldre värderingen.</small>";
   detail.innerHTML="<span>"+dateLabel(selected.date,{day:"numeric",month:"long",year:"numeric"})+"</span><strong>"+precise.format(selected.value)+"</strong><small>"+(prior?"Förändring sedan "+dateLabel(prior.date)+": "+signedMoney(selected.value-prior.value):"Ingen tidigare registrerad dag att jämföra med")+(selected.snapshot?.cash!=null?" · Kassa "+money.format(selected.snapshot.cash):"")+"</small>"+holdings;
 }
-function renderConclusion() {
-  const total=valueNow(), ret=total-data.startCapital, retPct=ret/data.startCapital*100;
-  const equity=data.holdings.reduce((sum,h)=>sum+h.quantity*h.price,0), share=total?equity/total*100:0;
-  const sells=data.transactions.filter(t=>t.type==="sell").length, buys=data.transactions.filter(t=>t.type==="buy").length;
-  document.querySelector("#conclusionLead").textContent="Portföljen är värd "+precise.format(total)+" och ligger "+signedMoney(ret)+" ("+(retPct>=0?"+":"")+pct.format(retPct)+" %) mot startkapitalet "+money.format(data.startCapital)+".";
-  document.querySelector("#conclusionAsOf").textContent="Senast uppdaterad "+dateLabel(data.asOf,{day:"numeric",month:"long",year:"numeric"})+".";
-  document.querySelector("#conclusionPerformance").textContent="Registrerat resultat är "+signedMoney(ret)+". Det finns "+data.history.length+" sparade dagsvärderingar; kalendern visar vilka datum som har uppgifter.";
-  document.querySelector("#conclusionAllocation").textContent=pct.format(share)+" % i aktier och "+money.format(data.cash)+" i kassa. Portföljen har "+data.holdings.length+" innehav, så enskilda bolag påverkar utfallet tydligt.";
-  document.querySelector("#conclusionActivity").textContent="Historiken innehåller "+buys+" köp och "+sells+" försäljningar. Affärsdatum saknas för de tre ursprungliga köpen.";
-  document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" planerade ändringar finns noterade. Gå igenom dem på tisdag kl. 10 och jämför med verifierade kurser." :"Nästa planerade paperhandelsfönster är tisdag/fredag kl. 10.00. Om körningen kommer efter fönstret eller data inte kan verifieras görs ingen retroaktiv affär. Endast paperhandel; inga riktiga order.";
+function renderConclusion(){
+  const total=valueNow(),ret=total-data.startCapital,retPct=ret/data.startCapital*100;
+  const equity=data.holdings.reduce((sum,h)=>sum+h.quantity*h.price,0),share=total?equity/total*100:0;
+  const sells=data.transactions.filter(t=>t.type==="sell").length,buys=data.transactions.filter(t=>t.type==="buy").length;
+  const validCount=verifiedHistory().length;
+  document.querySelector("#conclusionLead").textContent="Referensvärderingen är "+precise.format(total)+" ("+signedMoney(ret)+", "+(retPct>=0?"+":"")+pct.format(retPct)+" %) mot startkapitalet "+money.format(data.startCapital)+".";
+  document.querySelector("#conclusionAsOf").textContent="Portföljdata från "+dateLabel(data.asOf,{day:"numeric",month:"long",year:"numeric"})+"; marknadskursernas status visas på översikten.";
+  document.querySelector("#conclusionPerformance").textContent="Indikativt resultat på tillgängliga referenskurser är "+signedMoney(ret)+". "+validCount+" avstämda dagsvärderingar finns i historiken; äldre värden utan verifierad källa visas inte som historik.";
+  document.querySelector("#conclusionAllocation").textContent=pct.format(share)+" % i aktier och "+precise.format(data.cash)+" i kassa. Portföljen har "+data.holdings.length+" innehav.";
+  document.querySelector("#conclusionActivity").textContent="Ledger innehåller "+buys+" köp och "+sells+" försäljningar. Datum och avgift saknas för de tre ursprungliga köpen; 6 oktober-affärernas referenspriser är inte verifierade avslut.";
+  document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" lokala planeringsnoteringar finns sparade i den här webbläsaren. Nästa ordinarie paperhandelsgenomgång är tisdag/fredag kl. 10.00.":"Nästa ordinarie paperhandelsgenomgång är tisdag/fredag kl. 10.00. Sen ankomst eller saknat prisunderlag betyder ingen retroaktiv affär. Endast pappershandel; inga riktiga order.";
 }
 function setView(name) {
   const views={dashboard:"#dashboardView",history:"#historyView",plan:"#planView",calendar:"#calendarView",conclusion:"#conclusionView",model:"#modelView",scanner:"#scannerView"};
@@ -299,10 +301,11 @@ function render() {
   const equity = data.holdings.reduce((sum,h) => sum + h.quantity * h.price, 0);
   const overall = total - data.startCapital;
   const overallPct = overall / data.startCapital * 100;
-  const sorted = [...data.history].sort((a,b)=>a.date.localeCompare(b.date));
+  const sorted = verifiedHistory();
   const priorPoint = sorted.length > 1 ? sorted.at(-2) : null;
   const gapDays = priorPoint ? (Date.parse(data.asOf+"T12:00:00")-Date.parse(priorPoint.date+"T12:00:00"))/86400000 : Infinity;
-  const hasDailyComparison = gapDays <= 1;
+  const completeDailyPrices=marketDataState.complete&&data.holdings.every(h=>h.dayPct!=null)&&data.benchmarkDayPct!=null;
+  const hasDailyComparison = gapDays >= 0 && gapDays <= 1 && completeDailyPrices;
   const prior = priorPoint?.value ?? total;
   const day = hasDailyComparison ? total - prior : 0;
   const dayPct = hasDailyComparison && prior ? day / prior * 100 : 0;
@@ -336,7 +339,7 @@ function render() {
   updateMarketStatus();
 }
 function addHistory(date,value,snapshot=null) {
-  const item={date,value:Number(value),...(snapshot?{snapshot}:{})};
+  const item={date,value:Number(value),verified:true,origin:"local",source:"Manuellt sparad verifierad värdering",...(snapshot?{snapshot}:{})};
   const i=data.history.findIndex(p=>p.date===date);
   if(i>=0)data.history[i]=item;else data.history.push(item);
   data.history.sort((a,b)=>a.date.localeCompare(b.date));
@@ -359,6 +362,7 @@ document.querySelector("#priceForm").addEventListener("submit",event=>{
   addHistory(date,valueNow(),{cash:data.cash,holdings:data.holdings.map(h=>({name:h.name,ticker:h.ticker,quantity:h.quantity,price:h.price}))});persist();render();priceDialog.close();
 });
 document.querySelector("#saveDay").addEventListener("click",()=>{
+  if(!marketDataState.complete){alert("Kan inte spara en avstämd dagsvärdering: en eller flera aktiekurser saknas eller är för gamla.");return;}
   const form=document.querySelector("#snapshotForm");
   form.elements.value.value=valueNow().toFixed(2);form.elements.date.value=today();snapshotDialog.showModal();
 });
@@ -373,15 +377,15 @@ document.querySelector("#backup").addEventListener("click",()=>{
   const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download="investern-ing-portfolj-backup.json";link.click();URL.revokeObjectURL(link.href);
 });
 document.querySelector("#reset").addEventListener("click",()=>{
-  if(!confirm("Återställ dashboarden till senast kända portföljdata från projektet? Dina lokala uppdateringar ersätts."))return;
-  data=structuredClone(INITIAL);persist();render();
+  if(!confirm("Radera lokala planeringsnoteringar och dagsvärderingar från den här webbläsaren? GitHub-portföljdata påverkas inte."))return;
+  localStorage.removeItem(LOCAL_STORE);localStorage.removeItem(STORE);data=structuredClone(INITIAL);refreshDashboardData();
 });
 
 document.querySelectorAll(".view-tab").forEach(tab=>tab.addEventListener("click",()=>setView(tab.dataset.view)));
 document.querySelector("#tradeFilter").addEventListener("change",renderTransactions);
-document.querySelector("#addTrade").addEventListener("click",()=>document.querySelector("#tradeDialog").showModal());
+document.querySelector("#addTrade")?.addEventListener("click",()=>document.querySelector("#tradeDialog").showModal());
 document.querySelector("#cancelTrade").addEventListener("click",()=>document.querySelector("#tradeDialog").close());
-document.querySelector("#tradeForm").addEventListener("submit",event=>{
+document.querySelector("#tradeForm")?.addEventListener("submit",event=>{
   event.preventDefault();const fd=new FormData(event.currentTarget);
   data.transactions.push({type:String(fd.get("type")),name:String(fd.get("name")).trim(),ticker:String(fd.get("ticker")).trim(),quantity:Number(fd.get("quantity")),price:Number(fd.get("price")),date:String(fd.get("date"))||null});
   persist();render();event.currentTarget.reset();document.querySelector("#tradeDialog").close();
