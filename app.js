@@ -280,14 +280,17 @@ function render() {
   const overall = total - data.startCapital;
   const overallPct = overall / data.startCapital * 100;
   const sorted = [...data.history].sort((a,b)=>a.date.localeCompare(b.date));
-  const prior = sorted.length > 1 ? sorted.at(-2).value : total;
-  const day = total - prior;
-  const dayPct = prior ? day / prior * 100 : 0;
+  const priorPoint = sorted.length > 1 ? sorted.at(-2) : null;
+  const gapDays = priorPoint ? (Date.parse(data.asOf+"T12:00:00")-Date.parse(priorPoint.date+"T12:00:00"))/86400000 : Infinity;
+  const hasDailyComparison = gapDays <= 1;
+  const prior = priorPoint?.value ?? total;
+  const day = hasDailyComparison ? total - prior : 0;
+  const dayPct = hasDailyComparison && prior ? day / prior * 100 : 0;
   document.querySelector("#portfolioValue").textContent = precise.format(total);
   document.querySelector("#totalReturn").textContent = `${signedMoney(overall)} · ${overallPct >= 0 ? "+" : ""}${pct.format(overallPct)}%`;
-  document.querySelector("#dayValue").textContent = signedMoney(day);
-  document.querySelector("#dayPercent").textContent = `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % sedan föregående värdering`;
-  document.querySelector("#dayValue").className = day >= 0 ? "up" : "down";
+  document.querySelector("#dayValue").textContent = hasDailyComparison ? signedMoney(day) : "–";
+  document.querySelector("#dayPercent").textContent = hasDailyComparison ? `${dayPct >= 0 ? "+" : ""}${pct.format(dayPct)} % sedan föregående dagsvärdering` : "Ingen föregående dagsvärdering att jämföra med";
+  document.querySelector("#dayValue").className = hasDailyComparison ? (day >= 0 ? "up" : "down") : "stat-note";
   document.querySelector("#cashValue").textContent = money.format(data.cash);
   document.querySelector("#stockExposure").textContent = `${(equity / total * 100).toLocaleString("sv-SE",{maximumFractionDigits:1})}% i aktier`;
   document.querySelector("#equityValue").textContent = money.format(equity);
@@ -295,8 +298,8 @@ function render() {
   const equityPct = total ? equity / total * 100 : 0;
   document.querySelector("#equityShare").textContent = `${equityPct.toLocaleString("sv-SE",{maximumFractionDigits:1})}%`;
   document.querySelector("#donut").style.background = `conic-gradient(#52795b 0 ${equityPct}%,#d6e0d7 ${equityPct}% 100%)`;
-  document.querySelector("#benchmark").textContent = `${dayPct-data.benchmarkDayPct >= 0 ? "+" : ""}${pct.format(dayPct-data.benchmarkDayPct)} pp`;
-  document.querySelector("#benchmark").className = dayPct >= data.benchmarkDayPct ? "up" : "down";
+  document.querySelector("#benchmark").textContent = hasDailyComparison ? `${dayPct-data.benchmarkDayPct >= 0 ? "+" : ""}${pct.format(dayPct-data.benchmarkDayPct)} pp` : "–";
+  document.querySelector("#benchmark").className = hasDailyComparison ? (dayPct >= data.benchmarkDayPct ? "up" : "down") : "stat-note";
   document.querySelector("#asof").textContent = `${dateLabel(data.asOf,{day:"numeric",month:"short",year:"numeric"})} · stängning`;
   const values = sorted.slice(-7).map(p=>p.value);
   if (values.length > 1) {
