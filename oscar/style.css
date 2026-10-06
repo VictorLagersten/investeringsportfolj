@@ -28,3 +28,23 @@
 .priority p strong{color:var(--text)}
 @media(max-width:900px){.age-assessment{grid-template-columns:1fr}.level-meter{border-left:0;border-top:1px solid var(--line);padding-top:28px}.assessment-points{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.age-assessment{padding:20px;margin-bottom:65px}.assessment-main h2{font-size:32px}.assessment-points{grid-template-columns:1fr}.priority{min-height:0}.priority-visual{height:110px}}
+
+.flip-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.flip-card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:24px;position:relative;overflow:hidden}
+.flip-card.front{background:radial-gradient(circle at 85% 10%,rgba(105,227,255,.10),transparent 35%),var(--panel)}
+.flip-card.back{background:radial-gradient(circle at 85% 10%,rgba(216,255,69,.08),transparent 35%),var(--panel)}
+.flip-tag{font-size:10px;letter-spacing:.14em;color:var(--accent);font-weight:900}
+.flip-card h3{font-size:32px;margin:8px 0}
+.flip-lead{color:#d4dbe2;font-size:14px;margin:0 0 20px}
+.flip-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.flip-cols strong{font-size:13px}
+.flip-cols ul{padding-left:18px;margin:8px 0}
+.flip-cols li{color:var(--muted);font-size:12px;margin:7px 0}
+.coach-cue{margin-top:18px;padding:13px 15px;border:1px solid var(--line);border-radius:14px;background:rgba(11,15,20,.45);color:var(--cyan);font-size:11px;letter-spacing:.04em}
+.coach-cue b{font-size:14px;color:var(--text);margin-left:7px}
+.flip-note{font-size:11px;color:var(--muted);margin:14px 0 0}
+.flip-bottom{margin-top:14px;padding:20px 24px;border:1px solid var(--line);border-radius:18px;background:var(--panel2)}
+.flip-bottom strong{display:block;font-size:15px;margin-bottom:5px}
+.flip-bottom p{margin:0;color:var(--muted);font-size:13px}
+@media(max-width:900px){.flip-grid{grid-template-columns:1fr}.flip-cols{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.flip-cols{grid-template-columns:1fr}}
