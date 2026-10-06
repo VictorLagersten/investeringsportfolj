@@ -27,7 +27,7 @@
   "feeReconciliation": {
     "initialAggregateInferred": 35.96,
     "method": "50,000.00 start capital minus 39,950.40 gross initial purchases and 10,013.64 documented cash before the 2026-10-01 buy; initial fee slips are not available and no per-trade allocation is asserted.",
-    "knownLaterFees": 28.04
+    "knownLaterFees": 35.04
   },
   "priceNotes": "Fallback prices are reference marks, not a synchronized current valuation: NIBE B 45.02 and BONESUPPORT 230.60 are the 2026-10-05 closing references; ASSA ABLOY B 352.40 is the 2026-10-06 paper-trade reference. Current marks come from the delayed hourly market feed only when all held-stock quotes are fresh."
 }
