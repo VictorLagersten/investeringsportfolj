@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 
 const symbols = {
-  "SAND": { yahoo: "SAND.ST", name: "Sandvik" },
+  "ASSA-B": { yahoo: "ASSA-B.ST", name: "ASSA ABLOY B" },
   "NIBE B": { yahoo: "NIBE-B.ST", name: "NIBE Industrier B" },
   "BONEX": { yahoo: "BONEX.ST", name: "BONESUPPORT" },
   "OMXS30": { yahoo: "^OMX", name: "OMXS30" }
