@@ -1,46 +1,43 @@
 # INVESTERNING · portföljdashboard
 
-En lättläst dashboard för paperportföljen i projektet Investerning.
+En publik dashboard för en **simulerad paperportfölj**. Den är inte kopplad till Avanza eller Nordnet och lägger aldrig riktiga börsorder.
 
-## Vad du ser
+## Senast avstämda pappersportfölj · 6 oktober 2026
 
-- Portföljvärde, kassa, dagens förändring och total utveckling från startkapitalet 50 000 kr.
-- Innehav: Sandvik (40), NIBE B (328) och BONESUPPORT (44).
-- Jämförelse med OMXS30, fördelningen mellan aktier och kassa, och registrerad affärshistorik.
-- Värdekurva som ritas från sparade dagsvärden.
-- Manuell uppdatering av verifierade stängningskurser och kassa.
-- Säkerhetskopia som JSON-fil.
+- Startkapital: **50 000 kr**
+- ASSA ABLOY B: **41 aktier**
+- NIBE B: **328 aktier**
+- BONESUPPORT: **87 aktier**
+- Kassa: **192,40 kr**
+- Totalt registrerat courtage: **71,00 kr**
 
-## Öppna
+Kassan och innehaven följer de journalförda affärerna. De 192,40 kronorna är kvarvarande likvid efter hela aktieaffärer och avgifter; den ska inte döljas eller sättas till noll utan en motsvarande paperaffär. Värdering med referenspriserna i `portfolio.json` är **49 469,56 kr**. De priserna är inte alla från samma tidpunkt och ska inte beskrivas som en aktuell synkron värdering.
 
-Öppna `index.html` i webbläsaren. Sidan fungerar utan installation.
+De tre ursprungliga affärerna saknar verifierade datum och transaktionsavgifter per affär. De visas som okända. Det ursprungliga aggregerade courtaget **35,96 kr** är härlett från startkapital, ursprungliga bruttoköp och dokumenterad kassa före 1 oktober; senare kända avgifter är 9,00 kr, 13,04 kr och 13,00 kr. Därför blir totalen 71,00 kr, medan ursprungsavgifterna inte fördelas på enskilda köp.
 
-## Uppdatera historiken
+## Datakällor
 
-Välj **Uppdatera kurser** efter att du har verifierat dagens stängningskurser. Dashboarden räknar om portföljvärdet och sparar datumets värde automatiskt. **Spara dagens värde** låter dig registrera en värdering separat. Historiken visas lokalt i samma webbläsare.
+- `portfolio.json`: startkapital, aktuella innehav, kassa, referenspriser och avgiftssammanställning.
+- `ledger.json`: köp och försäljningar. Okända datum och avgifter är null.
+- `data/portfolio-journal.json`: analyser, källor, research och beslutsnoteringar.
+- `data/market.json`: separat, fördröjd Yahoo Finance-marknadsfeed.
 
-Startvärdena är från projektets senaste stängningsrapport för 30 september 2026. Dagsvärden i historiken är 50 000 kr (28 sep), 50 197,08 kr (29 sep) och 50 589,64 kr (30 sep). De tre affärerna är registrerade utan exakta affärsdatum eftersom de inte fanns i projektanteckningarna.
+Dashboarden hämtar portfölj och ledger från samma GitHub Pages-origin med cache-busting vid sidladdning och därefter var femte minut. Analysjournalen läses också in och kontrolleras var femte minut.
 
-## Viktigt om data
+## När data uppdateras
 
-Det här är en paperportfölj, inte en koppling till Avanza eller Nordnet. Webbsidan hämtar inte automatiskt livekurser och sparar inte data till GitHub eller mellan enheter. Kurser måste verifieras innan de matas in. Ingen handel genomförs här och vyn är inte finansiell rådgivning. Dagsrapporten kl. 18 körs i ChatGPT och behöver aktuell verifierbar marknadsdata.
+GitHub Actions hämtar marknadskurser ungefär **en gång i timmen, vid minut 17**. GitHub kan starta schemalagda körningar försenat. Feedens priser kan också vara fördröjda och är inte orderkurser.
 
-## Historik, kalender och planering
+Dashboarden använder den marknadsfilen för portföljvärdering endast när filen är högst 90 minuter gammal och innehåller färska kurser för alla tre innehaven. Annars visar den referenspriserna från `portfolio.json` och anger detta i statusraden. TradingView-remsan är en separat widget och kan uppdateras vid en annan tid än portföljvärdet.
 
-- Fliken **Historik** listar registrerade köp och försäljningar. De tre ursprungliga köpen saknar affärsdatum i projektanteckningarna och visas därför som "Datum saknas". Nya affärer kan läggas till i webbläsaren.
-- Fliken **Kalender** visar datum där portföljvärden har sparats. Klicka på en markerad dag för totalvärdet och, för nya sparade värderingar, även kassa och innehav per aktie. Äldre dagar har endast registrerade totalvärden.
-- Fliken **Planering** är en lokal anteckningslista för möjliga ändringar inför tisdagens genomgång kl. 10. Planer är inte order och genomför ingen handel.
-- Fliken **Slutsats** sammanfattar registrerat resultat, fördelning, affärshistorik och nästa genomgång.
-- Historik, planer och affärer sparas lokalt i webbläsaren och delas inte mellan enheter. Dashboarden är inte kopplad till en mäklare och handlar inte automatiskt.
+Ändringar av innehav, affärer eller analyser publiceras genom commit på `main`; GitHub Pages bygger då om sidan. En öppen dashboard kontrollerar GitHub-filerna var femte minut. Efter en lyckad publicering ska en omladdning visa masterdata direkt.
 
+## Paperhandel och analys
 
+Paperhandelsgenomgångar är schemalagda **tisdagar och fredagar kl. 10.00 Europe/Stockholm**. En daglig analysrapport är schemalagd kl. 18.00. Om en handelsgenomgång kommer efter handelsfönstret eller viktiga data inte kan verifieras, registreras ingen retroaktiv affär. Schemat garanterar inte att en automation startar exakt på minuten.
 
-## Investeringsmotorn v3
+Allt är paperhandel. Affärer som bygger på referenspris markeras som sådana; de är inte bekräftade verkliga fyllnader. Dashboarden kan inte automatiskt läsa alla ChatGPT-chattar. En verifierad analys eller affär måste publiceras till journalfilerna för att synas där.
 
-Fliken **Investeringsmotor** visar nu modellens tio faktorvikter, faktorernas bidrag till Investment Engine Score, scoreförändringar över tid och en jämförelse mellan befintliga innehav och verifierade kandidater. Okända faktorer räknas neutralt (50/100), men sänker datatäckningen. Minst fyra faktorer krävs för score och minst 75% dataconfidence för beslut. Scorehistoriken sparas i den aktuella webbläsaren.
+## Historik och begränsningar
 
-Inga kandidatpoäng publiceras utan tillräckliga verifierade datapunkter. Paperportföljens innehav och handelsjournal ligger kvar i `data/portfolio-journal.json`.
-
-
-
-Under poängsatta kandidater visas nu även en researchkö med sex befintliga bevakningsspår, senaste noterade datapunkt, vad som behöver verifieras härnäst och länk till källa. Researchspåren saknar medvetet score tills faktaunderlaget räcker.
+Historikdiagrammet visar registrerade dagsvärderingar, inte varje intradagsrörelse. Saknade historiska priser, datum och transaktionsavgifter ska förbli okända tills de kan styrkas. Marknadsdata är en analysfeed, inte ett exekveringsflöde eller garanterad realtidsdata.
