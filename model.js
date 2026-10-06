@@ -5,7 +5,7 @@ const DEFAULT_MODEL = {
   regime:"neutral",
   riskFreeRate:2.0,
   maxPositionPct:25,
-  minCashPct:10,
+  minCashPct:0,
   startingCapital:50000,
   trading:{courtagePct:0.09,minCourtageSEK:9,fxPct:0.25,minTradeSEK:750},
   horizons:{shortMaxDays:56,mediumMaxMonths:12,longMinMonths:12},
@@ -27,7 +27,7 @@ function readModel(){
   if(!saved)return structuredClone(DEFAULT_MODEL);
   const savedWeights=saved.weights||{};
   const weights=savedWeights.marketRegime==null||savedWeights.smallCapPotential==null?{...DEFAULT_MODEL.weights}:{...DEFAULT_MODEL.weights,...savedWeights};
-  return {...structuredClone(DEFAULT_MODEL),...saved,weights,
+  return {...structuredClone(DEFAULT_MODEL),...saved,minCashPct:0,weights,
     trading:{...DEFAULT_MODEL.trading,...(saved.trading||{})},horizons:{...DEFAULT_MODEL.horizons,...(saved.horizons||{})},
     candidates:saved.candidates||[],journal:saved.journal||[],backtests:saved.backtests||[],factorLearning:saved.factorLearning||{},scoreHistory:saved.scoreHistory||[]};
  }catch{return structuredClone(DEFAULT_MODEL)}
@@ -327,6 +327,6 @@ function initResearchTools(){
  renderJournal();
 }
 document.addEventListener("DOMContentLoaded",()=>{addModelListeners();renderModel();initResearchTools();syncSharedJournal();window.setInterval(syncSharedJournal,5*60*1000)});
-window.InvesternModel={render:renderModel,read:()=>model,save:saveModel,buyDecision,sellDecision,opportunityScore,conviction,expectedReturn};
+window.InvesternModel={render:renderModel,refreshPortfolio:renderModel,read:()=>model,save:saveModel,buyDecision,sellDecision,opportunityScore,conviction,expectedReturn};
 
 
