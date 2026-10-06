@@ -3,7 +3,7 @@
   "updatedAt": "2026-10-06",
   "portfolio": {
     "startCapital": 50000,
-    "cash": 10031.2,
+    "cash": 192.4,
     "asOf": "2026-10-06",
     "holdings": [
       {
@@ -19,7 +19,7 @@
       },
       {
         "ticker": "BONEX",
-        "quantity": 44,
+        "quantity": 87,
         "cost": 227.2
       }
     ],
@@ -94,6 +94,12 @@
     }
   ],
   "research": [
+    {
+      "id": "masterdata-correction-2026-10-06-bonex-carryforward",
+      "date": "2026-10-06",
+      "title": "Rättelse: återställd BONESUPPORT-affär från 1 okt",
+      "summary": "portfolio.json saknade den redan journalförda paperaffären från 1 okt: köp av 43 BONESUPPORT för 228,60 kr per aktie med 9 kr courtage. Affären har lagts till som en saknad rad i ledger.json utan att ändra de befintliga transaktionerna. Masterpositionen är därmed 87 BONESUPPORT. Efter Sandvikförsäljningen och ASSA ABLOY-köpet 6 okt är kvarvarande kassa 192,40 kr; ingen ny affär har lagts till för 6 okt. Total courtagehistorik är fortsatt 62,04 kr enligt masterposten."
+    },
     {
       "id": "chat-sync-2026-10-01-data-audit",
       "date": "2026-10-01",
