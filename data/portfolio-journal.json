@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-05",
+  "updatedAt": "2026-10-06",
   "portfolio": {
     "startCapital": 50000,
     "cash": 174.84,
@@ -168,6 +168,23 @@
         "https://investors.msab.com/investors/newsroom/press-releases/",
         "https://investor.bonesupport.com/en/investors/press-releases/",
         "https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-oforandrad-pa-175-procent6/",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
+      ]
+    },
+    {
+      "id": "paper-window-2026-10-06-no-trade",
+      "date": "2026-10-06",
+      "title": "Paperhandelsfönster 6 okt — ingen order, beslutstidsdata saknas",
+      "summary": "Beslutsnotering 6 okt 2026 kl. 10:01:22 CEST. Den schemalagda körningen kom 1 min 22 sek efter låst handelsfönster kl. 10:00; ingen affär simuleras retroaktivt. Inga riktiga order. Journalens senaste verifierade portföljpost är daterad 1 okt: startkapital 50 000 kr, kassa 174,84 kr, SAND 40, NIBE B 328, BONEX 87; inget senare transaktionspost finns. Senaste dashboardmarknadsfil vid beslutet hämtades kl. 09:32:35 CEST (Yahoo, fördröjd): SAND 369,10 (+1,88%), NIBE 45,36 (+0,76%), BONEX 235,60 (+2,17%), OMXS30 3 289,88 (+0,99%). Den var nästan 29 minuter gammal vid fönstret och är uttryckligen inte exekveringsdata; inga bid/ask/spread eller aktuella öppnings-/10:00-kurser kunde verifieras. Därför kunde inget korrekt pris eller slippage användas och ingen handel görs. Scan: journalens senaste scanner säger 0 av 964 bolag med minst 55% verifierad täckning; candidates-listan är tom. Score: inga poäng räknas från saknade data. Rang/risk: behåll befintliga innehav; BONEX är fortsatt koncentrationsrisk (~40% vid föregående markering), men saknar ny fundamental trigger; prisrörelse ensam ger inte säljsignal. SAND:s Q2-tes (order +17%, organisk tillväxt +17%, justerad EBITA-marginal 22,6%) kvarstår; falsifieras av uthållig order-/marginal-/kassaflödesförsämring. NIBE:s Q2-tes (försäljning +7,6%, EBIT-marginal 11,4% mot 9,4%) kvarstår, men efterfrågan, tullar och räntor ska följas; ompröva om marginal/kassaflöde försämras. BONEX Q2 (försäljning +25%, 30% valutajusterat; rörelseresultat 89,6m mot 54,9m) stöder tes, men koncentration och produkt/regulatorisk risk motiverar omprövning; prisfall ensamt ej exit. Ingen ny bolagsspecifik primärnyhet i snabbkontrollen ändrade dessa teser. Sandvik publicerade 5 okt inbjudan till Q3-rapportpresentation; rapport väntas 22 okt, ingen resultatny information i inbjudan. BONESUPPORTs tidigare annonserade återköpsprogram upp till 100m SEK löper som längst till 30 okt, men dagens utförda volymer/kursstöd verifierades inte. Watchlist-rangordning kan inte göras på jämförbar score: Saab (GlobalEye NL LOI och Canada term sheet ej bindande order), SEB (behöver senaste kapital/kredit/värdering), C-RAD (orderingång och orderkonvertering), MSAB (uthållig marginal/kassaflöde), Softronic (flera kvartal och värdering), Image Systems (likviditet/finansiering/orderåterhämtning). Inget köp av någon kandidat är motiverat utan färska faktorer och alternativens värdering. Cash-limit check: med gammal NIBE-kurs 45,36 hade 3 aktier kostat 136,08 kr plus minimicourtage 9 kr = 145,08 kr och lämnat 29,76 kr före spread/slippage; detta är endast en illustrativ kostnadsjämförelse från stale quote, ingen order/fill. Handelsbanken app/internetbank svenska/nordiska: 0,09%, minst 9 kr per affär; FX 0 för SEK-listade svenska aktier, lokala handelsskatter 0 verifierade. Dagens faktiska courtage 0 kr, FX 0, lokala avgifter 0. ISK-skatt separat: 2026 skattefri grundnivå 300 000 kr gemensamt över ISK/KF/PEPP; annan personlig nivå okänd, inget belopp bokas. Spread/slippage kan inte beräknas. Inte möjligt att verifiera dagsavkastning eller jämföra efter courtage då kassa/positioner inte avstämts efter 1 okt och inga aktuella köppriser fanns. Lärdom: en marknadsskanning nära fönstret räcker inte för order om prisflödet är ~29 min gammalt; behöver tidsstämplad quote och fullständig spread/position/kassa vid fönstret. Nästa planerade handelsfönster fredag 9 okt kl. 10:00; inga stående order eller beslut från denna körning.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/market.json",
+        "https://www.home.sandvik/en/news-and-media/",
+        "https://investor.bonesupport.com/en/investors/press-releases/",
+        "https://www.saab.com/newsroom/press-releases",
+        "https://investors.msab.com/investors/newsroom/press-releases/",
+        "https://indexes.nasdaqomx.com/index/history/omxs30",
         "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
         "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
       ]
