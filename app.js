@@ -76,6 +76,8 @@ async function syncSharedJournal(){
     const researchEntries=journal.research||[];
     const latest=researchEntries.reduce((best,item)=>!best||String(item.date||"")>=String(best.date||"")?item:best,null);
     if(note&&latest)note.textContent=(latest.date?latest.date+" · ":"")+latest.summary;
+    const noteDate=document.querySelector(".notes-card .note-date");
+    if(noteDate&&latest?.date)noteDate.textContent=dateLabel(latest.date,{day:"numeric",month:"short"}).replace(".","").toUpperCase("sv-SE");
     persist();render();
   }catch(error){console.warn("Gemensam journal kunde inte hämtas",error)}
 }
