@@ -1,43 +1,44 @@
 [
   {
-    "date": "2026-09-29",
-    "time": "10:00",
-    "symbol": "SANDVIK",
-    "action": "BUY",
-    "shares": 40,
-    "price": 374.1,
-    "amount": 14964,
-    "fee": 0
-  },
-  {
-    "date": "2026-09-29",
-    "time": "10:00",
-    "symbol": "NIBE-B",
-    "action": "BUY",
-    "shares": 328,
-    "price": 45.7,
-    "amount": 14989.6,
-    "fee": 0
-  },
-  {
-    "date": "2026-09-29",
-    "time": "10:00",
+    "date": null,
+    "time": null,
     "symbol": "BONEX",
     "action": "BUY",
     "shares": 44,
     "price": 227.2,
     "amount": 9996.8,
-    "fee": 0
+    "fee": null
   },
   {
-    "date": "2026-10-06",
-    "time": "10:00",
+    "date": null,
+    "time": null,
+    "symbol": "NIBE-B",
+    "action": "BUY",
+    "shares": 328,
+    "price": 45.7,
+    "amount": 14989.6,
+    "fee": null
+  },
+  {
+    "date": null,
+    "time": null,
     "symbol": "SANDVIK",
-    "action": "SELL",
+    "action": "BUY",
     "shares": 40,
-    "price": 362.3,
-    "amount": 14492,
-    "fee": 13.04
+    "price": 374.1,
+    "amount": 14964,
+    "fee": null
+  },
+  {
+    "date": "2026-10-01",
+    "time": null,
+    "symbol": "BONEX",
+    "action": "BUY",
+    "shares": 43,
+    "price": 228.6,
+    "amount": 9829.8,
+    "fee": 9,
+    "note": "Restored in ledger from already documented transaction paper-2026-10-01-bonex-43; original trade details preserved."
   },
   {
     "date": "2026-10-06",
@@ -50,14 +51,13 @@
     "fee": 13
   },
   {
-    "date": "2026-10-01",
-    "time": null,
-    "symbol": "BONEX",
-    "action": "BUY",
-    "shares": 43,
-    "price": 228.6,
-    "amount": 9829.8,
-    "fee": 9,
-    "note": "Restored in ledger from already documented transaction paper-2026-10-01-bonex-43; original trade details preserved."
+    "date": "2026-10-06",
+    "time": "10:00",
+    "symbol": "SANDVIK",
+    "action": "SELL",
+    "shares": 40,
+    "price": 362.3,
+    "amount": 14492,
+    "fee": 13.04
   }
 ]
