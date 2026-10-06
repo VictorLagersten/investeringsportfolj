@@ -3,7 +3,7 @@
   "updatedAt": "2026-10-06",
   "portfolio": {
     "startCapital": 50000,
-    "cash": 192.4,
+    "cash": 2.12,
     "asOf": "2026-10-06",
     "holdings": [
       {
@@ -14,8 +14,9 @@
       },
       {
         "ticker": "NIBE B",
-        "quantity": 328,
-        "cost": 45.7
+        "quantity": 332,
+        "cost": 45.69542168674699,
+        "referencePrice": 45.32
       },
       {
         "ticker": "BONEX",
@@ -23,7 +24,7 @@
         "cost": 227.8919540229885
       }
     ],
-    "cumulativeCommission": 71
+    "cumulativeCommission": 80
   },
   "transactions": [
     {
@@ -91,9 +92,28 @@
       "commission": 13,
       "gross": 14448.4,
       "note": "Paperhandel. 352,40 kr är verifierbart referenspris, inte exakt verifierad fyllnad kl. 10:00."
+    },
+    {
+      "id": "paper-2026-10-06-buy-nibe-4",
+      "type": "buy",
+      "name": "NIBE B",
+      "ticker": "NIBE B",
+      "quantity": 4,
+      "price": 45.32,
+      "date": "2026-10-06",
+      "commission": 9,
+      "decisionRecordedAt": "2026-10-06T14:57:59+02:00",
+      "priceObservedAt": "2026-10-06T14:37:53+02:00",
+      "note": "Paperkomplettering för att minimera kassan efter användarens uttryckliga instruktion. Referenskurs 45,32 kr från Yahoo Finance fördröjd data, observerad 14:37:53 CEST; inte verifierat avslutspris. Pappersbeslut registrerat 14:57:59 CEST; faktiskt order-/avslutsklockslag finns inte eftersom ingen riktig order skickades."
     }
   ],
   "research": [
+    {
+      "id": "paper-cash-minimization-2026-10-06",
+      "date": "2026-10-06",
+      "title": "Papperskomplettering för att minimera kassan",
+      "summary": "Användarens uttryckliga önskemål är att kassan ska vara så nära noll som hela aktier och avgifter tillåter. 6 okt kl. 14:57:59 CEST registrerades därför en ny paperkomplettering: köp 4 NIBE B à 45,32 kr referens (brutto 181,28 kr) + 9 kr courtage. Referensen kom från Yahoo Finance fördröjd data kl. 14:37:53 CEST och är inte ett verifierat avslutspris. Ingen mäklare kontaktades och ingen riktig order skickades. Kassa efter registreringen: 2,12 kr. Innehav: ASSA ABLOY B 41, NIBE B 332, BONESUPPORT 87, Sandvik 0. Samlat courtage 80,00 kr, varav 35,96 kr är härlett aggregerat initialt courtage och 44,04 kr senare specificerade avgifter. Exakt avslutstid saknas eftersom detta är en pappersaffär."
+    },
     {
       "id": "dashboard-audit-reconciliation-2026-10-06",
       "date": "2026-10-06",
