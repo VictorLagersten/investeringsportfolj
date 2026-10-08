@@ -331,7 +331,7 @@ function render() {
   const riskLabel=document.querySelector(".risk-note small");
   if(riskLabel)riskLabel.textContent="Koncentrerad · "+data.holdings.length+" innehav · värden enligt kursstatus ovan";
   const dailyStatus=document.querySelector("#dailyDataSummary");
-  if(dailyStatus)dailyStatus.textContent=tradesToday?"Dagens portföljavkastning och jämförelse mot OMXS30 visas inte: journalen innehåller affärer idag och exakta avslutskurser/tider saknas.":hasDailyComparison?"Portföljens dagsrörelse "+signedMoney(day)+" ("+(dayPct>=0?"+":"")+pct.format(dayPct)+"%). Jämförelsen mot OMXS30 "+(hasBenchmarkComparison?"är "+(dayPct-data.benchmarkDayPct>=0?"+":"")+pct.format(dayPct-data.benchmarkDayPct)+" procentenheter.":"saknar komplett benchmarkkurs."):"Dagsrörelsen för hela portföljen visas när alla innehav har färska kurser och jämförbar stängningskurs. Delkurser och saknade innehav visas i tabellen ovan.";
+  if(dailyStatus)dailyStatus.textContent="INDIKATIVT: fördröjd feed, inte verifierat dagsbokslut. "+(tradesToday?"Dagens portföljavkastning och jämförelse mot OMXS30 visas inte: journalen innehåller affärer idag och exakta avslutskurser/tider saknas.":hasDailyComparison?"Portföljens feedrörelse "+signedMoney(day)+" ("+(dayPct>=0?"+":"")+pct.format(dayPct)+"%). Feedjämförelsen mot OMXS30 "+(hasBenchmarkComparison?"är "+(dayPct-data.benchmarkDayPct>=0?"+":"")+pct.format(dayPct-data.benchmarkDayPct)+" procentenheter.":"saknar komplett benchmarkkurs."):"Dagsrörelsen visas när alla innehav har färska kurser och jämförbar stängningskurs.");
   const values = sorted.slice(-7).map(p=>p.value);
   if (values.length > 1) {
     const lo=Math.min(...values), hi=Math.max(...values), span=hi-lo || 1;
