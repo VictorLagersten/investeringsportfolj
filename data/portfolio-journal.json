@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-07",
+  "updatedAt": "2026-10-08",
   "portfolio": {
     "startCapital": 50000,
     "cash": 2.12,
@@ -108,6 +108,27 @@
     }
   ],
   "research": [
+    {
+      "id": "daily-close-review-2026-10-08",
+      "date": "2026-10-08",
+      "title": "Stängningsrapport 8 okt — kurser skiljer sig; värde fortsatt indikativt",
+      "summary": "Kontrollerad 8 okt 2026 kl. 19:17 CEST. Ingen affär. Senaste ledger: ASSA ABLOY B 41, NIBE B 332, BONEX 87; kassa 2,12 kr; kumulativt courtage 80 kr. Startkapital 50 000 kr. Ingen historikruta tillagd eftersom aktieprisflödena inte är samstämmiga och exakta fyllnader för pappersaffärer saknas.\n\nKURSER / VÄRDERING (all marknadsdata fördröjd eller historisk): market.json, hämtad 8 okt 18:36 CEST, visar ASSA 339,90, NIBE 43,66, BONEX 230,20 och OMXS30 3 202,436. Mekaniskt beräknat med journalinnehaven blir 48 460,54 kr. Jämfört med filens föregående stängningar ger den feeden +522,58 kr / +1,09% för portföljen och −0,76% för index, dvs +1,85 procentenheter. Det här är en feedindikering, inte verifierad avkastning. Nasdaq indexhistorik visar OMXS30 3 213,27, −13,52 punkter / −0,42%; Investing visar 3 211,30 / −0,48%. Aktiesidor för 8 okt visar ASSA ca 339,60 (Yahoo 339,90), NIBE ca 43,65–43,70 (Yahoo 43,66) och BONEX ca 227,20–227,60 jämfört med Yahoo 230,20. Med dessa alternativa aktiepriser blir en mekanisk portföljmarkering ungefär 48 183,92–48 247,62 kr. Skillnaden på BONEX ensam är materiell. Därför fastställs inte officiellt stängningsvärde, dags-/totalavkastning eller alfa. Mät inte denna dag genom att välja ett godtyckligt prisflöde.\n\nMARKNAD / NYHETER: Nasdaq OMXS30 ned 0,42% (officiell indexsida; Investing −0,48%). Detta är bred marknadskontext, inte förklaring till enskild akties rörelser. Saab meddelade 8 okt stärkt samarbete med GKN Aerospace kring Gripen E/F-motorer; verifierat samarbetsavtal men ingen orderstorlek eller intäktsprognos i den publicerade rubriken. Möjlig långsiktig industriell/leveransförmågefördel; finansiell effekt och inprisning kan inte bedömas utan detaljer. BONESUPPORTs senaste listade primärnyheter i denna kontroll var CERAMENT V-uppdateringen 27 aug och betalningsbeskedet 3 aug; inget nytt 8 okt identifierat. ASSA:s senaste listade nyheter: Q3-inbjudan 5 okt; rapport väntas 27 okt. Ingen ny NIBE-bolagsnyhet identifierad i avgränsad sökning. Pris/volym: kursdataleverantörer skiljer sig och jämförbar volymbekräftelse kunde inte säkras, så ingen teknisk signal poängsätts. Makro: SCB:s preliminära september-KPI 1,1% och KPIF 1,5% (publicerat 7 okt; energi främsta förklaring). Tolkning: kan öka ränte-/multipelosäkerhet, särskilt för NIBE:s efterfrågekänslighet, men ändrar inte bolagstes utan nytt fundamentalt underlag.\n\nINNEHAV / BESLUT: ASSA ABLOY 41 — BEHÅLL/OMPRÖVA: Q2-tesen bygger på organisk tillväxt, högre EBITA-marginal och kassaflöde; motbevisas av uthållig nedgång i organisk tillväxt, marginal eller kassakonvertering och skulddriven tillväxt utan avkastning. Nästa katalysator Q3 27 okt. NIBE B 332 — BEHÅLL/OMPRÖVA: följ värmepumpsefterfrågan, marginalåterhämtning, kassaflöde/skuld och ränteläge; ompröva om förbättringen stannar eller balansräkningen försämras. BONEX 87 — OMPRÖVA koncentration, inte automatisk sälj: stark tidigare Q2-tillväxttes kvarstår men cirka 40% vikt och produkt/regulatorisk risk gör koncentrationen stor; ompröva vid försämrad försäljning, marginal, kassaflöde eller säkerhets/regulatorisk händelse. Ett prisfall ensamt är inte säljsignal. Inga numeriska scores utan täckande data.\n\nKANDIDATER / TÄCKNING: Ingen kandidat når verifierad score. Saab blir researchspår med nytt 8 okt samarbetsbesked; nästa steg är att skilja samarbete från bindande intäktsorder och verifiera orderstock, marginal, värdering, balans och insiderdata. SEB, C-RAD, MSAB, Softronic och Image Systems behålls som oscoreade researchspår; färsk jämförbar värdering, fundamentals, kassaflöde, insiders samt pris/volym saknas. Bred sökning omfattade bolagens officiella nyhetssidor och riktade webbsökningar; ingen systematisk granskning av varje bolagsrapport eller hela marknadsuniversum genomfördes. Reddit/Avanza-forum täcktes inte tillförlitligt i denna körning och publik förvaltardata granskades inte systematiskt. Forum är inte faktaunderlag. Ingen score räknas från luckor.\n\nKOSTNADER / NÄSTA FÖNSTER: Ingen affär; nytt courtage 0 kr, FX 0 kr och lokala avgifter 0 kr för svenska SEK-noterade aktier. Kumulativt journalfört courtage 80 kr (ursprungliga 35,96 kr är härlett, ej allokerat per order). Handelsbankens publicerade taxa enligt prislistan: Sverige/Norden 0,09%, min 9 kr per affär. Spread/slippage kan inte beräknas från dessa fördröjda historikkällor. ISK-skatt hålls separat; personlig nivå kan inte räknas utan total ISK/KF/PEPP. Nästa handelsfönster fredag 9 okt kl. 10:00: verifiera beslutstidskurser och kassaläge; jämför bara kompletta kandidater mot att behålla efter courtage. Om priskonflikten kvarstår eller underlag saknas: ingen handel. Pappersportfölj, inga riktiga order.",
+      "sources": [
+        "https://indexes.nasdaqomx.com/index/history/omxs30",
+        "https://www.investing.com/indices/omx-stockholm-30-historical-data",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/market.json",
+        "https://se.investing.com/equities/assa-abloy-historical-data",
+        "https://www.investing.com/equities/nibe-industrier-b-historical-data",
+        "https://stockanalysis.com/quote/sto/BONEX/history/",
+        "https://se.investing.com/equities/bonesupport-holding-ab-historical-data",
+        "https://www.saab.com/newsroom/press-releases",
+        "https://www.assaabloy.com/group/en/news-media/press-releases",
+        "https://investor.bonesupport.com/en/investors/press-releases/",
+        "https://www.scb.se/en/finding-statistics/statistics-by-subject-area/prices-and-economic-trends/price-statistics/consumer-price-index-cpi/pong/statistical-news/cpi-flash-estimate-september-2026/",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
+      ]
+    },
     {
       "id": "daily-close-review-2026-10-07",
       "date": "2026-10-07",
@@ -300,7 +321,7 @@
   "candidates": [],
   "investmentEngine": {
     "version": "3.0.0",
-    "updatedAt": "2026-10-02",
+    "updatedAt": "2026-10-08",
     "weights": {
       "quality": 14,
       "growth": 14,
@@ -319,7 +340,7 @@
     "rotationRule": "Compare holdings with eligible candidates only when both have at least 75% confidence; a score gap of 10 points triggers review, never an automatic trade.",
     "scoreChangeDetector": "Compare latest score per ticker with prior saved score in local browser storage; first observation is baseline.",
     "dataStatus": "0 fully scoreable candidates; 6 existing research leads shown without scores pending the missing factor evidence.",
-    "researchQueueUpdatedAt": "2026-10-02",
+    "researchQueueUpdatedAt": "2026-10-08",
     "researchQueue": [
       {
         "name": "Saab",
