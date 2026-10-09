@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - 'scripts/portfolio-integrity.mjs'
+      - 'scripts/test-portfolio-integrity.mjs'
       - '.github/workflows/portfolio-integrity.yml'
       - 'README.md'
   workflow_dispatch:
@@ -24,6 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Regression-test missed-window handling
+        run: node scripts/test-portfolio-integrity.mjs
       - name: Validate, reconcile, and safely publish audit
         shell: bash
         run: |
