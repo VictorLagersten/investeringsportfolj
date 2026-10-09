@@ -2,7 +2,7 @@ import fs from "node:fs";
 const read = p => JSON.parse(fs.readFileSync(p, "utf8"));
 const round2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
 const close = (a,b) => Math.abs(Number(a)-Number(b)) < 0.011;
-const now = new Date();
+const now = process.env.PORTFOLIO_TEST_NOW ? new Date(process.env.PORTFOLIO_TEST_NOW) : new Date();
 const parts = new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Stockholm",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",weekday:"short",hourCycle:"h23"}).formatToParts(now);
 const part = k => parts.find(p=>p.type===k)?.value;
 const today = part("year")+"-"+part("month")+"-"+part("day");
@@ -59,7 +59,7 @@ if(auditSlot&&(process.env.GITHUB_EVENT_NAME==="schedule"||process.env.FORCE_TRA
   journal.updatedAt=today; auditAdded=true;
  }
 }
-const report={schema:1,checkedAt:now.toISOString(),localDate:today,localTime:part("hour")+":"+part("minute"),status:errors.length?"FAIL":warnings.length?"WARN":"PASS",errors,warnings,reconciled:{ledgerTransactions:ledger.length,journalTransactions:(journal.transactions||[]).length,holdings:portfolio.holdings.map(h=>({symbol:h.symbol,shares:h.shares})),expectedCash:cash,recordedCash:portfolio.cash,expectedTotalFees:fees,recordedTotalFees:portfolio.totalFees,marketFetchedAt:market.fetchedAt||null,marketAgeMinutes:age},tradeWindow:{weekday,localHour:hour,localMinute:minute,auditAdded}};
+const report={schema:1,checkedAt:now.toISOString(),localDate:today,localTime:part("hour")+":"+part("minute"),status:errors.length||auditAdded?"FAIL":warnings.length?"WARN":"PASS",errors,warnings,reconciled:{ledgerTransactions:ledger.length,journalTransactions:(journal.transactions||[]).length,holdings:portfolio.holdings.map(h=>({symbol:h.symbol,shares:h.shares})),expectedCash:cash,recordedCash:portfolio.cash,expectedTotalFees:fees,recordedTotalFees:portfolio.totalFees,marketFetchedAt:market.fetchedAt||null,marketAgeMinutes:age},tradeWindow:{weekday,localHour:hour,localMinute:minute,auditAdded}};
 fs.writeFileSync("data/portfolio-integrity.json",JSON.stringify(report,null,2)+"\n");
 if(auditAdded) fs.writeFileSync("data/portfolio-journal.json",JSON.stringify(journal,null,2)+"\n");
 console.log(JSON.stringify(report,null,2));
