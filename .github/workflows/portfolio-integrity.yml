@@ -24,13 +24,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Validate master data and detect missed trade window
-        run: node scripts/portfolio-integrity.mjs
-      - name: Commit audit and any missed-window record
-        if: always()
+      - name: Validate, reconcile, and safely publish audit
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/portfolio-integrity.json data/portfolio-journal.json
-          git diff --cached --quiet || git commit -m "Audit portfolio integrity and trade window"
-          git push
+          for attempt in 1 2 3; do
+            echo "Audit/publish attempt $attempt"
+            git fetch origin main
+            git reset --hard origin/main
+            audit_exit=0
+            node scripts/portfolio-integrity.mjs || audit_exit=$?
+            git add data/portfolio-integrity.json data/portfolio-journal.json
+            git diff --cached --quiet || git commit -m "Audit portfolio integrity and trade window"
+            if git push origin HEAD:main; then
+              exit "$audit_exit"
+            fi
+            echo "Push race detected; re-fetching latest main and recomputing audit."
+            sleep 2
+          done
+          echo "Could not publish audit after three attempts."
+          exit 1
