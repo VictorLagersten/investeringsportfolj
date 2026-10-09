@@ -4,6 +4,11 @@ on:
     # Summer: 10:30 Stockholm = 08:30 UTC. Winter: 10:30 Stockholm = 09:30 UTC.
     - cron: "30 8 * * 2,5"
     - cron: "30 9 * * 2,5"
+  push:
+    paths:
+      - 'scripts/portfolio-integrity.mjs'
+      - '.github/workflows/portfolio-integrity.yml'
+      - 'README.md'
   workflow_dispatch:
 permissions:
   contents: write
