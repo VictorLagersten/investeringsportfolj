@@ -20,6 +20,7 @@ De tre ursprungliga affärerna saknar verifierade datum och transaktionsavgifter
 - `portfolio.json`: startkapital, aktuella innehav, kassa, referenspriser och avgiftssammanställning.
 - `ledger.json`: köp och försäljningar. Okända datum och avgifter är null.
 - `data/portfolio-journal.json`: analyser, källor, research och beslutsnoteringar.
+- `data/portfolio-integrity.json`: automatisk avstämning av ledger, innehav, kassa, courtage och kursfeed.
 - `data/market.json`: separat, fördröjd Yahoo Finance-marknadsfeed.
 
 Dashboarden hämtar portfölj och ledger från samma GitHub Pages-origin med cache-busting vid sidladdning och därefter var femte minut. Analysjournalen läses också in och kontrolleras var femte minut.
@@ -34,7 +35,7 @@ Dashboarden använder den marknadsfilen för portföljvärdering endast när fil
 
 ## Paperhandel och analys
 
-Paperhandelsgenomgångar är schemalagda **tisdagar och fredagar kl. 10.00 Europe/Stockholm**. En daglig analysrapport är schemalagd kl. 18.00. Om en handelsgenomgång kommer efter handelsfönstret eller viktiga data inte kan verifieras, registreras ingen retroaktiv affär. Schemat garanterar inte att en automation startar exakt på minuten.
+Paperhandelsgenomgångar är schemalagda **tisdagar och fredagar kl. 10.00–10.30 Europe/Stockholm**. En daglig analysrapport är schemalagd kl. 18.00. En GitHub Actions-kontroll stämmer av masterfilerna och markerar ett missat fönster som `MISSLYCKAD HANDELSCYKEL` om ingen journalpost med `tradeWindowStatus` finns. Kontrollen fattar inte själv investeringsbeslut och kan inte garantera att ChatGPT-automationen startar exakt på minuten. Om en handelsgenomgång kommer efter fönstret eller data inte kan verifieras, registreras ingen retroaktiv affär.
 
 Allt är paperhandel. Affärer som bygger på referenspris markeras som sådana; de är inte bekräftade verkliga fyllnader. Dashboarden kan inte automatiskt läsa alla ChatGPT-chattar. En verifierad analys eller affär måste publiceras till journalfilerna för att synas där.
 
