@@ -1,0 +1,31 @@
+name: Portfolio integrity and missed trade-window guard
+on:
+  schedule:
+    # Summer: 10:30 Stockholm = 08:30 UTC. Winter: 10:30 Stockholm = 09:30 UTC.
+    - cron: "30 8 * * 2,5"
+    - cron: "30 9 * * 2,5"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: portfolio-integrity-main
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate master data and detect missed trade window
+        run: node scripts/portfolio-integrity.mjs
+      - name: Commit audit and any missed-window record
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/portfolio-integrity.json data/portfolio-journal.json
+          git diff --cached --quiet || git commit -m "Audit portfolio integrity and trade window"
+          git push
