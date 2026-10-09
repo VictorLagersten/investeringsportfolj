@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "checkedAt": "2026-10-09T10:22:04.695Z",
+  "localDate": "2026-10-09",
+  "localTime": "12:22",
+  "status": "PASS",
+  "errors": [],
+  "warnings": [],
+  "reconciled": {
+    "ledgerTransactions": 7,
+    "journalTransactions": 7,
+    "holdings": [
+      {
+        "symbol": "ASSA-B",
+        "shares": 41
+      },
+      {
+        "symbol": "NIBE-B",
+        "shares": 332
+      },
+      {
+        "symbol": "BONEX",
+        "shares": 87
+      }
+    ],
+    "expectedCash": 2.12,
+    "recordedCash": 2.12,
+    "expectedTotalFees": 80,
+    "recordedTotalFees": 80,
+    "marketFetchedAt": "2026-10-09T09:33:59.367Z",
+    "marketAgeMinutes": 48
+  },
+  "tradeWindow": {
+    "weekday": "Fri",
+    "localHour": 12,
+    "localMinute": 22,
+    "auditAdded": false
+  }
+}
