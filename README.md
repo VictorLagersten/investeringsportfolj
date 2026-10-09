@@ -6,14 +6,14 @@ En publik dashboard för en **simulerad paperportfölj**. Den är inte kopplad t
 
 - Startkapital: **50 000 kr**
 - ASSA ABLOY B: **41 aktier**
-- NIBE B: **328 aktier**
+- NIBE B: **332 aktier**
 - BONESUPPORT: **87 aktier**
-- Kassa: **192,40 kr**
-- Totalt registrerat courtage: **71,00 kr**
+- Kassa: **2,12 kr**
+- Totalt registrerat courtage: **80,00 kr**
 
-Kassan och innehaven följer de journalförda affärerna. De 192,40 kronorna är kvarvarande likvid efter hela aktieaffärer och avgifter; den ska inte döljas eller sättas till noll utan en motsvarande paperaffär. Värdering med referenspriserna i `portfolio.json` är **49 469,56 kr**. De priserna är inte alla från samma tidpunkt och ska inte beskrivas som en aktuell synkron värdering.
+Detta är det senaste bokförda paperläget, inte en aktuell realtidsvärdering. Referenspriserna i `portfolio.json` är från olika tidpunkter och marknadsfilen är en fördröjd feed. Totalvärde och avkastning ska därför inte anges som verifierade förrän kurserna är tidsmässigt jämförbara.
 
-De tre ursprungliga affärerna saknar verifierade datum och transaktionsavgifter per affär. De visas som okända. Det ursprungliga aggregerade courtaget **35,96 kr** är härlett från startkapital, ursprungliga bruttoköp och dokumenterad kassa före 1 oktober; senare kända avgifter är 9,00 kr, 13,04 kr och 13,00 kr. Därför blir totalen 71,00 kr, medan ursprungsavgifterna inte fördelas på enskilda köp.
+De tre ursprungliga affärerna saknar verifierade datum och transaktionsavgifter per affär. De visas som okända. Det ursprungliga aggregerade courtaget **35,96 kr** är härlett från startkapital, ursprungliga bruttoköp och dokumenterad kassaresten; senare kända avgifter är 9,00 kr, 13,04 kr, 13,00 kr och 9,00 kr. Därför blir totalen 80,00 kr, medan ursprungsavgifterna inte fördelas på enskilda köp.
 
 ## Datakällor
 
