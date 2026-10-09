@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-08",
+  "updatedAt": "2026-10-09",
   "portfolio": {
     "startCapital": 50000,
     "cash": 2.12,
@@ -108,6 +108,20 @@
     }
   ],
   "research": [
+    {
+      "id": "trade-window-failure-2026-10-09",
+      "date": "2026-10-09",
+      "title": "MISSLYCKAD HANDELSCYKEL — fredag 9 oktober",
+      "tradeWindowDate": "2026-10-09",
+      "tradeWindowStatus": "FAILED",
+      "createdAt": "2026-10-09T10:22:00+02:00",
+      "summary": "Efterhandskontroll av handelsfönstret 10:00–10:30 Europe/Stockholm. Den schemalagda portföljautomationen senast kördes 10:04:34 CEST enligt automationens körhistorik, men det finns ingen publicerad journalpost för dagens köp/sälj/NO_TRADE-beslut och ingen verifierad commit som registrerar en sådan. Därför markeras cykeln som MISSLYCKAD, inte som NO_TRADE: det går inte att bevisa att ett giltigt beslut genomfördes och publicerades inom fönstret. Ingen affär skapas retroaktivt; portfolio.json och ledger.json lämnas oförändrade. Åtgärd: obligatoriskt tradeWindowDate/tradeWindowStatus i varje framtida beslut samt automatisk watchdog vid fönstrets slut.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json"
+      ]
+    },
     {
       "id": "daily-close-review-2026-10-08",
       "date": "2026-10-08",
