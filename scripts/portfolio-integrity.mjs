@@ -49,7 +49,7 @@ const age=Number.isFinite(marketTime)?Math.round((now.getTime()-marketTime)/6000
 if(age==null||age<0||age>90) warnings.push("Market feed stale/invalid: "+(age==null?"unknown":age)+" minutes");
 for(const k of ["ASSA-B","NIBE B","BONEX"]) if(!market.quotes?.[k]||!Number.isFinite(Number(market.quotes[k].price))) warnings.push("Missing market quote "+k);
 if(Number(portfolio.cash)<0) errors.push("Negative cash");
-const tradeDay=weekday==="Tue"||weekday==="Fri", auditSlot=tradeDay&&hour===10&&minute>=30;
+const tradeDay=weekday==="Tue"||weekday==="Fri", auditSlot=tradeDay&&(hour>10||(hour===10&&minute>=30));
 if(process.env.GITHUB_EVENT_NAME==="schedule"&&!auditSlot){console.log("No-op outside local audit slot: "+today+" "+part("hour")+":"+part("minute")+" Europe/Stockholm");process.exit(0);}
 let auditAdded=false;
 if(auditSlot&&(process.env.GITHUB_EVENT_NAME==="schedule"||process.env.FORCE_TRADE_WINDOW_AUDIT==="1")){
@@ -64,3 +64,6 @@ fs.writeFileSync("data/portfolio-integrity.json",JSON.stringify(report,null,2)+"
 if(auditAdded) fs.writeFileSync("data/portfolio-journal.json",JSON.stringify(journal,null,2)+"\n");
 console.log(JSON.stringify(report,null,2));
 if(errors.length) process.exitCode=1;
+// A missed trade decision is an operational failure even when the portfolio files reconcile.
+// Exit non-zero only after the FAILED audit has been written, so GitHub Actions visibly fails.
+if(auditAdded) { console.error("TRADE WINDOW FAILED: missing TRADE/NO_TRADE decision; failure record published."); process.exitCode=1; }
