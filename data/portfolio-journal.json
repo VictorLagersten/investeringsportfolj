@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-09",
+  "updatedAt": "2026-10-12",
   "portfolio": {
     "startCapital": 50000,
     "cash": 2.12,
@@ -108,6 +108,28 @@
     }
   ],
   "research": [
+    {
+      "id": "daily-close-review-2026-10-09",
+      "date": "2026-10-12",
+      "title": "Stängningsrapport för fredag 9 okt — markering korscheckad, indexbas avviker",
+      "createdAt": "2026-10-12T11:52:00+02:00",
+      "summary": "Rapporten kördes måndag 12 okt 2026 kl. 11:52 CEST, före dagens börsstängning. Senaste avslutade handelsdag är fredag 9 okt. Detta är en stängningsavstämning; dagens intradag är separerad. Ingen paperhandel görs här. Senast journalförda innehav (6 okt): ASSA ABLOY B 41, NIBE B 332, BONEX 87, kassa 2,12 kr; totalt journalfört courtage 80 kr (varav 35,96 kr härlett och inte fördelat på ursprungliga affärer). Startkapital 50 000 kr. Senaste paperhandelscykeln fredag 9 okt är i journalen markerad MISSLYCKAD: ingen giltig affär eller NO_TRADE-beslut publicerades inom fönstret. Inga affärer skapas retroaktivt.\n\nSTÄNGNING 9 OKT (fördröjda/historiska sekundärkällor, inte officiell orderdata): ASSA ABLOY B 348,70 kr (+2,59%; volym StockAnalysis 1,71m), NIBE B 44,16 kr (+1,15%; volym 5,80m), BONEX 237,20 kr (+3,04%; volym 286,95k). Nivåerna stöds av två historiktabeller per aktie, och dashboardens 12 okt Yahoo-feed har motsvarande 9 okt föregående stängningar. Mekanisk värdering på journalinnehaven: 49 596,34 kr. Jämfört med 8 okt feedmarkeringen 48 460,54 kr blir prisrörelsen +1 135,80 kr / +2,34%. Mot startkapital blir markeringen −403,66 kr / −0,81%. Detta är indikativ mark-to-market, inte slutligt verifierad portföljavkastning: några affärspriser är referenser, exakta fyllnader saknas, och initiala avgifter per order är inte verifierade.\n\nBENCHMARK: Nasdaq OMXS30-sida visar 3 251,55 den 9 okt, +49,12 / +1,53%, men den sida anger föregående stängning 3 202,44. Den tidigare 8 okt-rapporten citerade 3 213,27 som Nasdaq-värde för 8 okt. Dessa två benchmarkhistoriker stämmer inte ihop; därför beräknas ingen fastställd daglig relativavkastning/alfa och ingen historik korrigeras tyst. Dashboardens 12 okt Yahoo-indexmarkering 3 266,75 mot föregående 3 258,14 är intradag och en annan källa; använd den inte som fredagsstängning. Kurs-/volymdata är fördröjd/historisk, inte realtid.\n\n12 OKT INTRADAG (separat, Yahoo-market.json hämtad 11:37 CEST): ASSA 347,60; NIBE 43,92; BONEX 239,80; OMXS30 3 266,75. Mekaniskt portföljvärde på dessa fördröjda intradagskurser blir 49 697,76 kr. Det är inte dagens stängningsvärde och inte en realtidsmätning.\n\nTESER / STATUS: ASSA ABLOY 41 — BEHÅLL/OMPRÖVA. Q2 visade organisk försäljning +4%, EBITA-marginal 18,1% mot 17,2% och operativt kassaflöde 6 300 Mkr mot 5 452 Mkr; falsifieras av bestående nedgång i organisk tillväxt, marginal/kassakonvertering eller skulddriven tillväxt utan avkastning. Q3 publiceras 27 okt kl. 08:00 CET. NIBE B 332 — BEHÅLL/OMPRÖVA. Q2-återhämtning i försäljning och marginal är tesen; följ värmepumpsefterfrågan, räntor, marginal, kassaflöde och skuld; falsifieras om återhämtningen stannar eller finansieringsläget försämras. BONEX 87 — OMPRÖVA koncentration, inte automatisk sälj. Q2 försäljning +25% (+30% valutajusterat), rapporterat rörelseresultat 89,6 Mkr mot 54,9 Mkr; 41,6% av fredagens indikativa portföljmarkering ger hög bolagsspecifik koncentration. Falsifieras av tillväxt-/marginal-/kassaflödesförsämring eller materiell regulatorisk/produktsäkerhetshändelse. Prisuppgången fredag är inte ensam skäl att öka; kursdata bekräftar rörelse men saknar exekveringskvalitet.\n\nNYHETER / KATALYSATORER: Saab publicerade 9 okt en inbjudan till Q3-presentation, inte ett nytt kontrakt. 8 okt skrev Saab och GKN ett samarbetsavtal om Gripen E/F-motorer; publicerad sida anger ingen orderstorlek/finansiell prognos. Tolkning: möjlig stärkt industriell kapacitet på längre sikt, men intjäningseffekt och inprisning kan inte fastställas. ASSA:s Q3 är 27 okt; ingen ny bolagsspecifik resultatnyhet identifierades efter Q2 i den begränsade kontrollen. BONESUPPORTs senaste identifierade bolagsbesked är 1 sep återköpsprogram upp till 100 Mkr samt tidigare produkt-/ersättningsnyheter; inget nytt besked för 9 okt identifierades. Ingen ny NIBE-bolagsnyhet hittades i avgränsad officiell sidkontroll. Nyhetskontroll är inte ett uttömmande bevis på frånvaro av information. Makrobaslinje: SCB:s snabb-KPI för september var KPI 1,1%, KPIF 1,5%, energi angavs som främsta drivkraft; tolkning är möjlig ränte-/multipelosäkerhet, särskilt för räntekänslig värmepumpsefterfrågan.\n\nKANDIDATER / TÄCKNING: 0 scorebara kandidater; 6 befintliga researchspår Saab, SEB, C-RAD, MSAB, Softronic och Image Systems kvarstår utan poäng. Nästa datagap: färsk jämförbar värdering, balans/kassaflöde, insiderdata och pris/volym. Saab-beviset från 8 okt är samarbete, ej bindande försäljningsorder. Täckningen bestod av officiella bolagssidor och riktade marknadssökningar samt historikdata för de tre innehaven och Nasdaq indexsida. Reddit/Avanza Forum täcktes inte tillförlitligt i denna körning; publika investeringsbolags-/förvaltarportföljer granskades inte systematiskt. Forum är sentiment, inte fakta. Inga scores räknas från saknade faktorer.\n\nKOSTNADER / PLAN: Ingen affär i den här dagliga rapporten: nytt courtage 0 kr, FX 0 kr, lokala avgifter 0 kr. Handelsbankens aktuella prislista anger 0,09% på svenska/nordiska värdepapper, minst 9 kr per affär. ISK-skatt hålls separat; 2026 års skattefria grundnivå är 300 000 kr sammanlagt över ISK/KF/PEPP, men eventuell annan privat kontobehållning saknas. Inget individuellt skattebelopp bokas. Nästa ordinarie paperhandelsfönster är tisdag 13 okt kl. 10:00. Efter fredagens misslyckade cykel krävs beslutspost med tradeWindowDate/status publicerad under fönstret; annars markeras det åter som misslyckat. Endast paperhandel; inga riktiga order. Källor och tidsstämplar i denna post; alla kurser fördröjda eller historiska.",
+      "sources": [
+        "https://beta.indexes.nasdaq.com/Index/History/OMXS30",
+        "https://stockanalysis.com/quote/sto/ASSA.B/history/",
+        "https://stockanalysis.com/quote/sto/NIBE.B/history/",
+        "https://stockanalysis.com/quote/sto/BONEX/history/",
+        "https://www.closelook.io/indices/stock/assa-b.st/price-history/",
+        "https://closelook.net/de/indices/stock/nibe-b.st/price-history/",
+        "https://www.investing.com/equities/bonesupport-holding-ab-historical-data",
+        "https://www.saab.com/newsroom/press-releases",
+        "https://www.assaabloy.com/group/en/investors/reports-presentations/interim-reports/q3-2026",
+        "https://www.assaabloy.com/group/en/news-media/press-releases",
+        "https://investor.bonesupport.com/investare/pressmeddelanden/",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/privat/skatter/vardepapperforsakringar/investeringssparkonto.4.5fc8c94513259a4ba1d800037851.html"
+      ]
+    },
     {
       "id": "trade-window-failure-2026-10-09",
       "date": "2026-10-09",
