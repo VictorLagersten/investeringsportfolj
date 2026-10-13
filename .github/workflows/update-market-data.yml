@@ -2,8 +2,8 @@ name: Update market data
 
 on:
   schedule:
-    # Run hourly, 17 minutes past the hour to avoid GitHub's peak load window.
-    - cron: "17 * * * *"
+    # Target every 15 minutes. GitHub may delay scheduled workflows under load.
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
