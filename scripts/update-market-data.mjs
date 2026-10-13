@@ -30,9 +30,10 @@ async function fetchQuote(symbol) {
       if (!result) throw new Error(`No chart result for ${symbol}`);
 
       const meta = result.meta ?? {};
-      const price = Number(meta.regularMarketPrice ?? meta.previousClose);
+      const price = Number(meta.regularMarketPrice);
       const previousClose = Number(meta.chartPreviousClose ?? meta.previousClose);
-      if (!Number.isFinite(price)) throw new Error(`No price for ${symbol}`);
+      if (!Number.isFinite(price) || price <= 0) throw new Error(`No current market price for ${symbol}`);
+      if (!Number.isFinite(previousClose) || previousClose <= 0) throw new Error(`No previous close for ${symbol}`);
 
       return {
         symbol,
@@ -76,11 +77,18 @@ for (const [key, config] of Object.entries(symbols)) {
   }
 }
 
-await mkdir("data", { recursive: true });
-await writeFile("data/market.json", JSON.stringify({
+const failedSymbols = Object.entries(quotes).filter(([, quote]) => !Number.isFinite(Number(quote.price)) || Number(quote.price) <= 0 || !Number.isFinite(Number(quote.previousClose)) || Number(quote.previousClose) <= 0);
+if (failedSymbols.length) {
+  console.error("Market refresh incomplete; preserving previous market.json. Failed symbols: " + failedSymbols.map(([key, quote]) => key + ": " + (quote.error || "missing current/previous price")).join("; "));
+  process.exitCode = 1;
+} else {
+  await mkdir("data", { recursive: true });
+  await writeFile("data/market.json", JSON.stringify({
   version: 2,
   source: "Yahoo Finance chart endpoint",
   disclaimer: "Market data may be delayed. This file is for dashboard analysis and is not an execution feed.",
   fetchedAt: new Date().toISOString(),
-  quotes
-}, null, 2) + "\n");
+    quotes
+  }, null, 2) + "\n");
+  console.log("Saved complete market data for " + Object.keys(quotes).length + " symbols.");
+}
