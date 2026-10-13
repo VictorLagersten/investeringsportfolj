@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "checkedAt": "2026-10-13T08:47:32.173Z",
+  "checkedAt": "2026-10-13T09:42:32.140Z",
   "localDate": "2026-10-13",
-  "localTime": "10:47",
+  "localTime": "11:42",
   "status": "PASS",
   "errors": [],
   "warnings": [],
@@ -27,13 +27,13 @@
     "recordedCash": 2.12,
     "expectedTotalFees": 80,
     "recordedTotalFees": 80,
-    "marketFetchedAt": "2026-10-13T08:33:04.076Z",
-    "marketAgeMinutes": 14
+    "marketFetchedAt": "2026-10-13T09:36:32.554Z",
+    "marketAgeMinutes": 6
   },
   "tradeWindow": {
     "weekday": "Tue",
-    "localHour": 10,
-    "localMinute": 47,
+    "localHour": 11,
+    "localMinute": 42,
     "auditAdded": false
   }
 }
