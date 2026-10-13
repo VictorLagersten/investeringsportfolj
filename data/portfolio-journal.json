@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-12",
+  "updatedAt": "2026-10-13",
   "portfolio": {
     "startCapital": 50000,
     "cash": 2.12,
@@ -108,6 +108,20 @@
     }
   ],
   "research": [
+    {
+      "id": "trade-window-failure-2026-10-13",
+      "date": "2026-10-13",
+      "tradeWindowDate": "2026-10-13",
+      "tradeWindowStatus": "FAILED",
+      "title": "MISSLYCKAT HANDELSFÖNSTER — tisdag 13 oktober",
+      "createdAt": "2026-10-13T10:19:03+02:00",
+      "summary": "Den schemalagda körningen inträffade tisdag 13 oktober 2026 kl. 10:19:03 CEST, efter handelsfönstrets låsta tid 10:00. Enligt reglerna fattas inget retroaktivt köp-/säljbeslut. Ingen affär gjordes och inga verkliga order skickades. Kanonisk avstämning: kassa 2,12 kr, ASSA ABLOY B 41, NIBE B 332, BONEX 87; kumulativt courtage 80 kr. portfolio.json och ledger.json lämnas oförändrade eftersom ingen affär genomfördes. Ingen kostnads-/cash-residualberäkning görs utan aktuellt beslutstidspris. Nästa ordinarie fönster fredag 16 oktober kl. 10:00 CEST. Endast paperhandel.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json"
+      ]
+    },
     {
       "id": "daily-close-review-2026-10-12",
       "date": "2026-10-12",
