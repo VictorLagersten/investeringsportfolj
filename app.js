@@ -145,7 +145,7 @@ function updateMarketStatus(){
   }else{
     el.textContent=master+" · referenskurser"+(marketDataState.fetchedAt?" · kursfil "+time(marketDataState.fetchedAt):"");
   }
-  el.title="Portfölj och affärer hämtas från portfolio.json och ledger.json. Kursfilen uppdateras ungefär varje timme och varje aktiekurs har egen tidsstämpel. Saknade kurser visas inte som nollrörelse. "+(marketDataState.error||"");
+  el.title="Portfölj och affärer hämtas från portfolio.json och ledger.json. Kursfilen uppdateras med målet var 15:e minut (GitHub kan fördröja schemalagda körningar) och varje aktiekurs har egen tidsstämpel. Saknade kurser visas inte som nollrörelse. "+(marketDataState.error||"");
   if(label){
     label.textContent=marketDataState.complete?"Rörelser från fördröjd kursfeed":marketDataState.updatedNames.length?"Ofullständig feed · per aktie":"Referenskurser · rörelser saknas";
     label.classList.toggle("market-label-warning",!marketDataState.complete);
