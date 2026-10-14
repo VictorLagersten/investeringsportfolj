@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-13",
+  "updatedAt": "2026-10-14",
   "portfolio": {
     "startCapital": 50000,
     "cash": 2.12,
@@ -108,6 +108,31 @@
     }
   ],
   "research": [
+    {
+      "id": "daily-close-review-2026-10-14",
+      "date": "2026-10-14",
+      "title": "Stängningsrapport 14 okt — uppgång i innehaven, MSAB Q3-förhandsbesked",
+      "createdAt": "2026-10-14T17:57:15+02:00",
+      "summary": "Daglig stängningsrapport 14 okt 2026, kontrollerad 17:57 CEST. Ingen handel i rapporten. Journal/ledger: ASSA ABLOY B 41, NIBE B 332, BONEX 87; kassa 2,12 kr; kumulativt courtage 80 kr. Senaste affär 6 okt. Handelsfönstret tisdag 13 okt finns journalfört som MISSLYCKAT (automationen kom 10:19 efter låst 10:00-tid); ingen retroaktiv affär.\n\nKURSER / VÄRDE (fördröjda historikmarkeringar, inte exekveringsdata): Investing.com historikrader för 14 okt anger ASSA 352,60 kr (+0,86%, volym 118,22k), BONEX 255,00 kr (+2,33%, volym 87,55k); StockAnalysis anger NIBE 44,89 kr (+2,07%, volym 1,24m); Investing OMXS30 3 278,88 (+0,06%). Mekaniskt portföljvärde med dessa rader: 51 547,20 kr inkl. kassa. Mot de föregående dagsnivåerna ASSA 349,60, NIBE 43,98, BONEX 249,20 och OMXS30 3 276,81 är portföljen +929,72 kr / +1,84%, index +0,06%, indikativ relativ rörelse +1,77 procentenheter. Markering mot startkapital 50 000 kr är +1 547,20 kr / +3,09%, men totalavkastningen efter historiska avgifter/fyllnader är inte verifierad. Alternativt Yahoo-snapshot hämtad 17:46 CEST visar ASSA 351,50, NIBE 44,48, BONEX 253,40 och OMXS30 3 276,266; med den blir värdet 51 226,78 kr och dagsrörelsen mot feedens föregående close +609,30 kr / +1,20%, index -0,02%. Källspridning ger därmed ett indikativt portföljspann 51 226,78–51 547,20 kr och en dagsrörelse +609–930 kr. Ingen enda exakt officiell värdering eller benchmarkrelativ avkastning fastställs. Kurser och volymer är fördröjda/historiska, inte realtid. BONEX steg mest i kronor; volymen i Investing-tabellen var lägre än föregående dags 511,8k, vilket inte bekräftar uppgången med stigande volym. ASSA-volym nära sin rapporterade 121,7k genomsnittsnivå; NIBE-volym cirka 1,24m. Volymleverantörer kan skilja sig.\n\nNYHETER / FAKTA OCH TOLKNING:\n• MSAB: bolaget offentliggjorde 14 okt kl. 11:00 preliminär Q3. EBIT uppskattas till 72,0 Mkr mot 45,8 Mkr (+57,2%); omsättning 175,0 Mkr mot 146,6 Mkr (+19,4%). Bolaget säger att strategigenomförande/skalerbar modell bidrar, men nämner regionala marknader och offentliga investeringscykler som kvartalsrisker. Rapport publiceras 23 okt. Tolkning: konkret uppreviderad earnings-bas och positiv resultat-/marginalkatalysator; marknadssökning visade en Cboe/Marketscreener indikativ MSAB-kurs 102,50 kr (+21,16%) efter beskedet, men den kursen och volymreaktionen behöver verifieras mot Nasdaq closing/volym och kan redan prisa in nyheten. Ingen köporder/score utan värdering, full rapport och uthållighetsanalys.\n• USA-inflation: AP rapporterade 14 okt 04:02 UTC att amerikansk KPI-inflation accelererade till 3,7% årstakt från 3,4% och över förväntade 3,6%; amerikanska räntor steg enligt rapporten. Tolkning: högre diskonteringsränta/riskpremie kan pressa multiplar, särskilt räntekänsliga NIBE-investeringar/efterfrågan; inget bevis på svensk efterfrågeförändring. Nyheten kom före Stockholmsbörsens öppning.\n• ASSA: inget nytt bolagsbesked i dagens riktade presskontroll; Q3 27 okt kl. 08:00 CET. Q2-basen: organisk tillväxt 4%, EBITA-marginal 18,1% mot 17,2%, operativt kassaflöde 6 300 mot 5 452 Mkr.\n• NIBE: ingen ny pressrelease i riktad kontroll; senaste officiella Q2: försäljning +7,6%, EBIT-marginal 11,4% mot 9,4%. Följa tullarnas belastning på NIBE Stoves (bolaget angav tidigare cirka 150 Mkr annualiserad effekt), slutkunders bostads-/investeringsvilja, skuld och kassaflöde.\n• BONESUPPORT: senaste primärbeskedet i kontrollen är 12 okt-rapport om 60 000 återköpta aktier under 5–9 okt inom programmet upp till 100 Mkr, senast till 30 okt. Tolkning: tillfälligt utbuds-/tekniskt stöd kan förekomma; påverkar inte i sig försäljning, marginal eller produktutfall. Q2-tillväxttes kvarstår; stor koncentrationsrisk.\n• Saab: senaste officiella upptäckta besked kvarstår 9 okt Q3-inbjudan, 8 okt GKN-samarbete, 7 okt brasiltillverkad Gripen E:s första flygning. Ingen kvantifierad ny order identifierad i dagens riktade kontroll. Q3 23 okt.\n• SEB: vd-övergång från 6 okt kvarstår att följa; Q3-resultat väntas 22 okt. Ingen ny primär nyhet hittad i riktad kontroll.\n\nPORTFÖLJTESER: ASSA ABLOY 41 — BEHÅLL/OMPRÖVA inför Q3; ompröva vid uthållig försvagning i organisk tillväxt, marginal eller kassakonvertering, eller förvärv/skuld utan avkastning. NIBE 332 — BEHÅLL/OMPRÖVA; ompröva om efterfråge-/marginalåterhämtning stannar eller skuldsättning/kassaflöde försämras. BONEX 87 — OMPRÖVA koncentration (cirka 43% av värdet), inte automatisk sälj; falsifieras av tillväxt-/marginal-/kassaflödesförsämring eller materiell produkt-/regulatorisk händelse. Prisrörelser ensamma utlöser inte köp/sälj.\n\nKANDIDATER: MSAB går från allmänt researchspår till prioriterad bevakning, men ingen poäng/order: verifiera den preliminära siffran i Q3-rapporten 23 okt, marginalbruttomix, kassaflöde, order-/kundkoncentration, värdering och dagens officiella pris/volym. Saab, SEB, C-RAD, Softronic och Image Systems står kvar utan score i väntan på jämförbart färskt fundamenta, balans/kassaflöde, värdering, insiderdata och pris/volym. 0 fullt scorebara kandidater. Begränsad sökning av bolagsreleaser, dagshistorik och etablerade nyheter; ingen full marknadsscanning. Reddit/Avanza Forum och publika investeringsbolags-/förvaltarportföljer granskades inte systematiskt. Forum är sentiment, inte faktaunderlag. Inget numeriskt score räknas från saknad data.\n\nKOSTNADER / NÄSTA FÖNSTER: Ingen affär: courtage 0 kr, FX 0 kr, lokala avgifter 0 kr. Handelsbanken Sverige/Norden: 0,09%, minst 9 kr per affär. ISK-skatt redovisas separat; personlig skatt kan inte beräknas utan övriga ISK/KF/PEPP. Nästa paperfönster fredag 16 okt kl. 10:00. Kassan är 2,12 kr; inget köp ryms, och ingen affär är aktuell utan försäljning/omallokering. Försäljning kräver verifierad modelltrigger. Endast paperhandel.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/market.json",
+        "https://www.investing.com/equities/assa-abloy-historical-data",
+        "https://stockanalysis.com/quote/sto/NIBE.B/history/",
+        "https://www.investing.com/equities/bonesupport-holding-ab-historical-data",
+        "https://www.investing.com/indices/omx-stockholm-30-historical-data",
+        "https://investors.msab.com/investors/newsroom/press-releases/2026/msab-micro-systemation-ab-publ-provides-preliminary-update-for-the-third-quarter-of-2026-operating-profit-ebit-exceeds-expectations/",
+        "https://www.marketscreener.com/news/micro-systemation-s-operating-profit-was-sek72-0m-45-8-in-the-third-quarter-ce785dd2dd89f522",
+        "https://apnews.com/article/704d3190f0fba2908df07c85f26346ec",
+        "https://investor.bonesupport.com/investerare/pressmeddelanden/",
+        "https://www.assaabloy.com/group/en/news-media/press-releases",
+        "https://www.assaabloy.com/group/en/investors/reports-presentations/interim-reports/q3-2026",
+        "https://www.nibegroup.com/news/",
+        "https://www.saab.com/newsroom/press-releases",
+        "https://sebgroup.com/press",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html"
+      ]
+    },
     {
       "id": "daily-close-review-2026-10-13",
       "date": "2026-10-13",
@@ -434,8 +459,8 @@
     "minimumConfidenceForDecision": 75,
     "rotationRule": "Compare holdings with eligible candidates only when both have at least 75% confidence; a score gap of 10 points triggers review, never an automatic trade.",
     "scoreChangeDetector": "Compare latest score per ticker with prior saved score in local browser storage; first observation is baseline.",
-    "dataStatus": "0 fully scoreable candidates; 6 existing research leads shown without scores pending the missing factor evidence.",
-    "researchQueueUpdatedAt": "2026-10-12",
+    "dataStatus": "MSAB har en ny preliminär Q3-katalysator; fortsatt 0 fullt scorebara kandidater eftersom valuation/kassaflöde/pris- och volymbekräftelse saknas.",
+    "researchQueueUpdatedAt": "2026-10-14",
     "researchQueue": [
       {
         "name": "Saab",
@@ -461,9 +486,9 @@
       {
         "name": "MSAB",
         "ticker": "MSAB B",
-        "evidence": "Äldre Q2/H1-basnotering i researchkön; ingen full färsk bolagsanalys gjordes i dag. Uppgiften är en lead, inte bekräftelse på att ingen senare information finns.",
-        "next": "Verifiera helårsmarginal, kassakonvertering, orderpipeline, likviditet/skuld, värdering och insiderdata.",
-        "source": "https://view.news.eu.nasdaq.com/view?id=b0806a09a16b15b5df4ca36348a0f7b25&lang=en&src=micro"
+        "evidence": "14 okt 11:00: preliminär Q3: omsättning 175,0 Mkr (+19,4% YoY), EBIT 72,0 Mkr (+57,2% YoY). Bolaget uppger att regionala marknader/offentliga investeringscykler kan påverka enskilda kvartal; full rapport 23 okt.",
+        "next": "Verifiera preliminära siffror 23 okt; analysera EBIT-marginal/mix, kassaflöde, kund-/orderkoncentration, värdering samt officiell stängningskurs och volymreaktion innan score.",
+        "source": "https://investors.msab.com/investors/newsroom/press-releases/2026/msab-micro-systemation-ab-publ-provides-preliminary-update-for-the-third-quarter-of-2026-operating-profit-ebit-exceeds-expectations/"
       },
       {
         "name": "Softronic",
