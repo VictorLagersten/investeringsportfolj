@@ -26,6 +26,8 @@ function opportunityScore(r){
   return Math.min(100,i*.8+(b??i)*.15+small+catalyst);
 }
 function coverage(r){const keys=["currentPrice","dayPct","marketCap","revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","liquidity"];return Math.round(keys.filter(k=>n(r[k])!=null).length/keys.length*100)}
+const ANALYSIS_FIELDS=["revenueGrowth3y","epsGrowth3y","roic","operatingMargin","fcfMargin","netDebtEbitda","pe","evEbit","priceMomentum12m","priceMomentum6m","insiderOwnership","liquidity"];
+function analysisFieldCount(r){return ANALYSIS_FIELDS.filter(k=>n(r[k])!=null).length}
 function weighted(parts){
   const valid=parts.filter(x=>x.v!=null);
   const weight=valid.reduce((s,x)=>s+x.w,0);
@@ -39,6 +41,7 @@ function businessScore(r){
   return weighted([{v:quality,w:.35},{v:growth,w:.30},{v:balance,w:.20},{v:insider,w:.15}]);
 }
 function investmentScore(r){
+  if(analysisFieldCount(r)<4)return null;
   const b=businessScore(r);
   const valuation=avg([invScale(n(r.pe),45,12),invScale(n(r.evEbit),30,10)]);
   const momentum=avg([scale(n(r.priceMomentum12m),-30,30),scale(n(r.priceMomentum6m),-20,25)]);
@@ -52,14 +55,14 @@ function riskFlag(r){
   if(lev!=null&&lev>3)flags.push("Skuld");
   if(liq!=null&&liq<1)flags.push("Likviditet");
   if(n(r.fcfMargin)!=null&&n(r.fcfMargin)<0)flags.push("Neg. FCF");
-  if(coverage(r)<55)flags.push("Datagap");
+  if(coverage(r)<55||analysisFieldCount(r)<4)flags.push("Datagap");
   if(r.riskNote)flags.push("Notering");
   return flags.length?flags.join(" · "):"Ingen flagga";
 }
 function status(r){
   if(!tradable(r))return "Ej Handelsbanken-universum";
   const s=investmentScore(r), c=coverage(r);
-  if(c<55||s==null)return "Ej redo";
+  if(c<55||analysisFieldCount(r)<4||s==null)return "Ej redo";
   if(!tradable(r))return "Ej Handelsbanken-universum";
   if(!dataFreshEnough(r))return "Data för gammal";
   if(s>=78&&c>=75)return "Kandidat";
@@ -102,14 +105,14 @@ async function syncMarketPrices(){
 function renderScanner(){
   const filter=document.querySelector("#scannerFilter"),rowsEl=document.querySelector("#scannerRows");if(!rowsEl)return;
   const sorted=[...scannerRows].sort((a,b)=>(opportunityScore(b)??-1)-(opportunityScore(a)??-1));
-  const filtered=sorted.filter(r=>{if(!tradable(r))return false;const s=investmentScore(r);if(filter?.value==="ready")return coverage(r)>=55;if(filter?.value==="small")return smallCap(r);if(filter?.value==="watch")return s!=null&&s>=65&&s<78;return true});
+  const filtered=sorted.filter(r=>{if(!tradable(r))return false;const s=investmentScore(r),eligible=coverage(r)>=55&&analysisFieldCount(r)>=4&&s!=null;if(filter?.value==="scoreable")return eligible;if(filter?.value==="ready")return eligible;if(filter?.value==="small")return eligible&&smallCap(r);if(filter?.value==="watch")return eligible&&s>=65&&s<78;return true});
   rowsEl.innerHTML=filtered.length?filtered.map(r=>{
-    const b=businessScore(r),s=investmentScore(r),c=coverage(r);
+    const eligible=coverage(r)>=55&&analysisFieldCount(r)>=4,b=eligible?businessScore(r):null,s=eligible?investmentScore(r):null,c=coverage(r);
     return "<tr><td><strong>"+esc(r.name||r.ticker)+"</strong><small>"+esc(r.ticker)+" · "+esc(r.sector||"")+"</small></td><td>"+(b==null?"–":b.toFixed(0))+"</td><td><b class='model-score "+(s>=78?"good":s>=65?"mid":"")+"'>"+(s==null?"–":s.toFixed(0))+"</b></td><td>"+c+"%</td><td>"+esc(riskFlag(r))+"</td><td>"+status(r)+(smallCap(r)?" · småbolag":"")+"</td></tr>";
-  }).join(""):"<tr><td colspan='6' class='model-empty'>Ingen importerad kandidat matchar filtret.</td></tr>";
+  }).join(""):"<tr><td colspan='6' class='model-empty'>"+(filter?.value==="all"?"Inga aktier i universumet matchar filtret.":"Inga scorebara kandidater ännu. Universumet innehåller upptäcktsaktier, men minst fyra analysfält och 55% datatäckning krävs innan en preliminär scannerpoäng visas. Välj ‘Alla upptäckta’ för att bläddra i universumet.")+"</td></tr>";
   document.querySelector("#scannerCount").textContent=scannerRows.length+" bolag";
-  const ready=scannerRows.filter(r=>coverage(r)>=55).length;
-  document.querySelector("#scannerCoverage").textContent=ready+" av "+scannerRows.length+" har minst 55% datatäckning.";
+  const ready=scannerRows.filter(r=>coverage(r)>=55&&analysisFieldCount(r)>=4&&investmentScore(r)!=null).length;
+  document.querySelector("#scannerCoverage").textContent=ready+" av "+scannerRows.length+" har minst fyra analysfält och 55% datatäckning; det är ett preliminärt datafilter, inte verifierad analys.";
   renderPortfolioRisk();
 }
 function renderPortfolioRisk(){
@@ -139,7 +142,7 @@ async function loadBroadUniverse(){
     rows.forEach(x=>{
       if(!x.ticker)return;
       const prior=existing.get(x.ticker);
-      const merged={...(prior||{}),ticker:x.ticker,name:x.name||prior?.name||x.ticker,currentPrice:x.currentPrice??prior?.currentPrice??null,dayPct:x.dayPct??prior?.dayPct??null,marketCap:x.marketCap??prior?.marketCap??null,pe:x.pe??prior?.pe??null,sector:x.sector||prior?.sector||"",source:x.source||"Broad universe discovery",exchange:x.exchange||prior?.exchange||"",market:x.market||prior?.market||"",currency:x.currency||prior?.currency||"",listed:x.listed??prior?.listed,asOf:x.asOf||j.generatedAt||prior?.asOf||""};
+      const merged={...(prior||{}),ticker:x.ticker,name:x.name||prior?.name||x.ticker,currentPrice:x.currentPrice??prior?.currentPrice??null,dayPct:x.dayPct??prior?.dayPct??null,marketCap:x.marketCap??prior?.marketCap??null,pe:x.pe??prior?.pe??null,sector:x.sector||prior?.sector||"",source:(prior?.source&&prior.source!=="Broad universe discovery")?prior.source:(x.source||"Broad universe discovery"),exchange:x.exchange||prior?.exchange||"",market:x.market||prior?.market||"",currency:x.currency||prior?.currency||"",listed:x.listed??prior?.listed,asOf:x.asOf||j.generatedAt||prior?.asOf||""};
       existing.set(x.ticker,merged);
     });
     scannerRows=[...existing.values()];
