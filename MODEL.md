@@ -1,4 +1,4 @@
-# INVESTERNING – Investeringsmodell v2
+# INVESTERNING – Investeringsmodell
 
 ## Syfte
 Modellen ska hitta attraktiva investeringar genom att kombinera fundamental kvalitet, tillväxt, värdering, risk, momentum, insiderbild och katalysatorer. Den ska inte kopiera en enskild investerare.
@@ -13,15 +13,12 @@ Modellen ska hitta attraktiva investeringar genom att kombinera fundamental kval
 7. **Catalysts** – rapporter, nya produkter, kontrakt, regulatoriska händelser och andra tydliga värdedrivare.
 8. **Small-cap filter** – särskilt fokus på skalbara nischer, insiderägande, lönsam tillväxt och låg informationsgrad.
 
-## Viktning v2
-- Kvalitet 20%
-- Tillväxt 20%
-- Värdering 15%
-- Momentum 10%
-- Insider/ägande 10%
-- Katalysatorer 5%
-- Balansräkning 10%
-- Risk 10%
+## Viktning i dashboardens modell
+- Kvalitet 14%, tillväxt 14%, värdering 10%, momentum 16%
+- Insider/ägande 5%, katalysator 12%, balansräkning 10%, riskkontroll 10%
+- Marknadsregim 5%, småbolagspotential 4%
+
+Vikter summerar till 100%. Dashboardkodens `DEFAULT_MODEL` är implementeringskällan.
 
 En score ska inte räknas som ett automatiskt köp. Datatäckning och kvalitativ analys måste kontrolleras först.
 
@@ -105,7 +102,7 @@ Dashboarden visar toppvikt och ett enkelt koncentrationsmått (HHI) för registr
 5. Göra portföljoptimering utifrån korrelation och riskbudget, inte bara bolagsscore.
 
 
-## Automatisk marknadsdata v2
+## Automatisk, fördröjd marknadsdata
 Dashboarden hämtar nu automatiskt marknadsdata via GitHub Actions och lagrar senaste hämtning i `data/market.json`. Dashboarden läser filen löpande och uppdaterar registrerade innehav samt scannerpriser när nya data finns.
 
 Marknadsdata används för:
@@ -202,7 +199,7 @@ Market-, fundamental-, ownership- och catalyst-freshness ska behandlas separat. 
 Position sizing ska ta hänsyn till toppvikt, sektor, korrelation, volatilitet och marginalbidrag till portföljrisken när sådana data finns. Diversifiering är ett riskverktyg, inte ett självändamål.
 
 ### Operativ regel
-Vid varje tisdag/fredag 10:00-genomgång ska modellen i princip ställa:
+Vid varje tisdag/fredag 10:00–10:30-genomgång ska modellen i princip ställa:
 **"Om hela kapitalet var kontant nu, vilka positioner skulle ge bäst riskjusterad kapitaltillväxt över de tre tidshorisonterna?"**
 Sedan jämförs svaret med den faktiska portföljen och endast meningsfulla kapitalförflyttningar föreslås.
 
@@ -216,7 +213,7 @@ The current dashboard score uses ten factors on a 0–100 scale. Its canonical w
 - Catalysts 12%, balance sheet 10%, risk control 10%, insider/ownership 5%
 - Market-regime fit 5%, small-cap potential 4%
 
-Weights sum to 100%. A missing factor contributes a neutral 50 to the weighted calculation and never a positive score. A total Investment Engine Score is shown only after at least four of ten factor fields are present. Decision confidence remains a separate gate: below 75%, no buy or sell decision is produced. The interface shows the factor contributions and data coverage alongside the score.
+Weights sum to 100%. Missing factors are excluded from both the numerator and denominator; they receive no neutral points. A provisional Investment Engine Score is shown only when at least four of ten factor fields are present, and is normalized over verified factors only. Confidence/data coverage remains a separate gate. Decision confidence remains a separate gate: below 75%, no buy or sell decision is produced. The interface shows the factor contributions and data coverage alongside the score.
 
 The change detector stores the prior score per ticker in that browser's local storage; its first observation is a baseline. Rotation review compares a current holding only with the best eligible candidate when both have at least 75% confidence. A gap of 10 points raises a review prompt, not an automatic trade. If verified candidate data is absent, the dashboard leaves scores and score gaps blank.
 
@@ -224,3 +221,12 @@ The change detector stores the prior score per ticker in that browser's local st
 
 ### Oscoread researchkö
 The 2026-10-02 analysis also records six research leads (Saab, SEB, C-RAD, MSAB, Softronic and Image Systems). The dashboard displays the evidence already noted, a follow-up checklist and source link for each. These are explicitly unscored research leads, not eligible candidates or recommendations. They enter the scored candidate table only after adequate factor evidence is verified.
+
+
+## Aktuell drift och databegränsningar · 16 oktober 2026
+
+- Paperbeslut fönster: tisdag och fredag 10:00–10:30 Europe/Stockholm. Schemalagda försök görs 10:00, 10:10, 10:20 och 10:30; endast ett slutbeslut per datum och ingen retroaktiv affär.
+- Dashboarden uppdaterar masterdata och journal ungefär var femte minut. GitHub Actions försöker hämta kursfilen var 15:e minut; GitHub kan fördröja körningar och marknadsfilen är inte en orderfeed eller garanterad realtid.
+- Lokal planering och manuellt sparade kalenderdagar lagras i webbläsaren. De är inte den gemensamma journalen. Delade beslut/analyser måste publiceras i journalen.
+- Scanneruniversumet är upptäckt, inte fullständig fundamental täckning. Importerade scannerpoäng är preliminära och måste verifieras mot daterade källor.
+- Kontrollfilerna visar att portfölj/kassa kan stämmas av, men ursprungliga affärsdatum och individuella avgifter saknas. Därför är fullständig nettoavkastning och daglig benchmarkhistorik ännu inte verifierade.
