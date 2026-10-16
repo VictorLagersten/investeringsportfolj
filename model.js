@@ -63,8 +63,10 @@ function factorCoverage(c){return FACTORS.filter(([k])=>num(c[k])!=null).length}
 function factorScore(c){
  if(factorCoverage(c)<4)return null;
  const w=model.weights||DEFAULT_MODEL.weights;
- const total=FACTORS.reduce((s,[k])=>s+Number(w[k]||0),0)||100;
- return FACTORS.reduce((s,[k])=>s+(num(c[k])==null?50:clamp(num(c[k])))*Number(w[k]||0),0)/total;
+ const available=FACTORS.filter(([k])=>num(c[k])!=null);
+ const total=available.reduce((s,[k])=>s+Number(w[k]||0),0);
+ if(!total)return null;
+ return available.reduce((s,[k])=>s+clamp(num(c[k]))*Number(w[k]||0),0)/total;
 }
 function confidence(c){
  const filled=factorCoverage(c);
@@ -78,10 +80,11 @@ function horizonScore(c,h){
  return v==null?null:clamp(50+v*1.25);
 }
 function expectedReturn(c){
- const vals=["shortExpectedReturn","mediumExpectedReturn","longExpectedReturn"].map(k=>num(c[k])).filter(v=>v!=null);
- if(!vals.length)return null;
- const weights=[.45,.35,.20];
- return vals.reduce((s,v,i)=>s+v*weights[i],0)/weights.slice(0,vals.length).reduce((a,b)=>a+b,0);
+ const horizons=[["shortExpectedReturn",.45],["mediumExpectedReturn",.35],["longExpectedReturn",.20]]
+  .map(([key,weight])=>({value:num(c[key]),weight})).filter(x=>x.value!=null);
+ if(!horizons.length)return null;
+ const total=horizons.reduce((sum,x)=>sum+x.weight,0);
+ return horizons.reduce((sum,x)=>sum+x.value*x.weight,0)/total;
 }
 function timeToCatalyst(c){const d=c.catalystDate?Date.parse(c.catalystDate):NaN;return Number.isFinite(d)?Math.max(0,Math.round((d-Date.now())/86400000)):null}
 function thesisStrength(c){
@@ -238,9 +241,10 @@ function renderFactorWeights(){
 function renderFactorDetail(c){
  const intro=document.querySelector("#factorDetailIntro"),rows=document.querySelector("#factorDetailRows");if(!rows)return;
  if(!c){intro.textContent="Ingen kandidat med verifierad faktorprofil att förklara ännu.";rows.innerHTML="<tr><td colspan='4' class='model-empty'>Lägg till eller importera verifierade data.</td></tr>";return}
- const w=model.weights||DEFAULT_MODEL.weights,total=FACTORS.reduce((s,[k])=>s+Number(w[k]||0),0)||100;
- const coverage=factorCoverage(c),score=factorScore(c);intro.textContent=c.name+" · Investment Engine Score "+(score==null?"ej beräknad":""+score.toFixed(1))+" · "+coverage+"/10 faktorer ifyllda";
- rows.innerHTML=FACTORS.map(([k,name])=>{const v=num(c[k]),weight=Number(w[k]||0),used=v==null?50:clamp(v),contribution=used*weight/total;return "<tr><td>"+esc(name)+"</td><td>"+weight+"%</td><td>"+(v==null?"50 · neutral (saknas)":v.toFixed(0))+"</td><td>"+contribution.toFixed(1)+" p</td></tr>"}).join("")+"<tr><td><strong>Summa</strong></td><td>100%</td><td></td><td><strong>"+(score==null?"–":score.toFixed(1)+" p")+"</strong></td></tr>";
+ const w=model.weights||DEFAULT_MODEL.weights;
+ const coverage=factorCoverage(c),score=factorScore(c),usedWeight=FACTORS.filter(([k])=>num(c[k])!=null).reduce((sum,[k])=>sum+Number(w[k]||0),0);
+ intro.textContent=c.name+" · Investment Engine Score "+(score==null?"ej beräknad":""+score.toFixed(1))+" · "+coverage+"/10 verifierade faktorer";
+ rows.innerHTML=FACTORS.map(([k,name])=>{const v=num(c[k]),weight=Number(w[k]||0),contribution=v==null?null:clamp(v)*weight/usedWeight;return "<tr><td>"+esc(name)+"</td><td>"+weight+"%</td><td>"+(v==null?"Saknas · ej poängsatt":v.toFixed(0))+"</td><td>"+(contribution==null?"–":contribution.toFixed(1)+" p")+"</td></tr>"}).join("")+"<tr><td><strong>Summa</strong></td><td>"+usedWeight+"% använd vikt</td><td></td><td><strong>"+(score==null?"–":score.toFixed(1)+" p")+"</strong></td></tr>";
 }
 function renderScoreChanges(candidates){
  const el=document.querySelector("#changeRows");if(!el)return;
