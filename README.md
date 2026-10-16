@@ -2,7 +2,7 @@
 
 En publik dashboard för en **simulerad paperportfölj**. Den är inte kopplad till Avanza eller Nordnet och lägger aldrig riktiga börsorder.
 
-## Senast avstämda pappersportfölj · 6 oktober 2026
+## Senast avstämd pappersportfölj · 16 oktober 2026
 
 - Startkapital: **50 000 kr**
 - ASSA ABLOY B: **41 aktier**
@@ -27,7 +27,7 @@ Dashboarden hämtar portfölj och ledger från samma GitHub Pages-origin med cac
 
 ## När data uppdateras
 
-GitHub Actions hämtar marknadskurser ungefär **en gång i timmen, vid minut 17**. GitHub kan starta schemalagda körningar försenat. Feedens priser kan också vara fördröjda och är inte orderkurser.
+GitHub Actions försöker hämta marknadskurser var 15:e minut. GitHub kan starta schemalagda körningar försenat. Feedens priser kan också vara fördröjda och är inte orderkurser.
 
 Dashboarden använder den marknadsfilen för portföljvärdering endast när filen är högst 90 minuter gammal och innehåller färska kurser för alla tre innehaven. Annars visar den referenspriserna från `portfolio.json` och anger detta i statusraden. TradingView-remsan är en separat widget och kan uppdateras vid en annan tid än portföljvärdet.
 
@@ -35,7 +35,7 @@ Dashboarden använder den marknadsfilen för portföljvärdering endast när fil
 
 ## Paperhandel och analys
 
-Paperhandelsgenomgångar är schemalagda **tisdagar och fredagar kl. 10.00–10.30 Europe/Stockholm**. En daglig analysrapport är schemalagd kl. 18.00. En GitHub Actions-kontroll stämmer av masterfilerna och markerar ett missat fönster som `MISSLYCKAD HANDELSCYKEL` om ingen journalpost med `tradeWindowStatus` finns. Kontrollen fattar inte själv investeringsbeslut och kan inte garantera att ChatGPT-automationen startar exakt på minuten. Om en handelsgenomgång kommer efter fönstret eller data inte kan verifieras, registreras ingen retroaktiv affär.
+Paperhandelsfönstret är **tisdagar och fredagar kl. 10:00–10:30 Europe/Stockholm**. Automationen försöker vid 10:00, 10:10, 10:20 och 10:30 och publicerar ett beslut per dag. Körning efter fönstret får inte skapa en retroaktiv affär. Den dagliga rapporten försöker köras kl. 18:00, 18:10, 18:20 och 18:30 och publiceras en gång per dag. En GitHub Actions-kontroll stämmer av masterfilerna och markerar ett missat fönster som `MISSLYCKAD HANDELSCYKEL` om ingen journalpost med `tradeWindowStatus` finns. Kontrollen fattar inte själv investeringsbeslut och kan inte garantera att ChatGPT-automationen startar exakt på minuten. Om en handelsgenomgång kommer efter fönstret eller data inte kan verifieras, registreras ingen retroaktiv affär.
 
 Allt är paperhandel. Affärer som bygger på referenspris markeras som sådana; de är inte bekräftade verkliga fyllnader. Dashboarden kan inte automatiskt läsa alla ChatGPT-chattar. En verifierad analys eller affär måste publiceras till journalfilerna för att synas där.
 
