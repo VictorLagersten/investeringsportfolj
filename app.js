@@ -418,8 +418,8 @@ async function loadPublishedAnalysis(){
     const journal=await response.json();
     const entry=(Array.isArray(journal.research)?journal.research:[]).find(item=>item?.type==="market-analysis");
     if(!entry){out.textContent="Ingen marknadsanalys finns ännu i den gemensamma GitHub-journalen.";return;}
-    const clean=String(entry.summary||"").replace(/\\r/g,"").trim();
-    const excerpt=clean.length>520?clean.slice(0,517).replace(/\\s+\\S*$/,"")+"…":clean;
+    const clean=String(entry.summary||"").replaceAll("\\r","").trim();
+    const excerpt=clean.length>520?clean.slice(0,517)+"…":clean;
     out.textContent=String(entry.title||"Senaste marknadsanalys")+" — "+excerpt+" Läs hela analysen i fliken Investeringsmotor under Trade Journal.";
     if(badge&&entry.date)badge.textContent=dateLabel(entry.date,{day:"numeric",month:"short"}).toUpperCase();
   }catch(error){console.warn("Publicerad marknadsanalys kunde inte hämtas",error);}
