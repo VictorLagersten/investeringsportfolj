@@ -2,7 +2,7 @@
   "startCapital": 50000,
   "cash": 2.12,
   "totalFees": 80,
-  "asOf": "2026-10-14",
+  "asOf": "2026-10-16",
   "holdings": [
     {
       "symbol": "ASSA-B",
@@ -23,11 +23,11 @@
       "price": 230.6
     }
   ],
-  "note": "Senast avstämd mot ledger 2026-10-14: ASSA ABLOY B 41, NIBE B 332, BONESUPPORT 87; kassa 2,12 kr. Ingen affär i dagens stängningsrapport. Daglig rapport och marknadsdatakonflikt finns i data/portfolio-journal.json.",
+  "note": "Senast avstämd mot ledger 2026-10-16: ASSA ABLOY B 41, NIBE B 332, BONESUPPORT 87; kassa 2,12 kr; totalt bokfört courtage 80 kr. Handelsfönstret fredag 16 oktober är journalfört som MISSLYCKAT eftersom körningen kom 10:02 efter låst tid 10:00. Ingen retroaktiv affär. Dagens marknadsfil är fördröjd och inte orderdata; se data/portfolio-journal.json.",
   "feeReconciliation": {
     "initialAggregateInferred": 35.96,
     "method": "50,000.00 start capital minus 39,950.40 gross initial purchases and 10,013.64 documented cash before the 2026-10-01 buy; initial fee slips are not available and no per-trade allocation is asserted.",
     "knownLaterFees": 44.04
   },
-  "priceNotes": "Price-fälten är fallback-/anskaffningsreferenser, inte dagens kurser. Yahoo Finance market.json är en fördröjd snapshot kl. 17:46 CEST. Historiska tabeller från Investing.com/StockAnalysis för 2026-10-14 ger andra stängningskurser; använd därför intervallet och dataluckan i senaste data/portfolio-journal.json, inte ett skenbart exakt livevärde."
+  "priceNotes": "Price-fälten är fallback-/anskaffningsreferenser, inte aktuella kurser. Senaste snapshot i data/market.json hämtades 2026-10-16 09:27 CEST, före handelsfönstret och fördröjd; använd inte den för affärsbeslut."
 }
