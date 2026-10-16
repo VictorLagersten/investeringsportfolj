@@ -409,6 +409,23 @@ document.querySelector("#planForm").addEventListener("submit",event=>{
 });
 document.querySelector("#calendarPrev").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()-1);renderCalendar();});
 document.querySelector("#calendarNext").addEventListener("click",()=>{calendarMonth.setMonth(calendarMonth.getMonth()+1);renderCalendar();});
+async function loadPublishedAnalysis(){
+  const out=document.querySelector("#chatAnalysis"),badge=document.querySelector(".note-date");
+  if(!out)return;
+  try{
+    const response=await fetch("./data/portfolio-journal.json?ts="+Date.now(),{cache:"no-store"});
+    if(!response.ok)throw new Error("journal HTTP "+response.status);
+    const journal=await response.json();
+    const entry=(Array.isArray(journal.research)?journal.research:[]).find(item=>item?.type==="market-analysis");
+    if(!entry){out.textContent="Ingen marknadsanalys finns ännu i den gemensamma GitHub-journalen.";return;}
+    const clean=String(entry.summary||"").replace(/\\r/g,"").trim();
+    const excerpt=clean.length>520?clean.slice(0,517).replace(/\\s+\\S*$/,"")+"…":clean;
+    out.textContent=String(entry.title||"Senaste marknadsanalys")+" — "+excerpt+" Läs hela analysen i fliken Investeringsmotor under Trade Journal.";
+    if(badge&&entry.date)badge.textContent=dateLabel(entry.date,{day:"numeric",month:"short"}).toUpperCase();
+  }catch(error){console.warn("Publicerad marknadsanalys kunde inte hämtas",error);}
+}
 render();
 refreshDashboardData();
+loadPublishedAnalysis();
 window.setInterval(refreshDashboardData, 5 * 60 * 1000);
+window.setInterval(loadPublishedAnalysis, 5 * 60 * 1000);
