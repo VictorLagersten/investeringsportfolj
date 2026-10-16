@@ -133,11 +133,12 @@ function downloadTemplate(){
 // Discovery rows are intentionally marked as discovery-only until sufficient verified
 // fundamental fields are available; discovery alone can never create a buy signal.
 async function loadBroadUniverse(){
+  const note=document.querySelector("#scannerUniverseNote");
   try{
     const r=await fetch("./data/universe.json?ts="+Date.now(),{cache:"no-store"});
-    if(!r.ok)return;
+    if(!r.ok)throw new Error("Universumet kunde inte hämtas");
     const j=await r.json(), rows=Array.isArray(j.rows)?j.rows:[];
-    if(!rows.length)return;
+    if(!rows.length){if(note)note.textContent="Universumfilen laddades men innehåller inga upptäcktsrader.";return;}
     const existing=new Map(scannerRows.map(x=>[x.ticker,x]));
     rows.forEach(x=>{
       if(!x.ticker)return;
@@ -147,9 +148,8 @@ async function loadBroadUniverse(){
     });
     scannerRows=[...existing.values()];
     saveScanner(); renderScanner();
-    const note=document.querySelector("#scannerUniverseNote");
     if(note){const localOnly=Math.max(0,scannerRows.length-rows.length);note.textContent="Automatiskt universum: "+rows.length.toLocaleString("sv-SE")+" bolag, data från "+(j.generatedAt?new Date(j.generatedAt).toLocaleString("sv-SE",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"okänt datum")+". Tabellen innehåller "+scannerRows.length.toLocaleString("sv-SE")+" unika bolag totalt"+(localOnly?" ("+localOnly.toLocaleString("sv-SE")+" lokala/importerade tillägg)":"")+"; upptäckt är inte verifierat investeringscase.";}
-  }catch{}
+  }catch(error){if(note)note.textContent="Kunde inte hämta det automatiska universumet. Visar "+scannerRows.length.toLocaleString("sv-SE")+" tidigare sparade rader; de är inte verifierade köpideer.";}
 }
 
 function initScanner(){
