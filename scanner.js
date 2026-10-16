@@ -71,20 +71,23 @@ function smallCap(r){
   return m!=null&&m<=15000&&n(r.insiderOwnership)!=null&&n(r.insiderOwnership)>=10;
 }
 function parseCSV(text){
-  const lines=text.replace(/^\uFEFF/,"").split(/\r?\n/).filter(x=>x.trim());
-  if(!lines.length)return[];
-  const rows=[];let cur="",cells=[],quote=false;
-  const push=()=>{cells.push(cur);cur=""};
-  for(let i=0;i<lines.length;i++){
-    const line=lines[i];
-    for(let j=0;j<line.length;j++){const ch=line[j];if(ch==="\"" ){if(quote&&line[j+1]==="\""){cur+="\"";j++}else quote=!quote}else if(ch===","&&!quote)push();else cur+=ch}
-    push();
-    if(cells.length>=SCANNER_FIELDS.length){rows.push(cells);cells=[]}
-    else if(i<lines.length-1){cur=cells.join(",")+"\n";cells=[]}
+  const input=text.charCodeAt(0)===65279?text.slice(1):text,records=[];let row=[],field="",quoted=false;
+  const quote=String.fromCharCode(34),lf=String.fromCharCode(10),cr=String.fromCharCode(13);
+  for(let i=0;i<input.length;i++){
+    const ch=input[i];
+    if(ch===quote){
+      if(quoted&&input[i+1]===quote){field+=quote;i++}else quoted=!quoted;
+    }else if(ch===","&&!quoted){row.push(field);field=""}
+    else if((ch===lf||ch===cr)&&!quoted){
+      if(ch===cr&&input[i+1]===lf)i++;
+      row.push(field);field="";if(row.some(x=>x.trim()))records.push(row);row=[];
+    }else field+=ch;
   }
-  const header=rows[0]||[];
-  const index=Object.fromEntries(header.map((h,i)=>[h.trim(),i]));
-  return rows.slice(1).map(a=>Object.fromEntries(SCANNER_FIELDS.map(k=>[k,(a[index[k]]??"").trim()]))).filter(r=>r.ticker||r.name);
+  row.push(field);if(row.some(x=>x.trim()))records.push(row);
+  if(records.length<2)return[];
+  const header=records[0].map(x=>x.trim()),index=Object.fromEntries(header.map((h,i)=>[h,i]));
+  return records.slice(1).map(cells=>Object.fromEntries(SCANNER_FIELDS.map(k=>[k,(cells[index[k]]??"").trim()])))
+    .filter(r=>r.ticker||r.name);
 }
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 async function syncMarketPrices(){
