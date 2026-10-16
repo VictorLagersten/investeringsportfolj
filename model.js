@@ -307,7 +307,16 @@ function addModelListeners(){
  document.querySelector("#modelRows")?.addEventListener("click",e=>{const b=e.target.closest(".model-edit");if(b){const c=model.candidates.find(c=>c.id===b.dataset.id);renderFactorDetail(c);openCandidate(c)}});
 }
 function renderJournal(){
- const el=document.querySelector("#journalRows");if(!el)return;
+ const el=document.querySelector("#journalRows");
+ const latest=sharedResearch.find(j=>j?.type==="market-analysis");
+ const analysis=document.querySelector("#chatAnalysis"),badge=document.querySelector(".note-date");
+ if(latest&&analysis){
+  const summary=String(latest.summary||"").replace(/\\s+/g," ").trim();
+  const excerpt=summary.length>420?summary.slice(0,417)+"…":summary;
+  analysis.textContent=String(latest.title||"Senaste marknadsanalys")+" — "+excerpt+" Läs hela analysen i Trade Journal.";
+  if(badge&&latest.date)badge.textContent=new Date(latest.date+"T12:00:00").toLocaleDateString("sv-SE",{day:"numeric",month:"short"}).toUpperCase();
+ }
+ if(!el)return;
  const shared=sharedResearch.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(j=>"<div><strong>"+esc(j.date||"")+" · "+esc(j.title||"Analys")+"</strong><span>"+esc(j.summary||"")+"</span><small>Gemensam dashboardjournal · publicerad från chatten</small></div>");
  const local=model.journal.slice(-8).reverse().map(j=>"<div><strong>"+esc(j.ticker)+" · "+esc(j.date||"")+"</strong><span>"+esc(j.hypothesis)+"</span><small>Förväntat "+esc(j.expectedReturn)+"% · Utfall "+esc(j.actualReturn??"ej klart")+"%</small><small>Invalidation: "+esc(j.invalidation)+"</small></div>");
  el.innerHTML=[...shared,...local].join("")||"<small>Inga analyser eller beslut loggade ännu.</small>";
