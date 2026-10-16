@@ -197,7 +197,7 @@ function buyDecision(c){
 }
 function sellDecision(h){
  const c=allCandidates().find(x=>x.ticker===h.ticker),p=portfolioContext(),current=p.weights.find(x=>x.ticker===h.ticker)?.weight??0;
- if(!c||factorCoverage(c)<4||confidence(c)<75)return{status:"OMPRÖVA",ticker:h.ticker,name:h.name,weight:current,score:null,targetPct:null,reasons:[],blockers:[!c?"Ingen verifierad profil":factorCoverage(c)<4?"Färre än 4 verifierade faktorer":"Dataconfidence under 75%; ingen säljsignal beräknas"]};
+ if(!c||factorCoverage(c)<4||confidence(c)<75)return{status:"EJ BEDÖMT",ticker:h.ticker,name:h.name,weight:current,score:null,targetPct:null,reasons:[],blockers:[!c?"Ingen verifierad profil":factorCoverage(c)<4?"Färre än 4 verifierade faktorer":"Dataconfidence under 75%; ingen säljsignal beräknas"]};
  const s=factorScore(c),conf=confidence(c),target=positionPct(c),reasons=[];
  if(s<58)reasons.push("Score under 58");
  if(conf<70)reasons.push("Dataconfidence under 70%");
