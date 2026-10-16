@@ -1,9 +1,9 @@
 name: Portfolio integrity and missed trade-window guard
 on:
   schedule:
-    # Summer: 10:30 Stockholm = 08:30 UTC. Winter: 10:30 Stockholm = 09:30 UTC.
-    - cron: "30 8 * * 2,5"
-    - cron: "30 9 * * 2,5"
+    # Summer: 10:45 Stockholm = 08:45 UTC. Winter: 10:45 Stockholm = 09:45 UTC; allow the 10:30 retry to publish before auditing.
+    - cron: "45 8 * * 2,5"
+    - cron: "45 9 * * 2,5"
   push:
     paths:
       - 'scripts/portfolio-integrity.mjs'
