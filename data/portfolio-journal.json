@@ -109,6 +109,83 @@
   ],
   "research": [
     {
+      "id": "market-analysis-2026-10-16",
+      "date": "2026-10-16",
+      "title": "Marknadsanalys 16 okt — rapportvecka, risker och aktuellt paperläge",
+      "createdAt": "2026-10-16T12:01:36+02:00",
+      "type": "market-analysis",
+      "tradeWindowStatus": "NO_TRADE_REPORT_ONLY_WINDOW_CLOSED",
+      "marketFetchedAt": "2026-10-16T09:42:25.574Z",
+      "marketSource": "Yahoo Finance chart; fördröjd analysdata, ej exekveringsfeed",
+      "snapshot": {
+        "portfolioValue": 51597.14,
+        "cash": 2.12,
+        "holdings": [
+          {
+            "ticker": "ASSA-B",
+            "quantity": 41,
+            "price": 357.3,
+            "value": 14649.3,
+            "weightPct": 28.39
+          },
+          {
+            "ticker": "NIBE-B",
+            "quantity": 332,
+            "price": 44.46,
+            "value": 14760.72,
+            "weightPct": 28.61
+          },
+          {
+            "ticker": "BONEX",
+            "quantity": 87,
+            "price": 255,
+            "value": 22185,
+            "weightPct": 43
+          }
+        ],
+        "benchmark": {
+          "ticker": "OMXS30",
+          "price": 3283.6724,
+          "dayPct": 0.847424
+        },
+        "portfolioMoveFromFeedPreviousCloseSek": -30.2,
+        "portfolioMoveFromFeedPreviousClosePct": -0.0585,
+        "relativeMoveVsBenchmarkPp": -0.906,
+        "feesRecorded": 80
+      },
+      "summary": "Marknads- och portföljgenomgång 16 oktober 2026, sammanställd 12:01 CEST. Endast analys och publicering; ingen paperhandel i denna rapport. Dagens giltiga handelsfönster 10:00–10:30 har passerat. Ingen retroaktiv affär görs. Inga riktiga order.\n\nPORTFÖLJENS BOKFÖRDA STATUS\nKanonisk journal och ledger stämmer av: ASSA ABLOY B 41 aktier, NIBE B 332, BONEX 87, kassa 2,12 kr, kumulativt bokfört courtage 80 kr; senaste journalförda affär 6 oktober. Initiala köpdatum och courtage per affär saknas; totalt initialt courtage 35,96 kr är en härledd aggregatsiffra och får inte fördelas på enskilda köp. Ingen historik har ändrats.\n\nFÖRDRÖJD MARKERING, INTE REALTID\nSenaste publicerade feed i data/market.json hämtades 11:42:25 CEST (Yahoo Finance chart; fördröjd analysfeed, marketState saknas och ingen volym ingår). Vid denna tidpunkt var ASSA 357,30 kr, NIBE 44,46 kr, BONEX 255,00 kr och OMXS30 3 283,6724. Mekaniskt värde med dessa prisnoteringar: ASSA 14 649,30 kr, NIBE 14 760,72 kr, BONEX 22 185,00 kr och kassa 2,12 kr, totalt 51 597,14 kr. Markeringen är cirka +3,19% mot startkapital 50 000 kr; den är inte en fullständigt verifierad avkastningsserie eftersom de ursprungliga avgifterna saknar per-affärskvitton och historiska kontantflöden/utdelningar inte är komplett dokumenterade. Från samma feedens föregående stängning blir den indikativa intradagsförändringen −30,20 kr (−0,06%) mot OMXS30 +0,85%, alltså ungefär −0,91 procentenheter relativt. Detta är en synkroniserad men fördröjd ögonblicksbild, inte officiell stängningsdata eller realtid. Kursrörelsen inom feeden bidrog ungefär ASSA +41,00 kr, NIBE +33,20 kr, BONEX −104,40 kr. Feed saknar volym, spread och orderdjup; inget pris/volym-filter kan därför bekräftas.\n\nVIKTER / RISK\nVid samma snapshot: ASSA cirka 28,4%, NIBE 28,6%, BONEX 43,0% och kassa <0,01%. BONEX är tydlig koncentrationsrisk över motorns generella 30%-varningsnivå; det är en risknotering, inte en automatisk säljsignal. Kassa 2,12 kr är praktiskt minimal och räcker inte till ett separat köp efter courtage. Ingen affär föreslås efter att dagens fönster stängt.\n\nBOLAGSFAKTA OCH TOLKNING\n\nBefintliga innehav:\n• ASSA ABLOY — Q2: organisk försäljning +4%, EBITA-marginal 18,1% mot 17,2%, operativt kassaflöde 6,3 mdkr mot 5,452 mdkr. Valutamotvind var −3%; organisk tillväxt var starkast i EMEIA och svagare i Asien/Stillahavsområdet. Q3 publiceras 27 okt kl. 08:00. Tolkning: marginal och kassakonvertering stöder tesen; valuta, geografisk svaghet och förvärvsintegration är kontrollpunkter. Status: BEHÅLL / OMPRÖVA vid Q3. Tes försvagas av uthålligt tapp i organisk tillväxt, marginal eller kassaflöde, eller skulddrivna förvärv utan avkastning.\n• NIBE — Q2: försäljning 10,849 mdkr (+7,6%; +8,7% vid fasta valutor), rörelseresultat 1,232 mdkr mot 0,944 mdkr och marginal 11,4% mot 9,4%. Bolaget uppger fortsatt belastning av oförutsägbara amerikanska tullar inom NIBE Stoves. Tolkning: resultatrekylen är positiv, men valutor/tullar och räntekänslig efterfrågan kan påverka marginal och multipel. Status: BEHÅLL / OMPRÖVA när kommande rapportdata om efterfrågan, kassaflöde, lager och skuldsättning finns. Tes försvagas om förbättringen stannar eller kapitalbindning/skuld ökar.\n• BONESUPPORT — Q2: försäljning +25% (30% vid konstanta valutor) till 355,7 Mkr; USA +25% och EUROW +24%; rapporterad bruttomarginal 90,8% mot 92,3%; justerat rörelseresultat 104,1 Mkr mot 62,4 Mkr. Q3 publiceras 22 okt kl. 08:00. Tolkning: tillväxt och vinstförbättring stöder caset, men marginal, kommersiell uthållighet och 43% portföljvikt gör Q3 särskilt viktig. Status: BEHÅLL / OMPRÖVA vid Q3; reducera inte enbart på prisrörelse. Tes försvagas av svagare USA-/EUROW-tillväxt, marginal- eller kassaflödesförsämring eller materiell regulatorisk/produktnyhet.\n\nNya och kommande katalysatorer:\n• Saab — 15 okt: FMV-beställning på ny Gripen-styrautomat, värde 1,3 mdkr, leveranser planerade 2030; 15 okt presenterades första GlobalEye för Sverige under ett redan beställt program. 16 okt lanserade Saab, FMV och Försvarsmakten en demonstrator för obemannad undervattensfarkost; kommunikationen beskriver framsteg i ett kontrakt som tilldelats tidigare, inte en ny order med nytt ordervärde. Tolkning: order-/teknikutfall stöder långsiktig efterfrågebild, men den nya 1,3 mdkr-affären ligger långt fram i tiden och intäkts-/marginaltiming behöver granskas. Q3 publiceras 23 okt kl. 07:30.\n• SEB — 14 okt: Finansinspektionens IRB-beslut väntas tillfälligt minska kapitalbufferten med 120 baspunkter via cirka 150 mdkr högre riskexponeringsbelopp, implementerat senast 31 dec tills modellgodkännanden. 15 okt: SEB nådde slutlig uppgörelse med New York DFS om historiska rutiner; DOJ avslutade sin granskning utan åtgärd. Betalning 33 MUSD bokförs som Q4-kostnad och anges ha begränsad finansiell påverkan; helårskostnadsmål oförändrat. Tolkning: avslutad historisk rättsprocess minskar osäkerhet men IRB-kapitalpåverkan är en materiell motvind för kapitalbuffert/utdelningsutrymme. Q3 22 okt cirka 06:30.\n• Svensk makro — SCB:s slutliga septembertal 14 okt: KPI 1,1% år/år och KPIF 1,5% mot 0,7% i augusti, främst energidrivet. Riksbanken höll styrräntan på 1,75% i september; den 8 okt talade riksbankschefen om inflationsrisk och möjliga skäl för höjning, men betonade att inkommande data ska bedömas före novembermötet. Tolkning: högre ränterisk kan pressa multiplar och bostads-/investeringskänslig efterfrågan; detta bevisar inte en bolagsspecifik resultatförsämring.\n• C-RAD — Q2: intäkter +16% till 122 Mkr, EBIT 28 Mkr mot 8 Mkr och marginal 23% mot 8%; orderingång −15% till 115 Mkr, främst svagare Amerika. Operativt kassaflöde 10 Mkr mot 1 Mkr. Q3 22 okt. Tolkning: lönsamhetslyft är positivt men beroendet av protonleveranser, geografi och kvartalsvis ordertiming gör orderingången nyckelkontroll.\n• MSAB — 14 okt preliminärt Q3: intäkter uppskattas till 175 Mkr (+19,4%) och EBIT 72 Mkr (+57,2%); detta är preliminärt, inte reviderat/fullständigt rapportutfall. Bolaget varnar för regionala förhållanden och offentliga investeringscykler. Full rapport 23 okt. Positiv katalysator men uthållighet, kassaflöde, mix och värdering återstår att kontrollera.\n• Softronic — senaste Q2 16 juli: Q2-försäljning +11,9% till 256,1 Mkr; EBITA 25,4 Mkr mot 19,4 och marginal 9,9% mot 8,5%; operativt kassaflöde 27,6 Mkr mot 7,1. Första halvåret hade 14,6% intäktstillväxt och 9,3% EBITA-marginal, medan andelen återkommande intäkter föll till 45,2% från 48,6%. Tolkning: vinst/kassaflöde starkt, men återkommande intäkters andel bör följas.\n• Image Systems — Q2: halvårsomsättning 47,7 Mkr mot 88,5, EBITDA −7,9 Mkr mot +5,5, operativt kassaflöde −15,2 Mkr mot +6,5 och orderstock 68,1 Mkr mot 84,6. Företrädesemissionen tillförde cirka 21,4 Mkr före kostnader och registrerades i september. Tolkning: emissionen ger likviditetsutrymme men späder ut ägare och löser inte svag orderingång/lönsamhet. Q3 23 okt.\n\nNÄSTA RAPPORTVECKA / BEVAKNING\n22 okt: BONESUPPORT, C-RAD och SEB. 23 okt: Saab, MSAB och Image Systems. 27 okt: ASSA ABLOY. Prioriterad research före nästa beslut: (1) läsa rapporterna när de publicerats, (2) jämföra order/försäljning, marginal, kassaflöde och balans mot tes, (3) kontrollera officiell/tidsstämplad pris- och volymreaktion, (4) därefter värdering, spread/likviditet och avgifter. Softronic inväntar jämförbar färsk kvartals-/värderingsanalys. Researchprioritet är inte en köpordning.\n\nMOTOR / BESLUT\nIngen av de namngivna kandidaterna får en numerisk score i denna genomgång: aktuella värderingsmått, insiderdata, jämförbar risk/avkastning, orderflöde och tidsstämplad volym saknas för en rättvis jämförelse. Dashboardens kod exkluderar saknade faktorer från poängen och kräver minst 4 av 10 faktorer plus 75% datatillit för beslut. Därför rättas den missvisande motorbeskrivningen “saknade faktorer = neutrala 50 poäng”; korrekt regel är att saknade faktorer inte poängsätts och score visas inte innan minimitäckning nås. 0 fullt scorebara kandidater, 0 modellmotiverade köp/sälj i denna rapport. Innehav kan inte få välgrundat säljbetyg utan profil-/faktordata; detta är inte samma sak som ett fullständigt kvantifierat behållbeslut.\n\nKOSTNADER / ISK\nIngen affär i denna rapport: courtage 0 kr, FX 0 kr, lokala avgifter 0 kr. Handelsbankens app/internetbank för svenska/nordiska aktier: 0,09% courtage, minst 9 kr per affär; svenska SEK-noterade aktier har inte valutaväxling. Spread/slippage kan inte uppskattas utan orderbok. ISK-skatt är separat från courtage: 2026 skattefri grundnivå 300 000 kr samlat över ISK/KF/PEPP; eventuell skatt beror på användarens totala kapitalunderlag på dessa konton och bokas inte in i paperjournalen utan fullständiga uppgifter. Ingen individuell ISK-skatt beräknas.\n\nTÄCKNING / LÄRANDE\nPrimärkällor kontrollerade: issuer-IR/rapporter och pressmeddelanden för innehaven samt Saab, SEB, C-RAD, MSAB, Softronic och Image Systems; SCB/Riksbanken; officiell Handelsbanken-prislista och Skatteverket. Sökning efter forum/offentliga portföljer gav inte tillräckligt jämförbar, verifierbar och tidsstämplad information för att använda som signal; Reddit/Avanza-forum eller investeringsbolagsportföljer ges därför ingen vikt i dagens beslut. Detta är en avgränsad uppdatering, inte täckning av varje aktie, forum eller förvaltare. Prisdata är uttryckligen fördröjd och volym saknas. Lärdom: starka preliminära/kvartalsnyheter får öka researchprioritet, men inte ensamma skapa köporder utan värdering, riskdata och pris-/volymbekräftelse. Nästa ordinarie paperfönster enligt journalens schema: tisdag 20 okt 10:00–10:30 CEST.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/market.json",
+        "https://www.assaabloy.com/group/en/news-media/press-releases/id.c1579119935a1298",
+        "https://www.assaabloy.com/group/en/investors/reports-presentations/interim-reports/q3-2026",
+        "https://www.nibegroup.com/news/",
+        "https://investor.bonesupport.com/en/investors/press-releases/bonesupport-holding-ab-publ-publishes-q2-2026-interim-report",
+        "https://www.bonesupport.com/en/financial-calendar",
+        "https://www.saab.com/newsroom/press-releases/2026/saab-receives-order-for-new-gripen-computer",
+        "https://www.saab.com/newsroom/press-releases/2026/saab-presents-first-globaleye-for-sweden",
+        "https://www.saab.com/newsroom/press-releases/2026/saab-fmv-and-the-swedish-armed-forces-launch-uncrewed-underwater-vehicle",
+        "https://www.saab.com/newsroom/press-releases/2026/invitation-to-saabs-q3-2026-interim-report-presentation",
+        "https://sebgroup.com/press/press-releases/2026/seb-comments-on-the-decision-from-the-swedish-financial-supervisory-authority",
+        "https://sebgroup.com/press/press-releases/2026/seb-reaches-a-resolution-with-dfs-concluding-us-authorities-reviews-of-the-banks-historical-processes",
+        "https://sebgroup.com/press/press-releases/2026/invitation--sebs-results-for-the-third-quarter-2026",
+        "https://c-rad.com/press-releases/c-rad-abs-delarsrapport-q226/",
+        "https://c-rad.com/investors/",
+        "https://investors.msab.com/sv/investerare/pressrum/pressmeddelanden/2026/msab-micro-systemation-ab-publ-lamnar-preliminar-information-om-tredje-kvartalet-2026-rorelseresultatet-overstiger-forvantningarna/",
+        "https://www.softronic.se/delarsrapport-for-perioden-1-januari-30-juni-2026-ir-nyheter/",
+        "https://www.imagesystemsgroup.se/media-press/press-releases/lower-net-sales-in-a-quarter-characterized-by-challenging-market-conditions",
+        "https://www.imagesystemsgroup.se/media-press/press-releases/image-systems-ab-announces-outcome-of-the-rights-issue",
+        "https://www.imagesystemsgroup.se/media-press/press-releases/last-day-of-trading-in-paid-subscribed-shares-bta-in-image-systems",
+        "https://www.scb.se/en/finding-statistics/statistics-by-subject-area/prices-and-economic-trends/price-statistics/consumer-price-index-cpi/pong/statistical-news/consumer-price-index-cpi-september-2026/",
+        "https://www.riksbank.se/en-gb/press-and-published/speeches-and-presentations/2026/strong-growth-and-inflation-risk--thedeen-sees-grounds-for-interest-rate-increase/",
+        "https://www.riksbank.se/en-gb/press-and-published/notices-and-press-releases/press-releases/2026/policy-rate-unchanged-at-16.75-per-cent",
+        "https://www.handelsbanken.se/sv/om-oss/juridiska-dokument/prislistor-privat/prislista-spara/prislista-vardepappershandel",
+        "https://www.skatteverket.se/investeringssparkonto"
+      ]
+    },
+    {
       "id": "trade-window-audit-correction-2026-10-16",
       "date": "2026-10-16",
       "title": "Revision av handelsfönster — körningar inom 10:00–10:30 felaktigt stoppade",
@@ -481,7 +558,7 @@
   "candidates": [],
   "investmentEngine": {
     "version": "3.0.0",
-    "updatedAt": "2026-10-12",
+    "updatedAt": "2026-10-16",
     "weights": {
       "quality": 14,
       "growth": 14,
@@ -494,54 +571,54 @@
       "marketRegime": 5,
       "smallCapPotential": 4
     },
-    "scoreScale": "0-100 per factor; missing factors contribute neutral 50 points but reduce coverage",
+    "scoreScale": "0–100 viktat medel endast av verifierade ifyllda faktorer; saknade faktorer exkluderas och ingen score visas före minst 4/10 verifierade faktorer.",
     "minimumVerifiedFactors": 4,
     "minimumConfidenceForDecision": 75,
     "rotationRule": "Compare holdings with eligible candidates only when both have at least 75% confidence; a score gap of 10 points triggers review, never an automatic trade.",
     "scoreChangeDetector": "Compare latest score per ticker with prior saved score in local browser storage; first observation is baseline.",
-    "dataStatus": "MSAB har en ny preliminär Q3-katalysator; fortsatt 0 fullt scorebara kandidater eftersom valuation/kassaflöde/pris- och volymbekräftelse saknas.",
-    "researchQueueUpdatedAt": "2026-10-14",
+    "dataStatus": "16 okt 12:01 CEST: portföljjournal/ledger avstämda (ASSA 41, NIBE 332, BONEX 87, kassa 2,12 kr, courtage 80 kr). Fördröjd marknadssnapshot senast 11:42 CEST; ingen volym/orderbok. Inga fullt scorebara kandidater och ingen affär i denna rapport.",
+    "researchQueueUpdatedAt": "2026-10-16",
     "researchQueue": [
       {
         "name": "Saab",
         "ticker": "SAAB B",
-        "evidence": "9 okt: Saab publicerade inbjudan till Q3-rapportpresentation; 8 okt bekräftade Saab/GKN ett samarbetsavtal om Gripen E/F-motorer. Samarbete/inbjudan är inte en order eller finansiell prognos.",
-        "next": "Verifiera bindande ordervärde/leveransplan, orderstock, marginal, värdering, balansräkning och insiders.",
-        "source": "https://www.saab.com/newsroom/press-releases"
+        "evidence": "15 okt: order på Gripen-styrautomat 1,3 mdkr med leveranser 2030. 16 okt: LUUV-demonstrator lanserad inom tidigare kontrakt; ingen ny orderstorlek angavs.",
+        "next": "Q3 23 okt: verifiera orderbok, intäkts-/marginalprofil och kassaflöde; komplettera värdering, officiell pris/volym och risk innan score.",
+        "source": "https://www.saab.com/newsroom/press-releases/2026/saab-receives-order-for-new-gripen-computer"
       },
       {
         "name": "SEB",
         "ticker": "SEB A",
-        "evidence": "Äldre Q2/H1-basnotering i researchkön; ingen full färsk bolagsanalys gjordes i dag. Uppgiften är en lead, inte bekräftelse på att ingen senare information finns.",
-        "next": "Hämta senaste rapportdata och verifiera kapitalrelationer, kreditförluster, värdering, insiderdata och momentum.",
-        "source": "https://sebgroup.com/press/press-releases/2026/seb-completes-latest-share-buyback-programme-and-initiates-new-programme2"
+        "evidence": "14 okt: tillfälligt −120 bp kapitalbuffert via cirka 150 mdkr högre REA. 15 okt: DFS-uppgörelse 33 MUSD, bokas Q4; DOJ avslutade utan åtgärd.",
+        "next": "Q3 22 okt: kontrollera CET1/buffert, kostnadsmål, kreditförluster, värdering och pris/volym; skilj regleringspåverkan från engångskostnaden.",
+        "source": "https://sebgroup.com/press/press-releases/2026/seb-comments-on-the-decision-from-the-swedish-financial-supervisory-authority"
       },
       {
         "name": "C-RAD",
         "ticker": "CRAD B",
-        "evidence": "Äldre Q2/H1-basnotering i researchkön; ingen full färsk bolagsanalys gjordes i dag. Uppgiften är en lead, inte bekräftelse på att ingen senare information finns.",
-        "next": "Följ orderingång och marginaltrend; komplettera värdering, kassaflöde, balansräkning, insiderdata och momentum.",
-        "source": "https://c-rad.com/press-releases/c-rads-interim-report-q226/"
+        "evidence": "Q2: försäljning +16%, EBIT 28 Mkr mot 8, men orderingång −15% till 115 Mkr, främst svagare Amerika; operativt kassaflöde 10 Mkr.",
+        "next": "Q3 22 okt: följ orderkonvertering, regioner, marginalkvalitet, kassaflöde, värdering och tidsstämplad volym.",
+        "source": "https://c-rad.com/press-releases/c-rad-abs-delarsrapport-q226/"
       },
       {
         "name": "MSAB",
         "ticker": "MSAB B",
-        "evidence": "14 okt 11:00: preliminär Q3: omsättning 175,0 Mkr (+19,4% YoY), EBIT 72,0 Mkr (+57,2% YoY). Bolaget uppger att regionala marknader/offentliga investeringscykler kan påverka enskilda kvartal; full rapport 23 okt.",
-        "next": "Verifiera preliminära siffror 23 okt; analysera EBIT-marginal/mix, kassaflöde, kund-/orderkoncentration, värdering samt officiell stängningskurs och volymreaktion innan score.",
-        "source": "https://investors.msab.com/investors/newsroom/press-releases/2026/msab-micro-systemation-ab-publ-provides-preliminary-update-for-the-third-quarter-of-2026-operating-profit-ebit-exceeds-expectations/"
+        "evidence": "14 okt preliminärt Q3: intäkter 175 Mkr (+19,4%), EBIT 72 Mkr (+57,2%); bolaget anger offentlig upphandling/investeringscykler som kvartalsrisk.",
+        "next": "Verifiera i Q3-rapporten 23 okt; analysera uthållig marginal, mix, kassaflöde, kundkoncentration, värdering och officiell pris/volym innan score.",
+        "source": "https://investors.msab.com/sv/investerare/pressrum/pressmeddelanden/2026/msab-micro-systemation-ab-publ-lamnar-preliminar-information-om-tredje-kvartalet-2026-rorelseresultatet-overstiger-forvantningarna/"
       },
       {
         "name": "Softronic",
         "ticker": "SOF B",
-        "evidence": "Äldre Q2/H1-basnotering i researchkön; ingen full färsk bolagsanalys gjordes i dag. Uppgiften är en lead, inte bekräftelse på att ingen senare information finns.",
-        "next": "Kontrollera trend mot tidigare kvartal, värdering, balansräkning, insiderdata och kursmomentum.",
-        "source": "https://news.cision.com/se/softronic-ab/r/delarsrapport-for-perioden--1-januari---30-juni-2026,c4375389"
+        "evidence": "Q2: omsättning +11,9%, EBITA-marginal 9,9% mot 8,5%, kassaflöde 27,6 mot 7,1 Mkr; återkommande intäkter var 44,3% av Q2-intäkterna mot 45,5%.",
+        "next": "Verifiera nästa rapport och utvecklingen i andel återkommande intäkter; komplettera värdering, insiderdata, likviditet och pris/volym innan score.",
+        "source": "https://www.softronic.se/delarsrapport-for-perioden-1-januari-30-juni-2026-ir-nyheter/"
       },
       {
         "name": "Image Systems",
         "ticker": "IS",
-        "evidence": "Äldre Q2/H1-basnotering i researchkön; ingen full färsk bolagsanalys gjordes i dag. Uppgiften är en lead, inte bekräftelse på att ingen senare information finns.",
-        "next": "Verifiera finansieringsstatus, likviditet och skuld, återhämtning i orderingång, värdering och insiderdata.",
+        "evidence": "Q2: H1-försäljning 47,7 mot 88,5 Mkr, EBITDA −7,9 mot +5,5, operativt kassaflöde −15,2 mot +6,5. Emissionen gav cirka 21,4 Mkr före kostnader i september.",
+        "next": "Q3 23 okt: kontrollera orderstock, RemaSawco, kassa/skuld efter emission och kassaflöde; komplettera värdering, utspädning och likviditet innan score.",
         "source": "https://www.imagesystemsgroup.se/media-press/press-releases/lower-net-sales-in-a-quarter-characterized-by-challenging-market-conditions"
       }
     ]
