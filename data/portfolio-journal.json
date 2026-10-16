@@ -109,6 +109,18 @@
   ],
   "research": [
     {
+      "id": "trade-window-audit-correction-2026-10-16",
+      "date": "2026-10-16",
+      "title": "Revision av handelsfönster — körningar inom 10:00–10:30 felaktigt stoppade",
+      "createdAt": "2026-10-16T11:10:00+02:00",
+      "summary": "Revision efter Victors förtydligande att handelsfönstret är 10:00–10:30 Europe/Stockholm. Äldre prompttext sa felaktigt att varje körning efter 10:00 var sen. Därför stoppades körningar inom det giltiga fönstret utan full SCAN/SCORE/RANK/RISKFILTER/PORTFÖLJ-beslut: tisdag 6 okt kl. 10:01:22, fredag 9 okt kl. 10:04:34, tisdag 13 okt kl. 10:19:03 och fredag 16 okt kl. 10:02:37. De tidigare rapporterna om dessa datum ska läsas som operativa uteblivna beslut, inte modellmotiverade BEHÅLL-beslut och inte verkliga marknadsmissar. Inga historiska affärer ändras eller läggs till retroaktivt. Separat: 2 okt kördes 15:01 CEST, utanför överenskommet fönster och korrekt missad. 6 okt har en faktisk paperrotation journalförd senare samma dag; den ska inte blandas ihop med det uteblivna beslutet i morgonfönstret. Per 16 okt: ASSA ABLOY B 41, NIBE B 332, BONEX 87, kassa 2,12 kr, kumulativt courtage 80 kr; senaste ledger-affär 6 okt. Automation uppdaterad till giltigt fönster 10:00–10:30 och schemalagda försök 10:00, 10:10, 10:20, 10:30, med kontroll mot dubblettbeslut. Nästa ordinarie beslut är tisdag 20 okt 10:00–10:30. Endast paperhandel; inga verkliga order.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json"
+      ]
+    },
+    {
       "id": "trade-window-failure-2026-10-16",
       "date": "2026-10-16",
       "title": "KORRIGERAD AUTOMATIONSNOTERING — inget beslut trots körning inom fönstret",
