@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-14",
+  "updatedAt": "2026-10-16",
   "portfolio": {
     "startCapital": 50000,
     "cash": 2.12,
@@ -108,6 +108,20 @@
     }
   ],
   "research": [
+    {
+      "id": "paper-window-missed-2026-10-16",
+      "date": "2026-10-16",
+      "tradeWindowDate": "2026-10-16",
+      "tradeWindowStatus": "MISSED",
+      "title": "MISSLYCKAT HANDELSFÖNSTER — fredag 16 oktober",
+      "createdAt": "2026-10-16T10:02:37+02:00",
+      "summary": "Schemalagd paperbeslutskörning mottogs fredag 16 oktober 2026 kl. 10:02:37 CEST, efter låst handelsfönster kl. 10:00. Enligt reglerna fattas inget retroaktivt köp-, sälj- eller rotationsbeslut. Ingen affär gjordes och inga riktiga order skickades. Kanonisk avstämning från portfolio.json och ledger.json: kassa 2,12 kr; ASSA ABLOY B 41, NIBE B 332, BONEX 87; sammanlagt bokfört courtage 80 kr. Ingen order, ingen referenskurs för affär, courtage 0 kr, valutaväxling 0 kr, lokala avgifter 0 kr; kassa oförändrad 2,12 kr. Market.json är en fördröjd Yahoo-snapshot hämtad 09:27:37 CEST, cirka 35 minuter före registreringen, och uttryckligen inte en exekveringsfeed; den kan inte användas för ett retroaktivt prisbeslut. Ledger och innehav lämnas oförändrade. Nästa ordinarie paperfönster tisdag 20 oktober kl. 10:00 CEST. Endast pappersportfölj.",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/market.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json"
+      ]
+    },
     {
       "id": "daily-close-review-2026-10-14",
       "date": "2026-10-14",
