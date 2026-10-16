@@ -1,7 +1,7 @@
 const STORE = "investern-ing-dashboard-v2";
 const LOCAL_STORE = "investern-ing-dashboard-local-v1";
 const INITIAL = {
-  startCapital: 50000, cash: 2.12, totalFees: 80, benchmarkDayPct: null, asOf: "2026-10-06",
+  startCapital: 50000, cash: 2.12, totalFees: 80, benchmarkDayPct: null, asOf: "2026-10-16",
   holdings: [
     {ticker:"ASSA ABLOY B",name:"ASSA ABLOY B",quantity:41,price:352.40,previousPrice:null,cost:352.717073,dayPct:null,quoteStatus:"reference"},
     {ticker:"NIBE B",name:"NIBE B",quantity:332,price:45.32,previousPrice:null,cost:45.722530,dayPct:null,quoteStatus:"reference"},
@@ -208,7 +208,7 @@ function renderChart() {
   const change = latest - first;
   const changePct = first ? change / first * 100 : 0;
   valueOut.textContent = money.format(latest);
-  changeOut.textContent = points.length > 1 ? `${signedMoney(change)} · ${changePct >= 0 ? "+" : ""}${pct.format(changePct)} %` : "Ingen avstämd historik ännu";
+  changeOut.textContent = points.length > 1 ? `${signedMoney(change)} · ${changePct >= 0 ? "+" : ""}${pct.format(changePct)} %` : "Ingen verifierad dagsvärdering ännu";
   changeOut.className = change >= 0 ? "up" : "down";
   if (points.length < 2) {
     chart.innerHTML = "";
@@ -283,12 +283,12 @@ function renderConclusion(){
   const equity=data.holdings.reduce((sum,h)=>sum+h.quantity*h.price,0),share=total?equity/total*100:0;
   const sells=data.transactions.filter(t=>t.type==="sell").length,buys=data.transactions.filter(t=>t.type==="buy").length;
   const validCount=verifiedHistory().length;
-  document.querySelector("#conclusionLead").textContent="Referensvärderingen är "+precise.format(total)+" ("+signedMoney(ret)+", "+(retPct>=0?"+":"")+pct.format(retPct)+" %) mot startkapitalet "+money.format(data.startCapital)+".";
+  document.querySelector("#conclusionLead").textContent="Beräknat markvärde på senaste tillgängliga kurser: "+precise.format(total)+". Skillnaden mot startkapitalet ("+signedMoney(ret)+", "+(retPct>=0?"+":"")+pct.format(retPct)+" %) är endast indikativ och inte en verifierad nettoavkastning.";
   document.querySelector("#conclusionAsOf").textContent="Portföljdata från "+dateLabel(data.asOf,{day:"numeric",month:"long",year:"numeric"})+"; marknadskursernas status visas på översikten.";
-  document.querySelector("#conclusionPerformance").textContent="Indikativt resultat på tillgängliga referenskurser är "+signedMoney(ret)+". "+validCount+" avstämda dagsvärderingar finns i historiken; äldre värden utan verifierad källa visas inte som historik.";
+  document.querySelector("#conclusionPerformance").textContent="Nettoavkastning mot OMXS30 kan inte verifieras ännu: affärsdatum och avgifter saknas för ursprungliga köp, och kursserien är fördröjd. "+validCount+" verifierade dagsvärderingar finns i kalenderhistoriken; den är inte fullständig.";
   document.querySelector("#conclusionAllocation").textContent=pct.format(share)+" % i aktier och "+precise.format(data.cash)+" i kassa. Portföljen har "+data.holdings.length+" innehav.";
   document.querySelector("#conclusionActivity").textContent="Ledger innehåller "+buys+" köp och "+sells+" försäljningar. Datum och avgift saknas för de tre ursprungliga köpen; 6 oktober-affärernas referenspriser är inte verifierade avslut.";
-  document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" lokala planeringsnoteringar finns sparade i den här webbläsaren. Nästa ordinarie paperhandelsgenomgång är tisdag/fredag kl. 10.00.":"Nästa ordinarie paperhandelsgenomgång är tisdag/fredag kl. 10.00. Sen ankomst eller saknat prisunderlag betyder ingen retroaktiv affär. Endast pappershandel; inga riktiga order.";
+  document.querySelector("#conclusionNext").textContent=data.plans.length?data.plans.length+" lokala planeringsnoteringar finns sparade i den här webbläsaren. Nästa ordinarie paperhandelsfönster är tisdag/fredag kl. 10:00–10:30 svensk tid.":"Nästa paperhandelsfönster är tisdag/fredag kl. 10:00–10:30 svensk tid. Efter 10:30 görs ingen retroaktiv affär. Saknat prisunderlag innebär att ingen affär journalförs. Endast pappershandel; inga riktiga order.";
 }
 function setView(name) {
   const views={dashboard:"#dashboardView",history:"#historyView",plan:"#planView",calendar:"#calendarView",conclusion:"#conclusionView",model:"#modelView",scanner:"#scannerView"};
