@@ -111,11 +111,11 @@
     {
       "id": "trade-window-failure-2026-10-16",
       "date": "2026-10-16",
-      "title": "MISSLYCKAD HANDELSCYKEL — 2026-10-16",
+      "title": "KORRIGERAD AUTOMATIONSNOTERING — inget beslut trots körning inom fönstret",
       "tradeWindowDate": "2026-10-16",
-      "tradeWindowStatus": "FAILED",
+      "tradeWindowStatus": "CORRECTED_CONFIGURATION_FAILURE",
       "createdAt": "2026-10-16T09:01:27.770Z",
-      "summary": "Automatisk kontroll 2026-10-16T09:01:27.770Z. Inget giltigt handelsbeslut publicerades till den gemensamma journalen senast vid kontroll efter handelsfönstret 10:00–10:30 Europe/Stockholm. Ingen affär skapad; ingen retroaktiv handel. Detta är en processvarning, inte ett köp-/säljbeslut. Masterdata-avstämningen gav inga fel. ",
+      "summary": "Kontroll efter handelsfönstret 16 okt noterade korrekt att inget slutligt handelsbeslut fanns registrerat. Orsaken var dock inte att körningen kom efter kl. 10:00: den schemalagda körningen 10:02:37 CEST låg inom överenskommet fönster 10:00–10:30. Den äldre automationstexten felaktigt klassade alla tider efter 10:00 som missade och hindrade analysen. Ingen affär gjordes, inga riktiga order skickades, och nu när fönstret är stängt görs ingen retroaktiv affär. Detta ersätter missvisande formulering om att själva fönstret missades. Automation uppdaterad till 10:00–10:30 med kontroller 10:00, 10:10, 10:20 och 10:30 samt skydd mot dubbla beslut. Se korrigering paper-window-missed-2026-10-16. Nästa fönster tisdag 20 okt kl. 10:00–10:30 CEST.",
       "sources": [
         "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
         "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json",
