@@ -23,11 +23,11 @@
       "price": 230.6
     }
   ],
-  "note": "Senast avstämd mot ledger 2026-10-16: ASSA ABLOY B 41, NIBE B 332, BONESUPPORT 87; kassa 2,12 kr; totalt bokfört courtage 80 kr. Revision: körningarna 6, 9, 13 och 16 okt låg inom överenskommet 10:00–10:30-fönster men äldre instruktion stoppade besluten; de är processmissar, inte BEHÅLL-signaler. Inga affärer görs retroaktivt. Detaljer i data/portfolio-journal.json. Nästa fönster tisdag 20 oktober 10:00–10:30 CEST.",
+  "note": "Senast avstämd mot ledger 2026-10-22: ASSA ABLOY B 41, NIBE B 332, BONESUPPORT 87; kassa 2,12 kr; totalt bokfört courtage 80 kr. Daglig rapport 22 okt finns i data/portfolio-journal.json. Nasdaq OMXS30 3 195,68 (−1,49%) verifierad; innehavens 22 okt stängningskurser saknas i tillgängligt prisflöde, så portföljvärde och avkastning redovisas inte. Ingen handel i stängningsrapporten.",
   "feeReconciliation": {
     "initialAggregateInferred": 35.96,
     "method": "50,000.00 start capital minus 39,950.40 gross initial purchases and 10,013.64 documented cash before the 2026-10-01 buy; initial fee slips are not available and no per-trade allocation is asserted.",
     "knownLaterFees": 44.04
   },
-  "priceNotes": "Price-fälten är fallback-/anskaffningsreferenser, inte aktuella kurser. Senaste snapshot i data/market.json hämtades 2026-10-16 09:27 CEST, före handelsfönstret och fördröjd; använd inte den för affärsbeslut."
+  "priceNotes": "data/market.json senast hämtad 2026-10-20 17:39 CEST och är fördröjd. Den kan inte användas som aktuell kurs. Prisflöden som kontrollerades 22 okt visade inte samtliga innehavs officiella 22 okt-stängningar; portfolio.json:s prisfält är fallback-/anskaffningsreferenser, inte aktuella kurser."
 }
