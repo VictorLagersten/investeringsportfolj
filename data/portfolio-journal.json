@@ -111,15 +111,16 @@
     {
       "id": "trade-window-failure-2026-10-23",
       "date": "2026-10-23",
-      "title": "MISSLYCKAD HANDELSCYKEL — 2026-10-23",
+      "title": "MISSLYCKAT HANDELSFÖNSTER — 2026-10-23, ingen retroaktiv affär",
       "tradeWindowDate": "2026-10-23",
       "tradeWindowStatus": "FAILED",
       "createdAt": "2026-10-23T09:13:45.693Z",
-      "summary": "Automatisk kontroll 2026-10-23T09:13:45.693Z. Inget giltigt handelsbeslut publicerades till den gemensamma journalen senast vid kontroll efter handelsfönstret 10:00–10:30 Europe/Stockholm. Ingen affär skapad; ingen retroaktiv handel. Detta är en processvarning, inte ett köp-/säljbeslut. Masterdata-avstämningen gav inga fel. ",
+      "summary": "Efterkontroll 2026-10-23 kl. 16:57 CEST (14:57Z): dagens handelsfönster 10:00–10:30 Europe/Stockholm är stängt. Ingen komplett DECISION eller NO_TRADE har verifierats från GitHub för dagens fönster. Den tidigare FAILED-posten skapades 11:13 CEST (09:13Z), alltså medan fönstret fortfarande var öppet; den var en processvarning och inte ett slutligt beslut. Ingen verifierad slutlig körning/publicering följde inom fönstret. Nu registreras dagens fönster som MISSED/INCOMPLETE; ingen retroaktiv paperaffär och ingen verklig order. Portfolio och ledger lämnas orörda eftersom ingen verifierad handel skett. Senast kända portfolio.json: ASSA ABLOY B 41, NIBE B 332, BONEX 87, kassa 2,12 kr, bokfört courtage 80 kr; dessa äldre referensvärden är inte beslutstidskurser.",
       "sources": [
         "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
         "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json",
-        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json"
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/actions"
       ]
     },
     {
