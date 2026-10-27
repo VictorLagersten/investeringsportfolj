@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-10-23",
+  "updatedAt": "2026-10-27",
   "portfolio": {
     "startCapital": 50000,
     "cash": 2.12,
@@ -108,6 +108,20 @@
     }
   ],
   "research": [
+    {
+      "id": "trade-window-failure-2026-10-27",
+      "date": "2026-10-27",
+      "title": "MISSLYCKAD HANDELSCYKEL — 2026-10-27",
+      "tradeWindowDate": "2026-10-27",
+      "tradeWindowStatus": "FAILED",
+      "createdAt": "2026-10-27T10:21:51.934Z",
+      "summary": "Automatisk kontroll 2026-10-27T10:21:51.934Z. Inget giltigt handelsbeslut publicerades till den gemensamma journalen senast vid kontroll efter handelsfönstret 10:00–10:30 Europe/Stockholm. Ingen affär skapad; ingen retroaktiv handel. Detta är en processvarning, inte ett köp-/säljbeslut. Masterdata-avstämningen gav inga fel. ",
+      "sources": [
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/portfolio.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/ledger.json",
+        "https://github.com/VictorLagersten/investeringsportfolj/blob/main/data/portfolio-journal.json"
+      ]
+    },
     {
       "id": "trade-window-failure-2026-10-23",
       "date": "2026-10-23",
