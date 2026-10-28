@@ -2,47 +2,47 @@
   "version": 2,
   "source": "Yahoo Finance chart endpoint",
   "disclaimer": "Market data may be delayed. This file is for dashboard analysis and is not an execution feed.",
-  "fetchedAt": "2026-10-28T11:32:05.241Z",
+  "fetchedAt": "2026-10-28T12:18:22.399Z",
   "quotes": {
     "ASSA-B": {
       "symbol": "ASSA-B.ST",
-      "price": 382.3,
+      "price": 383.3,
       "previousClose": 381.3,
-      "dayPct": 0.262260687123006,
+      "dayPct": 0.5245213742459898,
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-28T11:32:05.067Z"
+      "fetchedAt": "2026-10-28T12:18:22.163Z"
     },
     "NIBE B": {
       "symbol": "NIBE-B.ST",
-      "price": 45.95,
+      "price": 45.92,
       "previousClose": 45.45,
-      "dayPct": 1.1001100110010986,
+      "dayPct": 1.0341034103410252,
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-28T11:32:05.130Z"
+      "fetchedAt": "2026-10-28T12:18:22.249Z"
     },
     "BONEX": {
       "symbol": "BONEX.ST",
-      "price": 321,
+      "price": 320.8,
       "previousClose": 323,
-      "dayPct": -0.6191950464396245,
+      "dayPct": -0.6811145510835837,
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-28T11:32:05.184Z"
+      "fetchedAt": "2026-10-28T12:18:22.325Z"
     },
     "OMXS30": {
       "symbol": "^OMX",
-      "price": 3253.917,
+      "price": 3260.798,
       "previousClose": 3256.552,
-      "dayPct": -0.08091380085440969,
+      "dayPct": 0.1303833011111033,
       "currency": "SEK",
       "exchange": "STO",
       "marketState": null,
-      "fetchedAt": "2026-10-28T11:32:05.241Z"
+      "fetchedAt": "2026-10-28T12:18:22.398Z"
     }
   }
 }
