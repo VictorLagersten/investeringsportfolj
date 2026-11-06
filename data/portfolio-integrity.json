@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "checkedAt": "2026-11-06T16:15:22.966Z",
+  "checkedAt": "2026-11-06T16:56:58.685Z",
   "localDate": "2026-11-06",
-  "localTime": "17:15",
-  "status": "FAIL",
+  "localTime": "17:56",
+  "status": "WARN",
   "errors": [],
   "warnings": [
-    "Market feed stale/invalid: 286 minutes"
+    "Market feed stale/invalid: 328 minutes"
   ],
   "reconciled": {
     "ledgerTransactions": 7,
@@ -30,12 +30,12 @@
     "expectedTotalFees": 80,
     "recordedTotalFees": 80,
     "marketFetchedAt": "2026-11-06T11:29:04.308Z",
-    "marketAgeMinutes": 286
+    "marketAgeMinutes": 328
   },
   "tradeWindow": {
     "weekday": "Fri",
     "localHour": 17,
-    "localMinute": 15,
-    "auditAdded": true
+    "localMinute": 56,
+    "auditAdded": false
   }
 }
